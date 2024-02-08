@@ -3,30 +3,50 @@ package decoder
 import (
 	"net/url"
 
-	"github.com/charmbracelet/huh"
-	"github.com/zrcoder/ttoy/result"
+	"github.com/zrcoder/ttoy/util"
 )
 
-func encodeUrl() error {
-	ori := ""
-	input := huh.NewInput().Title("Encode url").Value(&ori)
-	if err := input.Run(); err != nil {
-		return err
+func UrlEncode() error {
+	if stdinput := util.ReadStdin(); stdinput != "" {
+		return urlEncodeAndShow(stdinput)
 	}
-	res := url.QueryEscape(ori)
-	result.Show(res)
+	return urlEncodeRun()
+}
+
+func UrlDecode() error {
+	if stdinput := util.ReadStdin(); stdinput != "" {
+		return urlDecodeAndShow(stdinput)
+	}
+	return urlDecodeRun()
+}
+
+func urlEncodeAndShow(input string) error {
+	res := url.QueryEscape(input)
+	util.Show(res)
 	return nil
 }
-func decodeUrl() error {
-	ori := ""
-	input := huh.NewInput().Title("Docode url").Value(&ori)
-	if err := input.Run(); err != nil {
+
+func urlEncodeRun() error {
+	input := ""
+	if err := util.NewInput("Encode url", &input).Run(); err != nil {
 		return err
 	}
-	res, err := url.QueryUnescape(ori)
-	if err != nil {
+	return urlEncodeAndShow(input)
+}
+
+func urlDecodeAndShow(ori string) error {
+	if res, err := url.QueryUnescape(ori); err != nil {
 		return err
+	} else {
+		util.Show(res)
 	}
-	result.Show(res)
 	return nil
+}
+
+func urlDecodeRun() error {
+	input := ""
+	if err := util.NewInput("Docode url", &input).Run(); err != nil {
+		return err
+	}
+	return urlDecodeAndShow(input)
 }

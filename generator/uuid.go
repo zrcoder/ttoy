@@ -2,12 +2,11 @@ package generator
 
 import (
 	"github.com/google/uuid"
-	"github.com/zrcoder/ttoy/result"
+	"github.com/zrcoder/ttoy/util"
 )
 
-func genUuid() error {
+func UUID() error {
 	res := uuid.NewString()
-	result.Show(res)
-
+	util.Show(res)
 	return nil
 }

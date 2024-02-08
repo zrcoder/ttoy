@@ -3,27 +3,47 @@ package decoder
 import (
 	"html"
 
-	"github.com/charmbracelet/huh"
-	"github.com/zrcoder/ttoy/result"
+	"github.com/zrcoder/ttoy/util"
 )
 
-func encodeHtml() error {
-	ori := ""
-	if err := huh.NewText().Title("Encode html").Value(&ori).Editor("nvim").Run(); err != nil {
-		return err
+func HtmlEncode() error {
+	if stdinput := util.ReadStdin(); stdinput != "" {
+		return htmlEncodeAndShow(stdinput)
 	}
-	res := html.EscapeString(ori)
-	result.Show(res)
+	return htmlEncodeRun()
+}
+
+func HtmlDecode() error {
+	if stdinput := util.ReadStdin(); stdinput != "" {
+		return htmlDecodeAndShow(stdinput)
+	}
+	return htmlDecodeRun()
+}
+
+func htmlEncodeAndShow(input string) error {
+	res := html.EscapeString(input)
+	util.Show(res)
 	return nil
 }
 
-func decodeHtml() error {
-	ori := ""
-	if err := huh.NewText().Title("Decode html").Value(&ori).Editor("nvim").Run(); err != nil {
+func htmlEncodeRun() error {
+	input := ""
+	if err := util.NewText("Encode html", "html", &input).Run(); err != nil {
 		return err
 	}
-	res := html.UnescapeString(ori)
-	result.Show(res)
-	return nil
+	return htmlEncodeAndShow(input)
+}
 
+func htmlDecodeAndShow(ori string) error {
+	res := html.UnescapeString(ori)
+	util.Show(res)
+	return nil
+}
+
+func htmlDecodeRun() error {
+	ori := ""
+	if err := util.NewText("Decode html", "html", &ori).Run(); err != nil {
+		return err
+	}
+	return htmlDecodeAndShow(ori)
 }

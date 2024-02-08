@@ -3,15 +3,17 @@ package formatter
 import (
 	"encoding/json"
 
-	"github.com/charmbracelet/huh"
-	"github.com/zrcoder/ttoy/result"
+	"github.com/zrcoder/ttoy/util"
 )
 
-func formatJson() error {
-	data := ""
-	if err := huh.NewText().Title("json formatter").Value(&data).Editor("nvim").Run(); err != nil {
-		return err
+func Json() error {
+	if stdinput := util.ReadStdin(); stdinput != "" {
+		return jsonFormatAndShow(stdinput)
 	}
+	return jsonRun()
+}
+
+func jsonFormatAndShow(data string) error {
 	var obj any
 	if err := json.Unmarshal([]byte(data), &obj); err != nil {
 		return err
@@ -19,7 +21,17 @@ func formatJson() error {
 	if data, err := json.MarshalIndent(obj, "", "  "); err != nil {
 		return err
 	} else {
-		result.ShowCode("json", string(data))
+		util.ShowCode("json", string(data))
 	}
 	return nil
+}
+
+func jsonRun() error {
+	data := ""
+
+	if err := util.NewText("json formatter", "json", &data).Run(); err != nil {
+		return err
+	}
+
+	return jsonFormatAndShow(data)
 }
