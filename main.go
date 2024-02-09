@@ -109,6 +109,7 @@ func newYamlCmd(action cli.ActionFunc) *cli.Command {
 		Action: action,
 	}
 }
+
 func newTomlCmd(action cli.ActionFunc) *cli.Command {
 	return &cli.Command{
 		Name:   "toml",
@@ -132,6 +133,8 @@ func main() {
 			uuid,
 		},
 	}
+
+	root.HideHelp = true
 
 	if err := root.Run(context.Background(), os.Args); err != nil {
 		util.ShowError(err)
