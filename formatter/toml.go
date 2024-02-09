@@ -34,5 +34,5 @@ func tomlRun() error {
 		return err
 	}
 
-	return jsonFormatAndShow(data)
+	return tomlFormatAndShow(data)
 }

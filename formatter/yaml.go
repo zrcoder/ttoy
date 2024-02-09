@@ -32,5 +32,5 @@ func yamlRun() error {
 		return err
 	}
 
-	return jsonFormatAndShow(data)
+	return yamlFormatAndShow(data)
 }
