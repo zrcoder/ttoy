@@ -8,6 +8,7 @@ import (
 	cvter "github.com/zrcoder/ttoy/coverter"
 	"github.com/zrcoder/ttoy/decoder"
 	"github.com/zrcoder/ttoy/formatter"
+	"github.com/zrcoder/ttoy/formatter/svg"
 	"github.com/zrcoder/ttoy/generator"
 	"github.com/zrcoder/ttoy/util"
 )
@@ -15,29 +16,32 @@ import (
 var (
 	json = &cli.Command{
 		Name:   "json",
-		Usage:  "format json or convert json to yaml, toml and so on",
+		Usage:  "format json or convert json to yaml, toml and graph(svg)",
 		Action: wrapAction(formatter.Json),
 		Commands: []*cli.Command{
 			newYamlCmd(wrapAction(cvter.Json2Yaml)),
 			newTomlCmd(wrapAction(cvter.Json2Toml)),
+			newGraphCmd("generate json graph", wrapAction(svg.Json)),
 		},
 	}
 	yaml = &cli.Command{
 		Name:   "yaml",
-		Usage:  "convert yaml to json, toml and so on",
+		Usage:  "convert yaml to json, toml and graph(svg)",
 		Action: wrapAction(formatter.Yaml),
 		Commands: []*cli.Command{
 			newJsonCmd(wrapAction(cvter.Yaml2Json)),
 			newTomlCmd(wrapAction(cvter.Yaml2Toml)),
+			newGraphCmd("generate yaml graph", wrapAction(svg.Json)),
 		},
 	}
 	toml = &cli.Command{
 		Name:   "toml",
-		Usage:  "convert toml to json, yaml and so on",
+		Usage:  "convert toml to json, yaml and graph(svg)",
 		Action: wrapAction(formatter.Toml),
 		Commands: []*cli.Command{
 			newJsonCmd(wrapAction(cvter.Toml2Json)),
 			newYamlCmd(wrapAction(cvter.Toml2Yaml)),
+			newGraphCmd("generate toml graph", wrapAction(svg.Json)),
 		},
 	}
 	xml = &cli.Command{
@@ -114,6 +118,14 @@ func newTomlCmd(action cli.ActionFunc) *cli.Command {
 	return &cli.Command{
 		Name:   "toml",
 		Usage:  "convert to toml",
+		Action: action,
+	}
+}
+
+func newGraphCmd(usage string, action cli.ActionFunc) *cli.Command {
+	return &cli.Command{
+		Name:   "graph",
+		Usage:  usage,
 		Action: action,
 	}
 }
