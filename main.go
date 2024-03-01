@@ -31,7 +31,7 @@ var (
 		Commands: []*cli.Command{
 			newJsonCmd(wrapAction(cvter.Yaml2Json)),
 			newTomlCmd(wrapAction(cvter.Yaml2Toml)),
-			newGraphCmd("generate yaml graph", wrapAction(svg.Json)),
+			newGraphCmd("generate yaml graph", wrapAction(svg.Yaml)),
 		},
 	}
 	toml = &cli.Command{
@@ -41,7 +41,7 @@ var (
 		Commands: []*cli.Command{
 			newJsonCmd(wrapAction(cvter.Toml2Json)),
 			newYamlCmd(wrapAction(cvter.Toml2Yaml)),
-			newGraphCmd("generate toml graph", wrapAction(svg.Json)),
+			newGraphCmd("generate toml graph", wrapAction(svg.Tomal)),
 		},
 	}
 	xml = &cli.Command{

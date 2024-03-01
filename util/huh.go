@@ -22,7 +22,7 @@ func NewInput(title string, bind *string) *huh.Form {
 	return huh.NewForm(
 		huh.NewGroup(
 			huh.NewInput().
-				Title(title).
+				Placeholder(title).
 				Value(bind),
 		),
 	)

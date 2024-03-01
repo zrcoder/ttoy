@@ -1,6 +1,8 @@
 package svg
 
 import (
+	"os"
+
 	"github.com/zrcoder/cdor"
 	"github.com/zrcoder/ttoy/util"
 )
@@ -33,9 +35,13 @@ func svg(kind string) error {
 	case "toml":
 		c.Toml(input)
 	}
-	file := "ttoy.svg"
+	data, err := c.Gen()
+	if err != nil {
+		return err
+	}
+	file := ""
 	if err := util.NewInput("file name", &file).Run(); err != nil {
 		return err
 	}
-	return c.SaveFile(file)
+	return os.WriteFile(file, data, 0600)
 }
