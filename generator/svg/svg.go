@@ -22,7 +22,7 @@ func Tomal() error {
 func svg(kind string) error {
 	input := util.ReadStdin()
 	if input == "" {
-		if err := util.NewText(kind+" graph", kind, &input).Run(); err != nil {
+		if err := util.NewText(kind+" svg", kind, &input).Run(); err != nil {
 			return err
 		}
 	}
@@ -43,5 +43,5 @@ func svg(kind string) error {
 	if err := util.NewInput("file name", &file).Run(); err != nil {
 		return err
 	}
-	return os.WriteFile(file, data, 0o600)
+	return os.WriteFile(file+".svg", data, 0o600)
 }
