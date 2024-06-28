@@ -10,16 +10,9 @@ import (
 	"github.com/zrcoder/ttoy/util"
 )
 
-func Hash() error {
-	if stdinput := util.ReadStdin(); stdinput != "" {
-		return hashAndShow(stdinput)
-	}
-	return hashRun()
-}
-
-func hashAndShow(input string) error {
+func Hash(input []byte) error {
 	h := md5.New()
-	if _, err := h.Write([]byte(input)); err != nil {
+	if _, err := h.Write(input); err != nil {
 		return err
 	}
 	resMd5 := hex.EncodeToString(h.Sum(nil))
@@ -42,22 +35,10 @@ func hashAndShow(input string) error {
 	}
 	resSha512 := hex.EncodeToString(h.Sum(nil))
 
-	util.ShowKVs(
+	return util.ShowKVs(
 		"md5:", resMd5,
 		"sha1:", resSha1,
 		"sha256:", resSha256,
 		"sha512:", resSha512,
 	)
-
-	return nil
-}
-
-func hashRun() error {
-	input := ""
-
-	if err := util.NewText("Hash", "txt", &input).Run(); err != nil {
-		return err
-	}
-
-	return hashAndShow(input)
 }

@@ -18,6 +18,23 @@ func NewText(title, extension string, bind *string) *huh.Form {
 	)
 }
 
+func NewSelect(title string, options []string, bind *string) *huh.Form {
+	ops := make([]huh.Option[string], len(options))
+	for i, o := range options {
+		ops[i] = huh.NewOption[string](o, o)
+	}
+	return huh.NewForm(
+		huh.NewGroup(
+			huh.NewSelect[string]().
+				Title(title).
+				Value(bind).
+				Options(
+					ops...,
+				),
+		),
+	)
+}
+
 func NewInput(title string, bind *string) *huh.Form {
 	return huh.NewForm(
 		huh.NewGroup(

@@ -1,62 +1,34 @@
 # ttoy
 
-```text
-NAME:
-   ttoy - terminal dev toys
+terminal dev toys
 
-USAGE:
-   ttoy  [command [command options]] [arguments...]
-
-COMMANDS:
-   json       format json or convert json to yaml, toml and so on
-   yaml       convert yaml to json, toml and so on
-   toml       convert toml to json, yaml and so on
-   xml, html  format xml/html or convert to markdown
-   encode     encode url, html and so on
-   decode     decode url, html and so on
-   hash       generate hashes
-   uuid       generate uuid
-```
+- Formaters
+- Converters
+- Generaters
+- Encoders/Decoders
 
 ## Examples
 
-### Formaters
-```shell
-echo '{"name":"Tom", "age":27}' | ttoy json
-```
-or
-```shell
-cat test.json | ttoy json
-```
-or
+### convert json to yaml
 
-```shell
-ttoy json << EOF
-{"name":"Tom",
-"age":27}
-EOF
-```
-or just
-```shell
-ttoy json
-```
-then a tui will appear to take inputs
-
-### Converters
-
-```shell
-echo '{"name":"Tom", "age":27}' | ttoy json toml
+```sh
+ttoy -i tt.json
 ```
 
-### Encoders/Decoders
+a tui appers, and select "converter" -> "yaml"
 
-```shell
-echo 'example.com/pet?name=tom&age=27' | ttoy encode url 
+> ttoy will print the yaml result on stdin, if you pass -o flag, the result will be written into the output file.
+
+```sh
+cat tt.json | ttoy
 ```
 
-### Generaters
 
-```shell
-ttoy uuid
+
+### generate svg graph from json
+
+```sh
+ttoy -i tt.json -o tt.svg
 ```
 
+select "generators" -> "json --> svg".

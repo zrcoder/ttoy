@@ -1,155 +1,156 @@
 package main
 
 import (
-	"context"
-	"os"
+	"errors"
 
-	"github.com/urfave/cli/v3"
-	cvter "github.com/zrcoder/ttoy/coverter"
-	"github.com/zrcoder/ttoy/decoder"
+	"github.com/zrcoder/ttoy/converter"
+	"github.com/zrcoder/ttoy/encoder"
 	"github.com/zrcoder/ttoy/formatter"
 	"github.com/zrcoder/ttoy/generator"
-	"github.com/zrcoder/ttoy/generator/svg"
 	"github.com/zrcoder/ttoy/util"
 )
 
-var (
-	json = &cli.Command{
-		Name:   "json",
-		Usage:  "format json or convert json to yaml, toml and graph(svg)",
-		Action: wrapAction(formatter.Json),
-		Commands: []*cli.Command{
-			newYamlCmd(wrapAction(cvter.Json2Yaml)),
-			newTomlCmd(wrapAction(cvter.Json2Toml)),
-			newSvgCmd("generate json graph", wrapAction(svg.Json)),
-		},
-	}
-	yaml = &cli.Command{
-		Name:   "yaml",
-		Usage:  "convert yaml to json, toml and graph(svg)",
-		Action: wrapAction(formatter.Yaml),
-		Commands: []*cli.Command{
-			newJsonCmd(wrapAction(cvter.Yaml2Json)),
-			newTomlCmd(wrapAction(cvter.Yaml2Toml)),
-			newSvgCmd("generate yaml graph", wrapAction(svg.Yaml)),
-		},
-	}
-	toml = &cli.Command{
-		Name:   "toml",
-		Usage:  "convert toml to json, yaml and graph(svg)",
-		Action: wrapAction(formatter.Toml),
-		Commands: []*cli.Command{
-			newJsonCmd(wrapAction(cvter.Toml2Json)),
-			newYamlCmd(wrapAction(cvter.Toml2Yaml)),
-			newSvgCmd("generate toml graph", wrapAction(svg.Tomal)),
-		},
-	}
-	xml = &cli.Command{
-		Name:    "xml",
-		Aliases: []string{"html"},
-		Usage:   "format xml/html or convert to markdown",
-		Action:  wrapAction(formatter.Html),
-	}
-	encode = &cli.Command{
-		Name:  "encode",
-		Usage: "encode url, html and so on",
-		Commands: []*cli.Command{
-			{
-				Name:   "url",
-				Action: wrapAction(decoder.UrlEncode),
-			},
-			{
-				Name:    "html",
-				Aliases: []string{"xml"},
-				Action:  wrapAction(decoder.HtmlEncode),
-			},
-		},
-	}
-	decode = &cli.Command{
-		Name:  "decode",
-		Usage: "decode url, html and so on",
-		Commands: []*cli.Command{
-			{
-				Name:   "url",
-				Action: wrapAction(decoder.UrlDecode),
-			},
-			{
-				Name:    "html",
-				Aliases: []string{"xml"},
-				Action:  wrapAction(decoder.HtmlDecode),
-			},
-		},
-	}
-	hash = &cli.Command{
-		Name:   "hash",
-		Usage:  "generate hashes",
-		Action: wrapAction(generator.Hash),
-	}
-	uuid = &cli.Command{
-		Name:   "uuid",
-		Usage:  "generate uuid",
-		Action: wrapAction(generator.UUID),
-	}
+type (
+	OperAction func(input []byte)
+	Action     func([]byte) error
 )
 
-func wrapAction(f func() error) cli.ActionFunc {
-	return func(ctx context.Context, c *cli.Command) error {
-		return f()
-	}
-}
-
-func newJsonCmd(action cli.ActionFunc) *cli.Command {
-	return &cli.Command{
-		Name:   "json",
-		Usage:  "convert to json",
-		Action: action,
-	}
-}
-
-func newYamlCmd(action cli.ActionFunc) *cli.Command {
-	return &cli.Command{
-		Name:   "yaml",
-		Usage:  "convert to yaml",
-		Action: action,
-	}
-}
-
-func newTomlCmd(action cli.ActionFunc) *cli.Command {
-	return &cli.Command{
-		Name:   "toml",
-		Usage:  "convert to toml",
-		Action: action,
-	}
-}
-
-func newSvgCmd(usage string, action cli.ActionFunc) *cli.Command {
-	return &cli.Command{
-		Name:   "svg",
-		Usage:  usage,
-		Action: action,
-	}
-}
-
 func main() {
-	root := &cli.Command{
-		Name:  "ttoy",
-		Usage: "terminal dev toys",
-		Commands: []*cli.Command{
-			json,
-			yaml,
-			toml,
-			xml,
-			encode,
-			decode,
-			hash,
-			uuid,
-		},
+	const (
+		converter = "converter"
+		formatter = "formatter"
+		generator = "generator"
+		encoder   = "encoder"
+		decoder   = "decoder"
+	)
+
+	oper := ""
+	ops := []string{converter, formatter, generator, encoder, decoder}
+	err := util.NewSelect("", ops, &oper).Run()
+	if err != nil {
+		util.ShowError(err)
+		return
 	}
 
-	root.HideHelp = true
+	opers := map[string]OperAction{
+		converter: convert,
+		formatter: format,
+		generator: generate,
+		encoder:   encode,
+		decoder:   decode,
+	}
+	opers[oper](util.Input)
+}
 
-	if err := root.Run(context.Background(), os.Args); err != nil {
+func convert(input []byte) {
+	const (
+		jy = "json --> yaml"
+		yj = "yaml --> json"
+		yt = "yaml --> toml"
+		ty = "toml --> yaml"
+		jt = "json --> toml"
+		tj = "toml --> json"
+	)
+	converters := map[string]Action{
+		jy: converter.Json2Yaml,
+		yj: converter.Yaml2Json,
+		yt: converter.Yaml2Toml,
+		ty: converter.Toml2Yaml,
+		jt: converter.Json2Toml,
+		tj: converter.Toml2Json,
+	}
+	srcformat := util.ParseInputExtension()
+	key := ""
+	if srcformat == "" {
+		ops := []string{jy, jt, yj, yt, tj, ty}
+		util.NewSelect("source format", ops, &key).Run()
+	} else {
+		set := map[string]bool{"json": true, "yaml": true, "toml": true}
+		ops := make([]string, 0, 2)
+		for k := range set {
+			if srcformat == k {
+				continue
+			}
+			ops = append(ops, k)
+		}
+		util.NewSelect("to", ops, &key).Run()
+		key = srcformat + " --> " + key
+	}
+
+	if err := converters[key](input); err != nil {
 		util.ShowError(err)
-		os.Exit(1)
+	}
+}
+
+func format(input []byte) {
+	formatters := map[string]Action{
+		"json": formatter.Json,
+		"yaml": formatter.Yaml,
+		"toml": formatter.Toml,
+		"html": formatter.Html,
+	}
+	srcformat := util.ParseInputExtension()
+	if srcformat == "" {
+		util.NewSelect("source format", []string{"json", "yaml", "toml", "html"}, &srcformat).Run()
+	}
+	action, ok := formatters[srcformat]
+	if !ok {
+		util.ShowError(errors.New("not supported format"))
+	}
+	if err := action(input); err != nil {
+		util.ShowError(err)
+	}
+}
+
+func generate(input []byte) {
+	const (
+		jsvg    = "json --> svg"
+		jstruct = "json --> struct"
+		uuid    = "uuid"
+		hash    = "hash"
+	)
+	generators := map[string]Action{
+		uuid:    generator.UUID,
+		hash:    generator.Hash,
+		jsvg:    generator.Json2Svg,
+		jstruct: generator.Json2Struct,
+	}
+	key := ""
+	util.NewSelect("generator", []string{uuid, hash, jsvg, jstruct}, &key).Run()
+	if err := generators[key](input); err != nil {
+		util.ShowError(err)
+	}
+}
+
+func encode(input []byte) {
+	encodeOrDecode(input, true)
+}
+
+func decode(input []byte) {
+	encodeOrDecode(input, false)
+}
+
+func encodeOrDecode(input []byte, encode bool) {
+	srcformat := util.ParseInputExtension()
+	var err error
+	if srcformat == "html" || srcformat == "xml" {
+		if encode {
+			err = encoder.EncodeHtml(input)
+		} else {
+			err = encoder.DecodeHtml(input)
+		}
+	} else {
+		url := string(input)
+		if url == "" {
+			util.NewInput("encode url", &url).Run()
+		}
+		if encode {
+			err = encoder.EncodeUrl(url)
+		} else {
+			err = encoder.DecodeUrl(url)
+		}
+	}
+	if err != nil {
+		util.ShowError(err)
 	}
 }

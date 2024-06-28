@@ -5,8 +5,7 @@ import (
 	"github.com/zrcoder/ttoy/util"
 )
 
-func UUID() error {
+func UUID(input []byte) error {
 	res := uuid.NewString()
-	util.Show(res)
-	return nil
+	return util.Show([]byte(res))
 }

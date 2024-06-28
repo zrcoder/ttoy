@@ -2,19 +2,19 @@ package util
 
 import (
 	"bufio"
+	"bytes"
 	"io"
 	"os"
-	"strings"
 )
 
-// ReadStdin read standard input string
-func ReadStdin() string {
+// ReadStdin read standard input
+func ReadStdin() []byte {
 	if IsStdinEmpty() {
-		return ""
+		return nil
 	}
 
 	reader := bufio.NewReader(os.Stdin)
-	var buf strings.Builder
+	var buf bytes.Buffer
 
 	for {
 		r, _, err := reader.ReadRune()
@@ -29,7 +29,7 @@ func ReadStdin() string {
 		}
 	}
 
-	return buf.String()
+	return buf.Bytes()
 }
 
 // IsStdinEmpty returns whether stdin is empty.

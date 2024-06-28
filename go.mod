@@ -4,6 +4,7 @@ go 1.22.0
 
 require (
 	github.com/BurntSushi/toml v1.3.2
+	github.com/ChimeraCoder/gojson v1.1.0
 	github.com/charmbracelet/huh v0.3.0
 	github.com/google/uuid v1.6.0
 	github.com/urfave/cli/v3 v3.0.0-alpha8
@@ -61,6 +62,7 @@ require (
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028 // indirect
 	gonum.org/v1/plot v0.14.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 	oss.terrastruct.com/d2 v0.6.3 // indirect
 	oss.terrastruct.com/util-go v0.0.0-20231101220827-55b3812542c2 // indirect
 )
