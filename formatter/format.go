@@ -6,8 +6,9 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"github.com/yosssi/gohtml"
-	"github.com/zrcoder/ttoy/util"
 	"gopkg.in/yaml.v3"
+
+	"github.com/zrcoder/ttoy/util"
 )
 
 func Html(origin []byte) error {

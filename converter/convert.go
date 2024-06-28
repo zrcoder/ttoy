@@ -5,8 +5,9 @@ import (
 	"encoding/json"
 
 	"github.com/BurntSushi/toml"
+	"gopkg.in/yaml.v3"
+
 	"github.com/zrcoder/ttoy/util"
-	"gopkg.in/yaml.v2"
 )
 
 func Json2Toml(jsonData []byte) error {

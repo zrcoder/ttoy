@@ -1,34 +1,32 @@
 # ttoy
 
-terminal dev toys
+Dev toys on the terminal
 
-- Formaters
-- Converters
-- Generaters
-- Encoders/Decoders
-
-## Examples
-
-### convert json to yaml
-
-```sh
-ttoy -i tt.json
 ```
+Dev toys on the terminal
 
-a tui appers, and select "converter" -> "yaml"
+Usage:
+  ttoy [command]
 
-> ttoy will print the yaml result on stdin, if you pass -o flag, the result will be written into the output file.
 
-```sh
-cat tt.json | ttoy
+  conv        convert between json, yaml and toml
+  fmt         format json, yaml, toml and xml
+  gen         generate hash, uuid, svg graph or go struct from json
+
+
+  dec         decode url or html
+  enc         encode url or html
+
+Additional Commands:
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+
+Flags:
+  -h, --help                   help for ttoy
+  -i, --input string           input file
+      --input-format string    input format
+  -o, --output string          output file
+      --output-format string   output format
+
+Use "ttoy [command] --help" for more information about a command.
 ```
-
-
-
-### generate svg graph from json
-
-```sh
-ttoy -i tt.json -o tt.svg
-```
-
-select "generators" -> "json --> svg".

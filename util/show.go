@@ -18,8 +18,9 @@ func ShowCode(code string, data []byte) error {
 	return Show(data)
 }
 
-func ShowError(err error) {
+func ShowFatal(err any) {
 	fmt.Println(err)
+	os.Exit(1)
 }
 
 func ShowKVs(res ...string) error {
