@@ -1,7 +1,5 @@
 # ttoy
 
-Dev toys on the terminal
-
 ```
 Dev toys on the terminal
 
