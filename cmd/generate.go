@@ -32,6 +32,7 @@ var uuidCmd = &cobra.Command{
 var svgCmd = &cobra.Command{
 	Use:   "svg",
 	Short: "generate svg graph for json",
+	Long:  "generate svg graph for json, see https://github.com/zrcoder/cdor",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return generator.Json2Svg(util.Input)
 	},
@@ -48,6 +49,7 @@ var structCmd = &cobra.Command{
 var d2Cmd = &cobra.Command{
 	Use:   "d2",
 	Short: "generate d2 svg graph from d2 scripts",
+	Long:  "generate d2 svg graph from d2 scripts, see https://d2lang.com",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return generator.D2(util.Input)
 	},
@@ -56,6 +58,7 @@ var d2Cmd = &cobra.Command{
 var ndorCmd = &cobra.Command{
 	Use:   "ndor",
 	Short: "generate ndor png from source code",
+	Long:  "generate ndor png from source code, see https://github.com/zrcoder/ndor/wiki",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return generator.Ndor(util.Input)
 	},
