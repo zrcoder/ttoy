@@ -15,12 +15,8 @@ Usage:
   dec         decode url or html
   enc         encode url or html
 
-Additional Commands:
-  completion  Generate the autocompletion script for the specified shell
-  help        Help about any command
 
 Flags:
-  -h, --help                   help for ttoy
   -i, --input string           input file
       --input-format string    input format
   -o, --output string          output file

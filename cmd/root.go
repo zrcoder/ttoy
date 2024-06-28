@@ -18,6 +18,13 @@ func Execute() {
 }
 
 func init() {
+	// hide help flags and command
+	rootCmd.PersistentFlags().BoolP("help", "h", false, "Print usage")
+	rootCmd.PersistentFlags().Lookup("help").Hidden = true
+	rootCmd.SetHelpCommand(&cobra.Command{Hidden: true})
+	// hide completion command
+	rootCmd.CompletionOptions.DisableDefaultCmd = true
+
 	rootCmd.PersistentFlags().StringVarP(&util.InputFile, "input", "i", "", "input file")
 	rootCmd.PersistentFlags().StringVarP(&util.OutputFile, "output", "o", "", "output file")
 	rootCmd.PersistentFlags().StringVarP(&util.InputFormat, "input-format", "", "", "input format")
