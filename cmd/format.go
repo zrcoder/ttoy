@@ -3,7 +3,6 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"github.com/zrcoder/ttoy/formatter"
-	"github.com/zrcoder/ttoy/util"
 )
 
 // formatCmd represents the format command
@@ -21,7 +20,7 @@ var formatCmd = &cobra.Command{
 			"xml":  formatter.Html,
 			"html": formatter.Html,
 		}
-		action := formatters[util.InputFormat]
+		action := formatters[InputFormat]
 		do(action)
 	},
 }

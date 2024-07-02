@@ -25,12 +25,12 @@ func init() {
 	// hide completion command
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 
-	rootCmd.PersistentFlags().StringVarP(&util.InputFile, "in", "i", "", "input file")
-	rootCmd.PersistentFlags().StringVarP(&util.OutputFile, "out", "o", "", "output file")
-	rootCmd.PersistentFlags().StringVarP(&util.InputFormat, "in-fmt", "", "", "input format")
-	rootCmd.PersistentFlags().StringVarP(&util.OutputFormat, "out-fmt", "", "", "output format")
+	rootCmd.PersistentFlags().StringVarP(&InputFile, "in", "i", "", "input file")
+	rootCmd.PersistentFlags().StringVarP(&OutputFile, "out", "o", "", "output file")
+	rootCmd.PersistentFlags().StringVarP(&InputFormat, "in-fmt", "", "", "input format")
+	rootCmd.PersistentFlags().StringVarP(&OutputFormat, "out-fmt", "", "", "output format")
 	rootCmd.AddGroup(&cobra.Group{ID: "main", Title: "Converter/Fomatter/Generator:"})
 	rootCmd.AddGroup(&cobra.Group{ID: "code", Title: "Encoder/Decoder:"})
 
-	cobra.OnInitialize(util.Init)
+	cobra.OnInitialize(Init)
 }

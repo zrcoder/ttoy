@@ -3,7 +3,6 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"github.com/zrcoder/ttoy/generator"
-	"github.com/zrcoder/ttoy/util"
 )
 
 var generateCmd = &cobra.Command{
@@ -17,7 +16,7 @@ var hashCmd = &cobra.Command{
 	Use:   "hash",
 	Short: "generate hash",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return generator.Hash(util.Input)
+		return generator.Hash(Input)
 	},
 }
 
@@ -25,7 +24,7 @@ var uuidCmd = &cobra.Command{
 	Use:   "uuid",
 	Short: "generate uuid",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return generator.Uuid(util.Input)
+		return generator.Uuid(Input)
 	},
 }
 
@@ -34,7 +33,7 @@ var svgCmd = &cobra.Command{
 	Short: "generate svg graph for json",
 	Long:  "generate svg graph for json, see https://github.com/zrcoder/cdor",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return generator.Json2Svg(util.Input)
+		return generator.Json2Svg(Input)
 	},
 }
 
@@ -42,7 +41,7 @@ var structCmd = &cobra.Command{
 	Use:   "struct",
 	Short: "generate go struct for json",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return generator.Json2Struct(util.Input)
+		return generator.Json2Struct(Input)
 	},
 }
 
@@ -51,7 +50,7 @@ var d2Cmd = &cobra.Command{
 	Short: "generate d2 svg graph from d2 scripts",
 	Long:  "generate d2 svg graph from d2 scripts, see https://d2lang.com",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return generator.D2(util.Input)
+		return generator.D2(Input)
 	},
 }
 
@@ -60,7 +59,7 @@ var ndorCmd = &cobra.Command{
 	Short: "generate ndor png from source code",
 	Long:  "generate ndor png from source code, see https://github.com/zrcoder/ndor/wiki",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return generator.Ndor(util.Input)
+		return generator.Ndor(Input)
 	},
 }
 

@@ -3,7 +3,6 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"github.com/zrcoder/ttoy/converter"
-	"github.com/zrcoder/ttoy/util"
 )
 
 // convertCmd represents the convert command
@@ -21,7 +20,7 @@ var convertCmd = &cobra.Command{
 			"toml-json": converter.Toml2Json,
 			"toml-yaml": converter.Toml2Yaml,
 		}
-		key := util.InputFormat + "-" + util.OutputFormat
+		key := InputFormat + "-" + OutputFormat
 		action := converters[key]
 		do(action)
 	},

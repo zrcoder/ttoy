@@ -6,6 +6,8 @@ import (
 	"os"
 )
 
+var OutputFile string
+
 func Show(data []byte) error {
 	if OutputFile != "" {
 		return os.WriteFile(OutputFile, data, 0o640)
