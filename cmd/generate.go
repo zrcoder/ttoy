@@ -66,7 +66,7 @@ var ndorCmd = &cobra.Command{
 func init() {
 	structCmd.Flags().StringVarP(&generator.StructOption.Name, "name", "n", "Ttoy", "struct name")
 	structCmd.Flags().StringVarP(&generator.StructOption.Pkg, "pkg", "p", "ttoy", "pkg name")
-	structCmd.Flags().BoolVarP(&generator.StructOption.AddYamlTag, "yaml", "y", false, "if add yaml tag")
+	structCmd.Flags().StringArrayVarP(&generator.StructOption.Tags, "tags", "t", []string{"json"}, "tags to add")
 	structCmd.Flags().BoolVarP(&generator.StructOption.ConvertFloats, "float", "f", true, "if convert floats")
 	structCmd.Flags().BoolVarP(&generator.StructOption.SubStruct, "sub", "s", false, "if generate sub struct")
 	generateCmd.AddCommand(hashCmd)
