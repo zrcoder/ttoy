@@ -33,10 +33,5 @@ func ShowKVs(res ...string) error {
 			buf.WriteByte('\n')
 		}
 	}
-	if OutputFile != "" {
-		return os.WriteFile(OutputFile, buf.Bytes(), 0o640)
-	}
-
-	fmt.Println(buf.String())
-	return nil
+	return Show(buf.Bytes())
 }

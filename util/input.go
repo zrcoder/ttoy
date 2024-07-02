@@ -2,7 +2,7 @@ package util
 
 import (
 	"os"
-	"strings"
+	"path/filepath"
 )
 
 var (
@@ -17,7 +17,7 @@ var (
 func Init() {
 	if InputFile != "" {
 		if InputFormat == "" {
-			InputFormat = parseFormat(InputFile)
+			InputFormat = filepath.Ext(InputFile)
 		}
 		var err error
 		Input, err = os.ReadFile(InputFile)
@@ -28,14 +28,6 @@ func Init() {
 		Input = ReadStdin()
 	}
 	if OutputFormat == "" && OutputFile != "" {
-		OutputFormat = parseFormat(OutputFile)
+		OutputFormat = filepath.Ext(OutputFile)
 	}
-}
-
-func parseFormat(path string) string {
-	i := strings.LastIndex(path, ".")
-	if i < 0 {
-		return ""
-	}
-	return path[i+1:]
 }

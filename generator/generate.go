@@ -51,12 +51,26 @@ func Hash(input []byte) error {
 	)
 }
 
+var StructOption = struct {
+	Name          string
+	Pkg           string
+	AddYamlTag    bool
+	ConvertFloats bool
+	SubStruct     bool
+}{}
+
 func Json2Struct(input []byte) error {
-	structName := "Ttoy"
-	pkgName := "ttoy"
 	buf := bytes.NewBuffer(input)
-	tags := []string{"json", "yaml"}
-	out, err := gojson.Generate(buf, gojson.ParseJson, structName, pkgName, tags, false, true)
+	tags := []string{"json"}
+	if StructOption.AddYamlTag {
+		tags = append(tags, "yaml")
+	}
+	out, err := gojson.Generate(buf, gojson.ParseJson,
+		StructOption.Name,
+		StructOption.Pkg,
+		tags,
+		StructOption.SubStruct,
+		StructOption.ConvertFloats)
 	if err != nil {
 		return err
 	}

@@ -30,7 +30,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&util.InputFormat, "in-fmt", "", "", "input format")
 	rootCmd.PersistentFlags().StringVarP(&util.OutputFormat, "out-fmt", "", "", "output format")
 	rootCmd.AddGroup(&cobra.Group{ID: "main", Title: "Converter/Fomatter/Generator:"})
-	rootCmd.AddGroup(&cobra.Group{ID: "code", Title: "Encode/Decode:"})
+	rootCmd.AddGroup(&cobra.Group{ID: "code", Title: "Encoder/Decoder:"})
 
 	cobra.OnInitialize(util.Init)
 }

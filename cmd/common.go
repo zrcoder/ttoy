@@ -7,7 +7,7 @@ import (
 
 type Action func(input []byte) error
 
-var UnknowFormat = "unknow format"
+const UnknowFormat = "unknow format"
 
 func do(action Action) {
 	if action == nil {
