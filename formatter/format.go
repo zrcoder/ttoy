@@ -17,15 +17,12 @@ func Html(origin []byte) error {
 }
 
 func Json(data []byte) error {
-	var obj any
-	if err := json.Unmarshal(data, &obj); err != nil {
+	buf := bytes.NewBuffer(nil)
+	err := json.Indent(buf, data, "", "  ")
+	if err != nil {
 		return err
 	}
-	if data, err := json.MarshalIndent(obj, "", "  "); err != nil {
-		return err
-	} else {
-		return util.ShowCode("json", data)
-	}
+	return util.ShowCode("json", buf.Bytes())
 }
 
 func Toml(data []byte) error {
