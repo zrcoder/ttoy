@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"os"
-	"path/filepath"
 
 	"github.com/zrcoder/ttoy/encoder"
 	"github.com/zrcoder/ttoy/util"
@@ -24,7 +23,7 @@ var (
 func Init() {
 	if InputFile != "" {
 		if InputFormat == "" {
-			InputFormat = filepath.Ext(InputFile)
+			InputFormat = extWithoutDot(InputFile)
 		}
 		var err error
 		Input, err = os.ReadFile(InputFile)
@@ -35,7 +34,7 @@ func Init() {
 		Input = util.ReadStdin()
 	}
 	if OutputFormat == "" && OutputFile != "" {
-		OutputFormat = filepath.Ext(OutputFile)
+		OutputFormat = extWithoutDot(OutputFile)
 	}
 	util.OutputFile = OutputFile
 }
@@ -66,4 +65,13 @@ func encodeOrDecode(encode bool) error {
 		return encoder.EncodeUrl(url)
 	}
 	return encoder.DecodeUrl(url)
+}
+
+func extWithoutDot(path string) string {
+	for i := len(path) - 1; i >= 0 && !os.IsPathSeparator(path[i]); i-- {
+		if path[i] == '.' {
+			return path[i+1:]
+		}
+	}
+	return ""
 }

@@ -45,9 +45,12 @@ func Yaml(data []byte) error {
 	if err := yaml.Unmarshal(data, &obj); err != nil {
 		return err
 	}
-	if data, err := yaml.Marshal(obj); err != nil {
+	buf := bytes.NewBuffer(nil)
+	encoder := yaml.NewEncoder(buf)
+	encoder.SetIndent(2)
+	if err := encoder.Encode(&obj); err != nil {
 		return err
 	} else {
-		return util.ShowCode("yaml", data)
+		return util.ShowCode("yaml", buf.Bytes())
 	}
 }
