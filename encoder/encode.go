@@ -1,8 +1,12 @@
 package encoder
 
 import (
+	"bytes"
 	"html"
 	"net/url"
+	"os"
+
+	decqr "github.com/tuotoo/qrcode"
 
 	"github.com/zrcoder/ttoy/util"
 )
@@ -28,4 +32,17 @@ func DecodeUrl(input string) error {
 	} else {
 		return util.Show([]byte(res))
 	}
+}
+
+func DecodeQr(img []byte) error {
+	buf := bytes.NewBuffer(img)
+	res, err := decqr.Decode(buf)
+	if err != nil {
+		return err
+	}
+	if util.OutputFile == "" {
+		return util.Show([]byte(res.Content))
+	}
+
+	return os.WriteFile(util.OutputFile, []byte(res.Content), 0o640)
 }

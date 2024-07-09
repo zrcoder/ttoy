@@ -12,6 +12,7 @@ import (
 
 	"github.com/ChimeraCoder/gojson"
 	"github.com/google/uuid"
+	genqr "github.com/skip2/go-qrcode"
 	"github.com/zrcoder/cdor"
 	ndor "github.com/zrcoder/ndor/pkg"
 
@@ -107,4 +108,19 @@ func Ndor(input []byte) error {
 		fmt.Println("output:", util.OutputFile)
 	}
 	return os.WriteFile(util.OutputFile, data, 0o640)
+}
+
+func Qrcode(input []byte) error {
+	qr, err := genqr.New(string(input), genqr.Medium)
+	if err != nil {
+		return err
+	}
+	if util.OutputFile == "" {
+		return util.Show([]byte(qr.ToSmallString(false)))
+	}
+	img, err := qr.PNG(-1)
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(util.OutputFile, img, 0o640)
 }

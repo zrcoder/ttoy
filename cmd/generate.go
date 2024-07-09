@@ -9,7 +9,7 @@ var generateCmd = &cobra.Command{
 	Use:     "gen",
 	Aliases: []string{"generate"},
 	GroupID: "main",
-	Short:   "generate hash, uuid, svg graph or go struct from json",
+	Short:   "generate hash, uuid, qrcode, svg graph or go struct from json",
 }
 
 var hashCmd = &cobra.Command{
@@ -63,6 +63,15 @@ var ndorCmd = &cobra.Command{
 	},
 }
 
+var genqrCmd = &cobra.Command{
+	Use:     "qr",
+	Aliases: []string{"qrcode"},
+	Short:   "encode drcode",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return generator.Qrcode(Input)
+	},
+}
+
 func init() {
 	structCmd.Flags().StringVarP(&generator.StructOption.Name, "name", "n", "Ttoy", "struct name")
 	structCmd.Flags().StringVarP(&generator.StructOption.Pkg, "pkg", "p", "ttoy", "pkg name")
@@ -75,5 +84,6 @@ func init() {
 	generateCmd.AddCommand(structCmd)
 	generateCmd.AddCommand(d2Cmd)
 	generateCmd.AddCommand(ndorCmd)
+	generateCmd.AddCommand(genqrCmd)
 	rootCmd.AddCommand(generateCmd)
 }

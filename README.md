@@ -9,11 +9,13 @@ Usage:
 Converter/Fomatter/Generator:
   conv        convert between json, yaml and toml
   fmt         format json, yaml, toml and xml
-  gen         generate hash, uuid, svg graph or go struct from json
+  gen         generate hash, uuid, qrcode, svg graph or go struct from json
 
-Encode/Decode:
-  dec         decode url or html
+Encoder/Decoder:
+  dec         decode url, html or qrcode
   enc         encode url or html
+
+Additional Commands:
 
 Flags:
   -i, --in string        input file
