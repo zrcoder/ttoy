@@ -11,11 +11,14 @@ import (
 	dmp "github.com/sergi/go-diff/diffmatchpatch"
 )
 
+const textWidth = 66
+
 var (
 	insertSty = lg.NewStyle().Background(util.Green)
 	deleteSty = lg.NewStyle().Background(util.Red)
-	blankSty  = lg.NewStyle().Foreground(util.Faint).Strikethrough(true)
-	textSty   = lg.NewStyle().Width(60).Border(lg.NormalBorder())
+	blankSty  = lg.NewStyle().Foreground(util.Faint)
+	wideSty   = lg.NewStyle().Width(textWidth)
+	textSty   = wideSty.Border(lg.NormalBorder())
 )
 
 func Show(srcFile, dstFile string, inline bool) {
@@ -48,16 +51,20 @@ func Show(srcFile, dstFile string, inline bool) {
 func diffView(diffs []dmp.Diff) (string, string) {
 	var src, dst strings.Builder
 	for _, diff := range diffs {
+		text := diff.Text
+		if len(text) > textWidth {
+			text = wideSty.Render(text)
+		}
 		switch diff.Type {
 		case dmp.DiffEqual:
-			src.WriteString(diff.Text)
-			dst.WriteString(diff.Text)
+			src.WriteString(text)
+			dst.WriteString(text)
 		case dmp.DiffDelete:
-			src.WriteString(deleteSty.Render(diff.Text))
-			dst.WriteString(blankSty.Render(diff.Text))
+			src.WriteString(deleteSty.Render(text))
+			dst.WriteString(blankSty.Render(text))
 		case dmp.DiffInsert:
-			src.WriteString(blankSty.Render(diff.Text))
-			dst.WriteString(insertSty.Render(diff.Text))
+			src.WriteString(blankSty.Render(text))
+			dst.WriteString(insertSty.Render(text))
 		}
 	}
 	return textSty.Render(src.String()), textSty.Render(dst.String())
