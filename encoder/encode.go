@@ -11,38 +11,41 @@ import (
 	"github.com/zrcoder/ttoy/util"
 )
 
-func EncodeHtml(input []byte) error {
+func EncodeHtml(input []byte) {
 	res := html.EscapeString(string(input))
-	return util.Show([]byte(res))
+	util.Show([]byte(res))
 }
 
-func DecodeHtml(input []byte) error {
+func DecodeHtml(input []byte) {
 	res := html.UnescapeString(string(input))
-	return util.Show([]byte(res))
+	util.Show([]byte(res))
 }
 
-func EncodeUrl(input string) error {
+func EncodeUrl(input string) {
 	res := url.QueryEscape(input)
-	return util.Show([]byte(res))
+	util.Show([]byte(res))
 }
 
-func DecodeUrl(input string) error {
+func DecodeUrl(input string) {
 	if res, err := url.QueryUnescape(input); err != nil {
-		return err
+		util.ShowFatal(err)
 	} else {
-		return util.Show([]byte(res))
+		util.Show([]byte(res))
 	}
 }
 
-func DecodeQr(img []byte) error {
+func DecodeQr(img []byte) {
 	buf := bytes.NewBuffer(img)
 	res, err := decqr.Decode(buf)
 	if err != nil {
-		return err
+		util.ShowFatal(err)
 	}
 	if util.OutputFile == "" {
-		return util.Show([]byte(res.Content))
+		util.Show([]byte(res.Content))
+		return
 	}
-
-	return os.WriteFile(util.OutputFile, []byte(res.Content), 0o640)
+	err = os.WriteFile(util.OutputFile, []byte(res.Content), 0o640)
+	if err != nil {
+		util.ShowFatal(err)
+	}
 }

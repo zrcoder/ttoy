@@ -15,16 +15,16 @@ var generateCmd = &cobra.Command{
 var hashCmd = &cobra.Command{
 	Use:   "hash",
 	Short: "generate hash",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return generator.Hash(Input)
+	Run: func(cmd *cobra.Command, args []string) {
+		generator.Hash(Input)
 	},
 }
 
 var uuidCmd = &cobra.Command{
 	Use:   "uuid",
 	Short: "generate uuid",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return generator.Uuid(Input)
+	Run: func(cmd *cobra.Command, args []string) {
+		generator.Uuid(Input)
 	},
 }
 
@@ -32,16 +32,16 @@ var svgCmd = &cobra.Command{
 	Use:   "svg",
 	Short: "generate svg graph for json",
 	Long:  "generate svg graph for json, see https://github.com/zrcoder/cdor",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return generator.Json2Svg(Input)
+	Run: func(cmd *cobra.Command, args []string) {
+		generator.Json2Svg(Input)
 	},
 }
 
 var structCmd = &cobra.Command{
 	Use:   "struct",
 	Short: "generate go struct for json",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return generator.Json2Struct(Input)
+	Run: func(cmd *cobra.Command, args []string) {
+		generator.Json2Struct(Input)
 	},
 }
 
@@ -49,8 +49,8 @@ var d2Cmd = &cobra.Command{
 	Use:   "d2",
 	Short: "generate d2 svg graph from d2 scripts",
 	Long:  "generate d2 svg graph from d2 scripts, see https://d2lang.com",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return generator.D2(Input)
+	Run: func(cmd *cobra.Command, args []string) {
+		generator.D2(Input)
 	},
 }
 
@@ -58,8 +58,8 @@ var ndorCmd = &cobra.Command{
 	Use:   "ndor",
 	Short: "generate ndor png from source code",
 	Long:  "generate ndor png from source code, see https://github.com/zrcoder/ndor/wiki",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return generator.Ndor(Input)
+	Run: func(cmd *cobra.Command, args []string) {
+		generator.Ndor(Input)
 	},
 }
 
@@ -67,8 +67,8 @@ var genqrCmd = &cobra.Command{
 	Use:     "qr",
 	Aliases: []string{"qrcode"},
 	Short:   "encode drcode",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return generator.Qrcode(Input)
+	Run: func(cmd *cobra.Command, args []string) {
+		generator.Qrcode(Input)
 	},
 }
 

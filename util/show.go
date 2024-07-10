@@ -4,28 +4,32 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+
+	lg "github.com/charmbracelet/lipgloss"
 )
 
 var OutputFile string
 
-func Show(data []byte) error {
+func Show(data []byte) {
 	if OutputFile != "" {
-		return os.WriteFile(OutputFile, data, 0o640)
+		err := os.WriteFile(OutputFile, data, 0o640)
+		if err != nil {
+			ShowFatal(err)
+		}
 	}
 	fmt.Println(string(data))
-	return nil
 }
 
-func ShowCode(code string, data []byte) error {
-	return Show(data)
+func ShowCode(code string, data []byte) {
+	Show(data)
 }
 
-func ShowFatal(err any) {
-	fmt.Println(err)
+func ShowFatal(err error) {
+	fmt.Println(lg.NewStyle().Foreground(Red).Render(err.Error()))
 	os.Exit(1)
 }
 
-func ShowKVs(res ...string) error {
+func ShowKVs(res ...string) {
 	buf := bytes.NewBuffer(nil)
 	for i, v := range res {
 		buf.WriteString(v)
@@ -35,5 +39,5 @@ func ShowKVs(res ...string) error {
 			buf.WriteByte('\n')
 		}
 	}
-	return Show(buf.Bytes())
+	Show(buf.Bytes())
 }

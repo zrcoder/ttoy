@@ -1,13 +1,14 @@
 package cmd
 
 import (
+	"errors"
 	"os"
 
 	"github.com/zrcoder/ttoy/encoder"
 	"github.com/zrcoder/ttoy/util"
 )
 
-type Action func(input []byte) error
+type Action func(input []byte)
 
 const UnknowFormat = "unknow format"
 
@@ -41,30 +42,29 @@ func Init() {
 
 func do(action Action) {
 	if action == nil {
-		util.ShowFatal(UnknowFormat)
+		util.ShowFatal(errors.New(UnknowFormat))
 	}
-	err := action(Input)
-	if err != nil {
-		util.ShowFatal(err)
-	}
+	action(Input)
 }
 
 var url string
 
-func encodeOrDecode(encode bool) error {
+func encodeOrDecode(encode bool) {
 	if InputFormat == "html" || OutputFormat == "html" {
 		if encode {
-			return encoder.EncodeHtml(Input)
+			encoder.EncodeHtml(Input)
+		} else {
+			encoder.DecodeHtml(Input)
 		}
-		return encoder.DecodeHtml(Input)
 	}
 	if url == "" {
 		url = string(Input)
 	}
 	if encode {
-		return encoder.EncodeUrl(url)
+		encoder.EncodeUrl(url)
+	} else {
+		encoder.DecodeUrl(url)
 	}
-	return encoder.DecodeUrl(url)
 }
 
 func extWithoutDot(path string) string {

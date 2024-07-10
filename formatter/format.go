@@ -11,43 +11,43 @@ import (
 	"github.com/zrcoder/ttoy/util"
 )
 
-func Html(origin []byte) error {
+func Html(origin []byte) {
 	res := gohtml.FormatBytes(origin)
-	return util.ShowCode("html", res)
+	util.ShowCode("html", res)
 }
 
-func Json(data []byte) error {
+func Json(data []byte) {
 	buf := bytes.NewBuffer(nil)
 	err := json.Indent(buf, data, "", "  ")
 	if err != nil {
-		return err
+		util.ShowFatal(err)
 	}
-	return util.ShowCode("json", buf.Bytes())
+	util.ShowCode("json", buf.Bytes())
 }
 
-func Toml(data []byte) error {
+func Toml(data []byte) {
 	var obj any
 	if err := toml.Unmarshal(data, &obj); err != nil {
-		return err
+		util.ShowFatal(err)
 	}
 	writer := bytes.NewBuffer(nil)
 	if err := toml.NewEncoder(writer).Encode(obj); err != nil {
-		return err
+		util.ShowFatal(err)
 	}
-	return util.ShowCode("toml", writer.Bytes())
+	util.ShowCode("toml", writer.Bytes())
 }
 
-func Yaml(data []byte) error {
+func Yaml(data []byte) {
 	var obj any
 	if err := yaml.Unmarshal(data, &obj); err != nil {
-		return err
+		util.ShowFatal(err)
 	}
 	buf := bytes.NewBuffer(nil)
 	encoder := yaml.NewEncoder(buf)
 	encoder.SetIndent(2)
 	if err := encoder.Encode(&obj); err != nil {
-		return err
+		util.ShowFatal(err)
 	} else {
-		return util.ShowCode("yaml", buf.Bytes())
+		util.ShowCode("yaml", buf.Bytes())
 	}
 }

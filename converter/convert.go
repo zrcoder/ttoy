@@ -10,74 +10,74 @@ import (
 	"github.com/zrcoder/ttoy/util"
 )
 
-func Json2Toml(jsonData []byte) error {
+func Json2Toml(jsonData []byte) {
 	var obj any
 	if err := json.Unmarshal([]byte(jsonData), &obj); err != nil {
-		return err
+		util.ShowFatal(err)
 	}
 	writer := bytes.NewBuffer(nil)
 	if err := toml.NewEncoder(writer).Encode(obj); err != nil {
-		return err
+		util.ShowFatal(err)
 	}
-	return util.ShowCode("toml", writer.Bytes())
+	util.ShowCode("toml", writer.Bytes())
 }
 
-func Toml2Json(tomlData []byte) error {
+func Toml2Json(tomlData []byte) {
 	var obj any
 	if _, err := toml.Decode(string(tomlData), &obj); err != nil {
-		return err
+		util.ShowFatal(err)
 	}
 	if data, err := json.MarshalIndent(obj, "", "  "); err != nil {
-		return err
+		util.ShowFatal(err)
 	} else {
-		return util.ShowCode("json", data)
+		util.ShowCode("json", data)
 	}
 }
 
-func Json2Yaml(jsonData []byte) error {
+func Json2Yaml(jsonData []byte) {
 	var obj any
 	if err := json.Unmarshal(jsonData, &obj); err != nil {
-		return err
+		util.ShowFatal(err)
 	}
 	data, err := yaml.Marshal(obj)
 	if err != nil {
-		return err
+		util.ShowFatal(err)
 	}
-	return util.ShowCode("yaml", data)
+	util.ShowCode("yaml", data)
 }
 
-func Yaml2Json(yamlData []byte) error {
+func Yaml2Json(yamlData []byte) {
 	var obj any
 	if err := yaml.Unmarshal(yamlData, &obj); err != nil {
-		return err
+		util.ShowFatal(err)
 	}
 	if data, err := json.MarshalIndent(obj, "", "  "); err != nil {
-		return err
+		util.ShowFatal(err)
 	} else {
-		return util.ShowCode("json", data)
+		util.ShowCode("json", data)
 	}
 }
 
-func Yaml2Toml(jsonData []byte) error {
+func Yaml2Toml(jsonData []byte) {
 	var obj any
 	if err := yaml.Unmarshal(jsonData, &obj); err != nil {
-		return err
+		util.ShowFatal(err)
 	}
 	writer := bytes.NewBuffer(nil)
 	if err := toml.NewEncoder(writer).Encode(obj); err != nil {
-		return err
+		util.ShowFatal(err)
 	}
-	return util.ShowCode("toml", writer.Bytes())
+	util.ShowCode("toml", writer.Bytes())
 }
 
-func Toml2Yaml(tomlData []byte) error {
+func Toml2Yaml(tomlData []byte) {
 	var obj any
 	if _, err := toml.Decode(string(tomlData), &obj); err != nil {
-		return err
+		util.ShowFatal(err)
 	}
 	if data, err := yaml.Marshal(obj); err != nil {
-		return err
+		util.ShowFatal(err)
 	} else {
-		return util.ShowCode("yaml", data)
+		util.ShowCode("yaml", data)
 	}
 }

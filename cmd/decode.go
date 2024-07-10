@@ -12,8 +12,8 @@ var decodeCmd = &cobra.Command{
 	Aliases: []string{"decode"},
 	GroupID: "code",
 	Short:   "decode url, html or qrcode",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return encodeOrDecode(false)
+	Run: func(cmd *cobra.Command, args []string) {
+		encodeOrDecode(false)
 	},
 }
 
@@ -21,8 +21,8 @@ var decqrCmd = &cobra.Command{
 	Use:     "qr",
 	Aliases: []string{"qrcode"},
 	Short:   "decode qrcode",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return encoder.DecodeQr(Input)
+	Run: func(cmd *cobra.Command, args []string) {
+		encoder.DecodeQr(Input)
 	},
 }
 

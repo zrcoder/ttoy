@@ -10,8 +10,8 @@ var encodeCmd = &cobra.Command{
 	Aliases: []string{"encode"},
 	GroupID: "code",
 	Short:   "encode url or html",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return encodeOrDecode(true)
+	Run: func(cmd *cobra.Command, args []string) {
+		encodeOrDecode(true)
 	},
 }
 
