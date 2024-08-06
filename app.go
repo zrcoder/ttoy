@@ -6,8 +6,6 @@ import (
 
 	"github.com/zrcoder/ttoy/pkg/converter"
 	"github.com/zrcoder/ttoy/pkg/formatter"
-
-	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 // App struct
@@ -71,10 +69,6 @@ func (a *App) FormatHtml(input string) (string, error) {
 func (a *App) transform(input []byte, transformer Transformer) (string, error) {
 	buf, err := transformer(input)
 	if err != nil {
-		runtime.MessageDialog(a.ctx, runtime.MessageDialogOptions{
-			Type:    runtime.ErrorDialog,
-			Message: err.Error(),
-		})
 		return "", err
 	}
 	return buf.String(), nil

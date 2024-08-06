@@ -4,17 +4,17 @@ import {
   ConvertYamlToToml,
   ConvertTomlToYaml,
 } from "../../wailsjs/go/main/App";
+import useTransformAction from "./useTransform";
 
 const YamlTomlConverter = () => {
+  const transformAction = useTransformAction();
   const handleFirstButtonAction = (
     leftValue,
     rightValue,
     setLeftValue,
     setRightValue
   ) => {
-    ConvertYamlToToml(leftValue).then((res) => {
-      setRightValue(res);
-    });
+    transformAction(leftValue, ConvertYamlToToml, setRightValue);
   };
 
   const handleSecondButtonAction = (
@@ -23,9 +23,7 @@ const YamlTomlConverter = () => {
     setLeftValue,
     setRightValue
   ) => {
-    ConvertTomlToYaml(rightValue).then((res) => {
-      setLeftValue(res);
-    });
+    transformAction(rightValue, ConvertTomlToYaml, setLeftValue);
   };
 
   return (

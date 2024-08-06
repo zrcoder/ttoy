@@ -1,16 +1,16 @@
 import DualEditor from "./DualEditor";
 import { FormatJson } from "../../wailsjs/go/main/App";
+import useTransformAction from "./useTransform";
 
 const JsonFormatter = () => {
+  const transformAction = useTransformAction();
   const handleButtonAction = (
     leftValue,
     rightValue,
     setLeftValue,
     setRightValue
   ) => {
-    FormatJson(leftValue).then((res) => {
-      setRightValue(res);
-    });
+    transformAction(leftValue, FormatJson, setRightValue);
   };
   return (
     <DualEditor

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Layout, Menu, ConfigProvider, theme } from "antd";
+import { Layout, Menu, ConfigProvider, theme, App as AntdApp } from "antd";
 import "antd/dist/reset.css";
 import {
   ToolOutlined,
@@ -27,99 +27,101 @@ const App = () => {
 
   return (
     <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
-      <Layout style={{ minHeight: "100vh" }}>
-        <Sider className="site-layout-background">
-          <Menu
-            selectedKeys={[selectedKey]}
-            onClick={handleMenuClick}
-            style={{ height: "100%", borderRight: 0, textAlign: "left" }}
-          >
-            <Menu.Item
-              key="home"
-              icon={<ToolOutlined />}
-              style={{ textAlign: "left" }}
-            >
-              TToy
-            </Menu.Item>
-
-            <Menu.ItemGroup title="Converters" style={{ textAlign: "left" }}>
-              <Menu.Item
-                key="cvt-jy"
-                icon={<FileOutlined />}
-                style={{ textAlign: "left" }}
-              >
-                json - yaml
-              </Menu.Item>
-              <Menu.Item
-                key="cvt-jt"
-                icon={<FileTextOutlined />}
-                style={{ textAlign: "left" }}
-              >
-                json - toml
-              </Menu.Item>
-              <Menu.Item
-                key="cvt-yt"
-                icon={<CodeOutlined />}
-                style={{ textAlign: "left" }}
-              >
-                yaml - toml
-              </Menu.Item>
-            </Menu.ItemGroup>
-
-            <Menu.ItemGroup
-              title="Encoders/Decoders"
-              style={{ textAlign: "left" }}
+      <AntdApp>
+        <Layout style={{ minHeight: "100vh" }}>
+          <Sider className="site-layout-background">
+            <Menu
+              selectedKeys={[selectedKey]}
+              onClick={handleMenuClick}
+              style={{ height: "100%", borderRight: 0, textAlign: "left" }}
             >
               <Menu.Item
-                key="documents"
-                icon={<FileOutlined />}
+                key="home"
+                icon={<ToolOutlined />}
                 style={{ textAlign: "left" }}
               >
-                Documents
+                TToy
               </Menu.Item>
-            </Menu.ItemGroup>
 
-            <Menu.ItemGroup title="Formatters" style={{ textAlign: "left" }}>
-              <Menu.Item
-                key="fmt-j"
-                icon={<FileOutlined />}
+              <Menu.ItemGroup title="Converters" style={{ textAlign: "left" }}>
+                <Menu.Item
+                  key="cvt-jy"
+                  icon={<FileOutlined />}
+                  style={{ textAlign: "left" }}
+                >
+                  json - yaml
+                </Menu.Item>
+                <Menu.Item
+                  key="cvt-jt"
+                  icon={<FileTextOutlined />}
+                  style={{ textAlign: "left" }}
+                >
+                  json - toml
+                </Menu.Item>
+                <Menu.Item
+                  key="cvt-yt"
+                  icon={<CodeOutlined />}
+                  style={{ textAlign: "left" }}
+                >
+                  yaml - toml
+                </Menu.Item>
+              </Menu.ItemGroup>
+
+              <Menu.ItemGroup
+                title="Encoders/Decoders"
                 style={{ textAlign: "left" }}
               >
-                json
-              </Menu.Item>
-              <Menu.Item
-                key="fmt-y"
-                icon={<FileTextOutlined />}
-                style={{ textAlign: "left" }}
-              >
-                yaml
-              </Menu.Item>
-              <Menu.Item
-                key="fmt-t"
-                icon={<CodeOutlined />}
-                style={{ textAlign: "left" }}
-              >
-                toml
-              </Menu.Item>
-              <Menu.Item key="fmt-h" icon={<FileTextOutlined />}>
-                html
-              </Menu.Item>
-            </Menu.ItemGroup>
-          </Menu>
-        </Sider>
-        <Layout>
-          <Content style={{ paddingTop: 15 }}>
-            {selectedKey === "home" && <Home />}
-            {selectedKey === "cvt-jy" && <JsonYamlConverter />}
-            {selectedKey === "cvt-jt" && <JsonTomlConverter />}
-            {selectedKey === "cvt-yt" && <YamlTomlConverter />}
-            {selectedKey === "fmt-j" && <JsonFormatter />}
-            {selectedKey === "fmt-y" && <YamlFormatter />}
-            {selectedKey === "fmt-t" && <TomlFormatter />}
-            {selectedKey === "fmt-h" && <HtmlFormatter />}
-          </Content>
+                <Menu.Item
+                  key="documents"
+                  icon={<FileOutlined />}
+                  style={{ textAlign: "left" }}
+                >
+                  Documents
+                </Menu.Item>
+              </Menu.ItemGroup>
+
+              <Menu.ItemGroup title="Formatters" style={{ textAlign: "left" }}>
+                <Menu.Item
+                  key="fmt-j"
+                  icon={<FileOutlined />}
+                  style={{ textAlign: "left" }}
+                >
+                  json
+                </Menu.Item>
+                <Menu.Item
+                  key="fmt-y"
+                  icon={<FileTextOutlined />}
+                  style={{ textAlign: "left" }}
+                >
+                  yaml
+                </Menu.Item>
+                <Menu.Item
+                  key="fmt-t"
+                  icon={<CodeOutlined />}
+                  style={{ textAlign: "left" }}
+                >
+                  toml
+                </Menu.Item>
+                <Menu.Item key="fmt-h" icon={<FileTextOutlined />}>
+                  html
+                </Menu.Item>
+              </Menu.ItemGroup>
+            </Menu>
+          </Sider>
+          <Layout>
+            <Content style={{ paddingTop: 15 }}>
+              {selectedKey === "home" && <Home />}
+              {selectedKey === "cvt-jy" && <JsonYamlConverter />}
+              {selectedKey === "cvt-jt" && <JsonTomlConverter />}
+              {selectedKey === "cvt-yt" && <YamlTomlConverter />}
+              {selectedKey === "fmt-j" && <JsonFormatter />}
+              {selectedKey === "fmt-y" && <YamlFormatter />}
+              {selectedKey === "fmt-t" && <TomlFormatter />}
+              {selectedKey === "fmt-h" && <HtmlFormatter />}
+            </Content>
+          </Layout>
         </Layout>
-      </Layout>
+      </AntdApp>
     </ConfigProvider>
   );
 };

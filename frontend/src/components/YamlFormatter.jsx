@@ -1,16 +1,16 @@
 import DualEditor from "./DualEditor";
 import { FormatYaml } from "../../wailsjs/go/main/App";
+import useTransformAction from "./useTransform";
 
 const YamlFormatter = () => {
+  const transformAction = useTransformAction();
   const handleButtonAction = (
     leftValue,
     rightValue,
     setLeftValue,
     setRightValue
   ) => {
-    FormatYaml(leftValue).then((res) => {
-      setRightValue(res);
-    });
+    transformAction(leftValue, FormatYaml, setRightValue);
   };
   return (
     <DualEditor

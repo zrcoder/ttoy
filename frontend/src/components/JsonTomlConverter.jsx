@@ -3,17 +3,17 @@ import {
   ConvertJsonToToml,
   ConvertTomlToJson,
 } from "../../wailsjs/go/main/App";
+import useTransformAction from "./useTransform";
 
 const JsonTomlConverter = () => {
+  const transformAction = useTransformAction();
   const handleFirstButtonAction = (
     leftValue,
     rightValue,
     setLeftValue,
     setRightValue
   ) => {
-    ConvertJsonToToml(leftValue).then((res) => {
-      setRightValue(res);
-    });
+    transformAction(leftValue, ConvertJsonToToml, setRightValue);
   };
 
   const handleSecondButtonAction = (
@@ -22,9 +22,7 @@ const JsonTomlConverter = () => {
     setLeftValue,
     setRightValue
   ) => {
-    ConvertTomlToJson(rightValue).then((res) => {
-      setLeftValue(res);
-    });
+    transformAction(rightValue, ConvertTomlToJson, setLeftValue);
   };
 
   return (

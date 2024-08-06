@@ -4,17 +4,17 @@ import {
   ConvertJsonToYaml,
   ConvertYamlToJson,
 } from "../../wailsjs/go/main/App";
+import useTransformAction from "./useTransform";
 
 const JsonYamlConverter = () => {
+  const transformAction = useTransformAction();
   const handleFirstButtonAction = (
     leftValue,
     rightValue,
     setLeftValue,
     setRightValue
   ) => {
-    ConvertJsonToYaml(leftValue).then((res) => {
-      setRightValue(res);
-    });
+    transformAction(leftValue, ConvertJsonToYaml, setRightValue);
   };
 
   const handleSecondButtonAction = (
@@ -23,9 +23,7 @@ const JsonYamlConverter = () => {
     setLeftValue,
     setRightValue
   ) => {
-    ConvertYamlToJson(rightValue).then((res) => {
-      setLeftValue(res);
-    });
+    transformAction(rightValue, ConvertYamlToJson, setLeftValue);
   };
 
   return (
