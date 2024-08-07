@@ -7,7 +7,7 @@ const TextDiffer = () => {
       style={{
         height: "calc(100vh - 40px)",
         margin: 0,
-        padding: "20px",
+        padding: "10px",
         boxSizing: "border-box",
         backgroundColor: "transparent",
       }}
@@ -28,7 +28,7 @@ const TextDiffer = () => {
             backgroundColor: "transparent",
           }}
         >
-          <h4 style={{ margin: 0 }}>Text Diff</h4>
+          <h4 style={{ margin: 0 }}>Text Difference</h4>
         </header>
         <DiffEditor
           height="calc(100% - 40px)" // Adjust height to account for the label

@@ -45,3 +45,11 @@ export function FormatYaml(arg1) {
 export function GenJsonSvg(arg1) {
   return window['go']['main']['App']['GenJsonSvg'](arg1);
 }
+
+export function GenTomlSvg(arg1) {
+  return window['go']['main']['App']['GenTomlSvg'](arg1);
+}
+
+export function GenYamlSvg(arg1) {
+  return window['go']['main']['App']['GenYamlSvg'](arg1);
+}

@@ -1,14 +1,16 @@
 import React from "react";
 import { Editor as MonacoEditor } from "@monaco-editor/react";
+import LangSelector from "./LangSelector";
 
 const Editor = ({
   height,
   language,
   value,
   readOnly = false,
-  onChange,
+  onTextChange,
   editorDidMount,
-  label,
+  languages,
+  onLanguageChange,
 }) => {
   const handleEditorDidMount = (editor, monaco) => {
     if (editorDidMount) {
@@ -19,17 +21,19 @@ const Editor = ({
 
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      {label && (
-        <div style={{ padding: "8px", borderBottom: "1px solid #d9d9d9" }}>
-          <h4 style={{ margin: 0 }}>{label}</h4>
-        </div>
+      {languages && languages.length > 0 && (
+        <LangSelector
+          value={language}
+          onChange={onLanguageChange}
+          languages={languages}
+        />
       )}
       <MonacoEditor
         loading={null} // 去掉默认的 loading 文字
         height={height}
         language={language}
         value={value}
-        onChange={onChange}
+        onChange={onTextChange}
         theme="vs-dark"
         options={{
           minimap: { enabled: false },

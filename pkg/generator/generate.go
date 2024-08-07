@@ -75,8 +75,26 @@ func Json2Struct(input []byte) {
 }
 
 func Json2Svg(data []byte) (*bytes.Buffer, error) {
+	return toSvg(func(c *cdor.Cdor) {
+		c.Json(string(data))
+	})
+}
+
+func Yaml2Svg(data []byte) (*bytes.Buffer, error) {
+	return toSvg(func(c *cdor.Cdor) {
+		c.Yaml(string(data))
+	})
+}
+
+func Tomal2Svg(data []byte) (*bytes.Buffer, error) {
+	return toSvg(func(c *cdor.Cdor) {
+		c.Toml(string(data))
+	})
+}
+
+func toSvg(fn func(*cdor.Cdor)) (*bytes.Buffer, error) {
 	c := cdor.Ctx()
-	c.Json(string(data))
+	fn(c)
 	data, err := c.Gen()
 	return bytes.NewBuffer(data), err
 }

@@ -3,23 +3,16 @@ import { Layout, Menu, ConfigProvider, theme, App as AntdApp } from "antd";
 import "antd/dist/reset.css";
 import {
   ToolOutlined,
-  FileOutlined,
-  FileTextOutlined,
-  CodeOutlined,
+  SyncOutlined,
+  FormatPainterOutlined,
   DiffOutlined,
-  SwapOutlined,
-  AppstoreAddOutlined,
+  DotChartOutlined,
 } from "@ant-design/icons";
 import Home from "./components/Home";
-import JsonYamlConverter from "./components/JsonYamlConverter";
-import JsonTomlConverter from "./components/JsonTomlConverter";
-import YamlTomlConverter from "./components/YamlTomlConverter";
-import JsonFormatter from "./components/JsonFormatter";
-import YamlFormatter from "./components/YamlFormatter";
-import TomlFormatter from "./components/TomlFormatter";
-import HtmlFormatter from "./components/HtmlFormatter";
+import Converter from "./components/Converter";
+import Formatter from "./components/Formatter";
 import TextDiffer from "./components/TextDiffer";
-import JsonSvgViewer from "./components/JsonSvgViewr";
+import DataViewer from "./components/DataViewer";
 
 const { Sider, Content } = Layout;
 
@@ -30,29 +23,24 @@ const menuItems = [
     label: "TToy",
   },
   {
-    groupTitle: "Converters",
+    key: "data", // Unique key for grouping
+    groupTitle: "Data",
     items: [
-      { key: "cvt-jy", icon: <SwapOutlined />, label: "json-yaml" },
-      { key: "cvt-jt", icon: <AppstoreAddOutlined />, label: "json-toml" },
-      { key: "cvt-yt", icon: <CodeOutlined />, label: "yaml-toml" },
+      { key: "cvt", icon: <SyncOutlined />, label: "Convertor" },
+      { key: "fmt", icon: <FormatPainterOutlined />, label: "Formater" },
     ],
   },
   {
-    groupTitle: "Formatters",
-    items: [
-      { key: "fmt-j", icon: <FileOutlined />, label: "json" },
-      { key: "fmt-y", icon: <FileTextOutlined />, label: "yaml" },
-      { key: "fmt-t", icon: <CodeOutlined />, label: "toml" },
-      { key: "fmt-h", icon: <FileTextOutlined />, label: "html" },
-    ],
-  },
-  {
+    key: "generators", // Unique key for grouping
     groupTitle: "Generators",
-    items: [{ key: "gen-json-svg", icon: <DiffOutlined />, label: "json-svg" }],
+    items: [
+      { key: "data-view", icon: <DotChartOutlined />, label: "Data Viewer" },
+    ],
   },
   {
+    key: "text", // Unique key for grouping
     groupTitle: "Text",
-    items: [{ key: "diff", icon: <DiffOutlined />, label: "diff" }],
+    items: [{ key: "diff", icon: <DiffOutlined />, label: "Differ" }],
   },
 ];
 
@@ -73,29 +61,17 @@ const App = () => {
               onClick={handleMenuClick}
               style={{ height: "100%", borderRight: 0, textAlign: "left" }}
             >
-              {menuItems.map((group, index) =>
+              {menuItems.map((group) =>
                 group.items ? (
-                  <Menu.ItemGroup
-                    key={index}
-                    title={group.groupTitle}
-                    style={{ textAlign: "left" }}
-                  >
+                  <Menu.ItemGroup key={group.key} title={group.groupTitle}>
                     {group.items.map((item) => (
-                      <Menu.Item
-                        key={item.key}
-                        icon={item.icon}
-                        style={{ textAlign: "left" }}
-                      >
+                      <Menu.Item key={item.key} icon={item.icon}>
                         {item.label}
                       </Menu.Item>
                     ))}
                   </Menu.ItemGroup>
                 ) : (
-                  <Menu.Item
-                    key={group.key}
-                    icon={group.icon}
-                    style={{ textAlign: "left" }}
-                  >
+                  <Menu.Item key={group.key} icon={group.icon}>
                     {group.label}
                   </Menu.Item>
                 )
@@ -103,17 +79,12 @@ const App = () => {
             </Menu>
           </Sider>
           <Layout>
-            <Content style={{ paddingTop: 15 }}>
+            <Content style={{ padding: 15 }}>
               {selectedKey === "home" && <Home />}
-              {selectedKey === "cvt-jy" && <JsonYamlConverter />}
-              {selectedKey === "cvt-jt" && <JsonTomlConverter />}
-              {selectedKey === "cvt-yt" && <YamlTomlConverter />}
-              {selectedKey === "fmt-j" && <JsonFormatter />}
-              {selectedKey === "fmt-y" && <YamlFormatter />}
-              {selectedKey === "fmt-t" && <TomlFormatter />}
-              {selectedKey === "fmt-h" && <HtmlFormatter />}
+              {selectedKey === "cvt" && <Converter />}
+              {selectedKey === "fmt" && <Formatter />}
               {selectedKey === "diff" && <TextDiffer />}
-              {selectedKey === "gen-json-svg" && <JsonSvgViewer />}
+              {selectedKey === "data-view" && <DataViewer />}
             </Content>
           </Layout>
         </Layout>

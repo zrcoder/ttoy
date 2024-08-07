@@ -72,6 +72,14 @@ func (a *App) GenJsonSvg(input string) (string, error) {
 	return a.regularSvgData(a.transform([]byte(input), generator.Json2Svg))
 }
 
+func (a *App) GenYamlSvg(input string) (string, error) {
+	return a.regularSvgData(a.transform([]byte(input), generator.Yaml2Svg))
+}
+
+func (a *App) GenTomlSvg(input string) (string, error) {
+	return a.regularSvgData(a.transform([]byte(input), generator.Tomal2Svg))
+}
+
 func (a *App) regularSvgData(input string, err error) (string, error) {
 	return "data:image/svg+xml;base64," + base64.StdEncoding.EncodeToString([]byte(input)), err
 }

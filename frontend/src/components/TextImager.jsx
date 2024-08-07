@@ -3,14 +3,14 @@ import { Button, Col, Row, Spin } from "antd";
 import Editor from "./Editor";
 import { App as AntdApp } from "antd";
 
-const TextImageGenerator = ({
-  editorLabel,
-  imageLabel,
-  editorLanguage,
+const TextImager = ({
+  langs = [],
   editorContent,
-  onEditorChange,
-  generator, // Function to generate image based on text
-  buttonLabel = "Generate",
+  onTextChange,
+  imageGenerator, // Function to generate image based on text
+  buttonLabel = "Generate→",
+  lang,
+  onLangChange,
 }) => {
   const { modal } = AntdApp.useApp();
   const [text, setText] = useState(editorContent || "");
@@ -20,15 +20,14 @@ const TextImageGenerator = ({
 
   const handleTextChange = (value) => {
     setText(value || "");
-    if (onEditorChange) onEditorChange(value || "");
+    if (onTextChange) onTextChange(value || "");
   };
 
   const handleButtonClick = () => {
-    setLoading(true); // Start loading indicator
+    setLoading(true);
     setImage(null);
-
-    if (generator) {
-      generator(text)
+    if (imageGenerator) {
+      imageGenerator(text)
         .then((res) => {
           setImage(res);
         })
@@ -46,7 +45,7 @@ const TextImageGenerator = ({
   return (
     <div
       style={{
-        padding: "20px",
+        padding: "10px",
         height: "calc(100vh - 40px)",
         boxSizing: "border-box",
       }}
@@ -56,12 +55,11 @@ const TextImageGenerator = ({
           <div
             style={{ height: "100%", display: "flex", flexDirection: "column" }}
           >
-            <div style={{ padding: "8px", borderBottom: "1px solid #d9d9d9" }}>
-              <h4 style={{ margin: 0 }}>{editorLabel}</h4>
-            </div>
             <Editor
               height="calc(100% - 32px)" // Adjust height based on the label
-              language={editorLanguage}
+              language={lang}
+              languages={langs}
+              onLanguageChange={onLangChange}
               value={text}
               onChange={handleTextChange}
               editorDidMount={(editor) => (editorRef.current = editor)}
@@ -72,9 +70,6 @@ const TextImageGenerator = ({
           <div
             style={{ height: "100%", display: "flex", flexDirection: "column" }}
           >
-            <div style={{ padding: "8px", borderBottom: "1px solid #d9d9d9" }}>
-              <h4 style={{ margin: 0 }}>{imageLabel}</h4>
-            </div>
             <div
               style={{
                 height: "calc(100% - 32px)",
@@ -132,4 +127,4 @@ const TextImageGenerator = ({
   );
 };
 
-export default TextImageGenerator;
+export default TextImager;
