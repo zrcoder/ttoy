@@ -55,38 +55,26 @@ const DualEditor = ({
     >
       <Row gutter={8} style={{ height: "calc(100% - 40px)", margin: 0 }}>
         <Col span={12} style={{ paddingRight: "8px", height: "100%" }}>
-          <div
-            style={{ height: "100%", display: "flex", flexDirection: "column" }}
-          >
-            <div style={{ padding: "8px", borderBottom: "1px solid #d9d9d9" }}>
-              <h4 style={{ margin: 0 }}>{leftLabel}</h4>
-            </div>
-            <Editor
-              height="calc(100% - 32px)" // Adjust height based on the label
-              readOnly={leftReadOnly}
-              language={leftLanguage}
-              value={leftValue}
-              onChange={handleLeftChange}
-              editorDidMount={(editor) => (leftEditorRef.current = editor)}
-            />
-          </div>
+          <Editor
+            height="calc(100% - 32px)"
+            readOnly={leftReadOnly}
+            language={leftLanguage}
+            value={leftValue}
+            onChange={handleLeftChange}
+            editorDidMount={(editor) => (leftEditorRef.current = editor)}
+            label={leftLabel}
+          />
         </Col>
         <Col span={12} style={{ paddingLeft: "8px", height: "100%" }}>
-          <div
-            style={{ height: "100%", display: "flex", flexDirection: "column" }}
-          >
-            <div style={{ padding: "8px", borderBottom: "1px solid #d9d9d9" }}>
-              <h4 style={{ margin: 0 }}>{rightLabel}</h4>
-            </div>
-            <Editor
-              height="calc(100% - 32px)" // Adjust height based on the label
-              language={rightLanguage}
-              readOnly={rightReadOnly}
-              value={rightValue}
-              onChange={handleRightChange}
-              editorDidMount={(editor) => (rightEditorRef.current = editor)}
-            />
-          </div>
+          <Editor
+            height="calc(100% - 32px)"
+            language={rightLanguage}
+            readOnly={rightReadOnly}
+            value={rightValue}
+            onChange={handleRightChange}
+            editorDidMount={(editor) => (rightEditorRef.current = editor)}
+            label={rightLabel}
+          />
         </Col>
       </Row>
       <div style={{ textAlign: "center", marginTop: "16px" }}>
