@@ -61,7 +61,7 @@ func encodeOrDecode(encode bool) {
 		url = string(Input)
 	}
 	if encode {
-		encoder.EncodeUrl(url)
+		encoder.EncodeUrlCli(url)
 	} else {
 		encoder.DecodeUrl(url)
 	}

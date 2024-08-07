@@ -21,7 +21,12 @@ func DecodeHtml(input []byte) {
 	util.Show([]byte(res))
 }
 
-func EncodeUrl(input string) {
+func EncodeUrl(input []byte) (*bytes.Buffer, error) {
+	res := url.QueryEscape(string(input))
+	return bytes.NewBufferString(res), nil
+}
+
+func EncodeUrlCli(input string) {
 	res := url.QueryEscape(input)
 	util.Show([]byte(res))
 }

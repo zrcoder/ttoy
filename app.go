@@ -3,9 +3,11 @@ package main
 import (
 	"bytes"
 	"context"
+	"encoding/base64"
 
 	"github.com/zrcoder/ttoy/pkg/converter"
 	"github.com/zrcoder/ttoy/pkg/formatter"
+	"github.com/zrcoder/ttoy/pkg/generator"
 )
 
 // App struct
@@ -64,6 +66,14 @@ func (a *App) FormatToml(input string) (string, error) {
 
 func (a *App) FormatHtml(input string) (string, error) {
 	return a.transform([]byte(input), formatter.Html)
+}
+
+func (a *App) GenJsonSvg(input string) (string, error) {
+	return a.regularSvgData(a.transform([]byte(input), generator.Json2Svg))
+}
+
+func (a *App) regularSvgData(input string, err error) (string, error) {
+	return "data:image/svg+xml;base64," + base64.StdEncoding.EncodeToString([]byte(input)), err
 }
 
 func (a *App) transform(input []byte, transformer Transformer) (string, error) {

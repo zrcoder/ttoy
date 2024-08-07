@@ -74,14 +74,19 @@ func Json2Struct(input []byte) {
 	util.Show(out)
 }
 
-func Json2Svg(inputJson []byte) {
+func Json2Svg(data []byte) (*bytes.Buffer, error) {
 	c := cdor.Ctx()
-	c.Json(string(inputJson))
+	c.Json(string(data))
 	data, err := c.Gen()
+	return bytes.NewBuffer(data), err
+}
+
+func Json2SvgCli(inputJson []byte) {
+	buf, err := Json2Svg(inputJson)
 	if err != nil {
 		util.ShowFatal(err)
 	}
-	util.Show(data)
+	util.Show(buf.Bytes())
 }
 
 func Uuid(input []byte) {

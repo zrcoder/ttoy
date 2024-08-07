@@ -34,7 +34,7 @@ var svgCmd = &cobra.Command{
 	Short: "generate svg graph for json",
 	Long:  "generate svg graph for json, see https://github.com/zrcoder/cdor",
 	Run: func(cmd *cobra.Command, args []string) {
-		generator.Json2Svg(Input)
+		generator.Json2SvgCli(Input)
 	},
 }
 

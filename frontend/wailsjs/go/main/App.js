@@ -41,3 +41,7 @@ export function FormatToml(arg1) {
 export function FormatYaml(arg1) {
   return window['go']['main']['App']['FormatYaml'](arg1);
 }
+
+export function GenJsonSvg(arg1) {
+  return window['go']['main']['App']['GenJsonSvg'](arg1);
+}

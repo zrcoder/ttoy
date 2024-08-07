@@ -20,3 +20,5 @@ export function FormatJson(arg1:string):Promise<string>;
 export function FormatToml(arg1:string):Promise<string>;
 
 export function FormatYaml(arg1:string):Promise<string>;
+
+export function GenJsonSvg(arg1:string):Promise<string>;

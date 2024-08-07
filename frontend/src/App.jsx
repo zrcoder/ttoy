@@ -19,8 +19,42 @@ import YamlFormatter from "./components/YamlFormatter";
 import TomlFormatter from "./components/TomlFormatter";
 import HtmlFormatter from "./components/HtmlFormatter";
 import TextDiffer from "./components/TextDiffer";
+import JsonSvgViewer from "./components/JsonSvgViewr";
 
 const { Sider, Content } = Layout;
+
+const menuItems = [
+  {
+    key: "home",
+    icon: <ToolOutlined />,
+    label: "TToy",
+  },
+  {
+    groupTitle: "Converters",
+    items: [
+      { key: "cvt-jy", icon: <SwapOutlined />, label: "json-yaml" },
+      { key: "cvt-jt", icon: <AppstoreAddOutlined />, label: "json-toml" },
+      { key: "cvt-yt", icon: <CodeOutlined />, label: "yaml-toml" },
+    ],
+  },
+  {
+    groupTitle: "Formatters",
+    items: [
+      { key: "fmt-j", icon: <FileOutlined />, label: "json" },
+      { key: "fmt-y", icon: <FileTextOutlined />, label: "yaml" },
+      { key: "fmt-t", icon: <CodeOutlined />, label: "toml" },
+      { key: "fmt-h", icon: <FileTextOutlined />, label: "html" },
+    ],
+  },
+  {
+    groupTitle: "Generators",
+    items: [{ key: "gen-json-svg", icon: <DiffOutlined />, label: "json-svg" }],
+  },
+  {
+    groupTitle: "Text",
+    items: [{ key: "diff", icon: <DiffOutlined />, label: "diff" }],
+  },
+];
 
 const App = () => {
   const [selectedKey, setSelectedKey] = useState("home");
@@ -39,72 +73,33 @@ const App = () => {
               onClick={handleMenuClick}
               style={{ height: "100%", borderRight: 0, textAlign: "left" }}
             >
-              <Menu.Item
-                key="home"
-                icon={<ToolOutlined />}
-                style={{ textAlign: "left" }}
-              >
-                TToy
-              </Menu.Item>
-
-              <Menu.ItemGroup title="Converters" style={{ textAlign: "left" }}>
-                <Menu.Item
-                  key="cvt-jy"
-                  icon={<SwapOutlined />}
-                  style={{ textAlign: "left" }}
-                >
-                  json-yaml
-                </Menu.Item>
-                <Menu.Item
-                  key="cvt-jt"
-                  icon={<AppstoreAddOutlined />}
-                  style={{ textAlign: "left" }}
-                >
-                  json-toml
-                </Menu.Item>
-                <Menu.Item
-                  key="cvt-yt"
-                  icon={<CodeOutlined />}
-                  style={{ textAlign: "left" }}
-                >
-                  yaml-toml
-                </Menu.Item>
-              </Menu.ItemGroup>
-
-              <Menu.ItemGroup title="Formatters" style={{ textAlign: "left" }}>
-                <Menu.Item
-                  key="fmt-j"
-                  icon={<FileOutlined />}
-                  style={{ textAlign: "left" }}
-                >
-                  json
-                </Menu.Item>
-                <Menu.Item
-                  key="fmt-y"
-                  icon={<FileTextOutlined />}
-                  style={{ textAlign: "left" }}
-                >
-                  yaml
-                </Menu.Item>
-                <Menu.Item
-                  key="fmt-t"
-                  icon={<CodeOutlined />}
-                  style={{ textAlign: "left" }}
-                >
-                  toml
-                </Menu.Item>
-                <Menu.Item key="fmt-h" icon={<FileTextOutlined />}>
-                  html
-                </Menu.Item>
-              </Menu.ItemGroup>
-              <Menu.ItemGroup title="Generators" style={{ textAlign: "left" }}>
-                <Menu.Item key="==" icon={<DiffOutlined />}></Menu.Item>
-              </Menu.ItemGroup>
-              <Menu.ItemGroup title="Text" style={{ textAlign: "left" }}>
-                <Menu.Item key="diff" icon={<DiffOutlined />}>
-                  diff
-                </Menu.Item>
-              </Menu.ItemGroup>
+              {menuItems.map((group, index) =>
+                group.items ? (
+                  <Menu.ItemGroup
+                    key={index}
+                    title={group.groupTitle}
+                    style={{ textAlign: "left" }}
+                  >
+                    {group.items.map((item) => (
+                      <Menu.Item
+                        key={item.key}
+                        icon={item.icon}
+                        style={{ textAlign: "left" }}
+                      >
+                        {item.label}
+                      </Menu.Item>
+                    ))}
+                  </Menu.ItemGroup>
+                ) : (
+                  <Menu.Item
+                    key={group.key}
+                    icon={group.icon}
+                    style={{ textAlign: "left" }}
+                  >
+                    {group.label}
+                  </Menu.Item>
+                )
+              )}
             </Menu>
           </Sider>
           <Layout>
@@ -118,6 +113,7 @@ const App = () => {
               {selectedKey === "fmt-t" && <TomlFormatter />}
               {selectedKey === "fmt-h" && <HtmlFormatter />}
               {selectedKey === "diff" && <TextDiffer />}
+              {selectedKey === "gen-json-svg" && <JsonSvgViewer />}
             </Content>
           </Layout>
         </Layout>
