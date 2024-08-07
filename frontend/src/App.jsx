@@ -6,6 +6,9 @@ import {
   FileOutlined,
   FileTextOutlined,
   CodeOutlined,
+  DiffOutlined,
+  SwapOutlined,
+  AppstoreAddOutlined,
 } from "@ant-design/icons";
 import Home from "./components/Home";
 import JsonYamlConverter from "./components/JsonYamlConverter";
@@ -15,6 +18,7 @@ import JsonFormatter from "./components/JsonFormatter";
 import YamlFormatter from "./components/YamlFormatter";
 import TomlFormatter from "./components/TomlFormatter";
 import HtmlFormatter from "./components/HtmlFormatter";
+import TextDiffer from "./components/TextDiffer";
 
 const { Sider, Content } = Layout;
 
@@ -46,37 +50,24 @@ const App = () => {
               <Menu.ItemGroup title="Converters" style={{ textAlign: "left" }}>
                 <Menu.Item
                   key="cvt-jy"
-                  icon={<FileOutlined />}
+                  icon={<SwapOutlined />}
                   style={{ textAlign: "left" }}
                 >
-                  json - yaml
+                  json-yaml
                 </Menu.Item>
                 <Menu.Item
                   key="cvt-jt"
-                  icon={<FileTextOutlined />}
+                  icon={<AppstoreAddOutlined />}
                   style={{ textAlign: "left" }}
                 >
-                  json - toml
+                  json-toml
                 </Menu.Item>
                 <Menu.Item
                   key="cvt-yt"
                   icon={<CodeOutlined />}
                   style={{ textAlign: "left" }}
                 >
-                  yaml - toml
-                </Menu.Item>
-              </Menu.ItemGroup>
-
-              <Menu.ItemGroup
-                title="Encoders/Decoders"
-                style={{ textAlign: "left" }}
-              >
-                <Menu.Item
-                  key="documents"
-                  icon={<FileOutlined />}
-                  style={{ textAlign: "left" }}
-                >
-                  Documents
+                  yaml-toml
                 </Menu.Item>
               </Menu.ItemGroup>
 
@@ -106,6 +97,14 @@ const App = () => {
                   html
                 </Menu.Item>
               </Menu.ItemGroup>
+              <Menu.ItemGroup title="Generators" style={{ textAlign: "left" }}>
+                <Menu.Item key="==" icon={<DiffOutlined />}></Menu.Item>
+              </Menu.ItemGroup>
+              <Menu.ItemGroup title="Text" style={{ textAlign: "left" }}>
+                <Menu.Item key="diff" icon={<DiffOutlined />}>
+                  diff
+                </Menu.Item>
+              </Menu.ItemGroup>
             </Menu>
           </Sider>
           <Layout>
@@ -118,6 +117,7 @@ const App = () => {
               {selectedKey === "fmt-y" && <YamlFormatter />}
               {selectedKey === "fmt-t" && <TomlFormatter />}
               {selectedKey === "fmt-h" && <HtmlFormatter />}
+              {selectedKey === "diff" && <TextDiffer />}
             </Content>
           </Layout>
         </Layout>

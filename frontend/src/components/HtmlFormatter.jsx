@@ -1,16 +1,16 @@
 import DualEditor from "./DualEditor";
 import { FormatHtml } from "../../wailsjs/go/main/App";
-import useTransformAction from "./useTransform";
+import { useTransformer } from "./util";
 
 const HtmlFormatter = () => {
-  const transformAction = useTransformAction();
+  const transform = useTransformer();
   const handleButtonAction = (
     leftValue,
     rightValue,
     setLeftValue,
     setRightValue
   ) => {
-    transformAction(leftValue, FormatHtml, setRightValue);
+    transform(leftValue, FormatHtml, setRightValue);
   };
   return (
     <DualEditor

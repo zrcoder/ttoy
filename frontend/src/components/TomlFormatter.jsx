@@ -1,16 +1,16 @@
 import DualEditor from "./DualEditor";
 import { FormatToml } from "../../wailsjs/go/main/App";
-import useTransformAction from "./useTransform";
+import { useTransformer } from "./util";
 
 const TomlFormatter = () => {
-  const transformAction = useTransformAction();
+  const transform = useTransformer();
   const handleButtonAction = (
     leftValue,
     rightValue,
     setLeftValue,
     setRightValue
   ) => {
-    transformAction(leftValue, FormatToml, setRightValue);
+    transform(leftValue, FormatToml, setRightValue);
   };
   return (
     <DualEditor
