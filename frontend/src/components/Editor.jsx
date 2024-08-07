@@ -13,12 +13,12 @@ const Editor = ({
     if (editorDidMount) {
       editorDidMount(editor, monaco);
     }
-    // 确保 readOnly 选项被正确应用
     editor.updateOptions({ readOnly: readOnly });
   };
 
   return (
     <MonacoEditor
+      loading={null} // 去掉默认的 loading 文字
       height={height}
       language={language}
       value={value}
@@ -31,7 +31,7 @@ const Editor = ({
         renderWhitespace: "none",
         renderControlCharacters: false,
         overviewRulerLanes: 0,
-        readOnly: readOnly, // 将 readOnly 传递到 options 中
+        readOnly: readOnly,
       }}
       editorDidMount={handleEditorDidMount}
     />

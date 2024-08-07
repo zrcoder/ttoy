@@ -23,7 +23,6 @@ const DualEditor = ({
   const leftEditorRef = useRef(null);
   const rightEditorRef = useRef(null);
 
-  // Handle editor content changes
   const handleLeftChange = (value) => {
     setLeftValue(value || "");
     if (onLeftChange) onLeftChange(value || "");
@@ -47,72 +46,67 @@ const DualEditor = ({
   };
 
   return (
-    <Row
+    <div
       style={{
         padding: "20px",
         height: "calc(100vh - 40px)",
+        boxSizing: "border-box",
       }}
     >
-      <Col
-        span={11}
-        style={{ paddingRight: "8px", height: "100%", border: "none" }}
-      >
-        <div
-          style={{
-            height: "100%",
-            textAlign: "left",
-          }}
-        >
-          <h4>{leftLabel}</h4>
-          <Editor
-            height="calc(100% - 32px)" // Subtract the height of the label
-            readOnly={leftReadOnly}
-            language={leftLanguage}
-            value={leftValue}
-            onChange={handleLeftChange}
-            editorDidMount={(editor) => (leftEditorRef.current = editor)}
-          />
-        </div>
-      </Col>
-      <Col span={2} style={{ textAlign: "center", height: "100%" }}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            height: "100%",
-          }}
-        >
-          {firstButtonLabel && (
-            <Button
-              type="primary"
-              onClick={handleFirstButtonClick}
-              style={{ marginBottom: "8px" }}
-            >
-              {firstButtonLabel}
-            </Button>
-          )}
-          {secondButtonLabel && (
-            <Button type="default" onClick={handleSecondButtonClick}>
-              {secondButtonLabel}
-            </Button>
-          )}
-        </div>
-      </Col>
-      <Col span={11} style={{ paddingLeft: "8px", height: "100%" }}>
-        <div style={{ height: "100%", textAlign: "left" }}>
-          <h4>{rightLabel}</h4>
-          <Editor
-            height="calc(100% - 32px)"
-            language={rightLanguage}
-            readOnly={rightReadOnly}
-            value={rightValue}
-            onChange={handleRightChange}
-            editorDidMount={(editor) => (rightEditorRef.current = editor)}
-          />
-        </div>
-      </Col>
-    </Row>
+      <Row gutter={8} style={{ height: "calc(100% - 40px)", margin: 0 }}>
+        <Col span={12} style={{ paddingRight: "8px", height: "100%" }}>
+          <div
+            style={{ height: "100%", display: "flex", flexDirection: "column" }}
+          >
+            <div style={{ padding: "8px", borderBottom: "1px solid #d9d9d9" }}>
+              <h4 style={{ margin: 0 }}>{leftLabel}</h4>
+            </div>
+            <Editor
+              height="calc(100% - 32px)" // Adjust height based on the label
+              readOnly={leftReadOnly}
+              language={leftLanguage}
+              value={leftValue}
+              onChange={handleLeftChange}
+              editorDidMount={(editor) => (leftEditorRef.current = editor)}
+            />
+          </div>
+        </Col>
+        <Col span={12} style={{ paddingLeft: "8px", height: "100%" }}>
+          <div
+            style={{ height: "100%", display: "flex", flexDirection: "column" }}
+          >
+            <div style={{ padding: "8px", borderBottom: "1px solid #d9d9d9" }}>
+              <h4 style={{ margin: 0 }}>{rightLabel}</h4>
+            </div>
+            <Editor
+              height="calc(100% - 32px)" // Adjust height based on the label
+              language={rightLanguage}
+              readOnly={rightReadOnly}
+              value={rightValue}
+              onChange={handleRightChange}
+              editorDidMount={(editor) => (rightEditorRef.current = editor)}
+            />
+          </div>
+        </Col>
+      </Row>
+      <div style={{ textAlign: "center", marginTop: "16px" }}>
+        {firstButtonLabel && (
+          <Button
+            type="primary"
+            onClick={handleFirstButtonClick}
+            style={{ marginRight: "8px" }}
+          >
+            {firstButtonLabel}
+          </Button>
+        )}
+        {secondButtonLabel && (
+          <Button type="default" onClick={handleSecondButtonClick}>
+            {secondButtonLabel}
+          </Button>
+        )}
+      </div>
+    </div>
   );
 };
+
 export default DualEditor;
