@@ -6,53 +6,53 @@
 import { Call as $Call, CancellablePromise as $CancellablePromise } from "@wailsio/runtime";
 
 export function ConvertJsonToToml(input: string): $CancellablePromise<string> {
-    return $Call.ByID(2837957667, input);
+    return $Call.ByID(3281720831, input);
 }
 
 export function ConvertJsonToYaml(input: string): $CancellablePromise<string> {
-    return $Call.ByID(2488354344, input);
+    return $Call.ByID(26539236, input);
 }
 
 export function ConvertTomlToJson(input: string): $CancellablePromise<string> {
-    return $Call.ByID(1662259047, input);
+    return $Call.ByID(1665751091, input);
 }
 
 export function ConvertTomlToYaml(input: string): $CancellablePromise<string> {
-    return $Call.ByID(2293362114, input);
+    return $Call.ByID(2870091790, input);
 }
 
 export function ConvertYamlToJson(input: string): $CancellablePromise<string> {
-    return $Call.ByID(3002591812, input);
+    return $Call.ByID(1979229024, input);
 }
 
 export function ConvertYamlToToml(input: string): $CancellablePromise<string> {
-    return $Call.ByID(23634670, input);
+    return $Call.ByID(1501076266, input);
 }
 
 export function FormatHtml(input: string): $CancellablePromise<string> {
-    return $Call.ByID(2936911431, input);
+    return $Call.ByID(2635587483, input);
 }
 
 export function FormatJson(input: string): $CancellablePromise<string> {
-    return $Call.ByID(1329261636, input);
+    return $Call.ByID(3593956704, input);
 }
 
 export function FormatToml(input: string): $CancellablePromise<string> {
-    return $Call.ByID(2645271790, input);
+    return $Call.ByID(3115803946, input);
 }
 
 export function FormatYaml(input: string): $CancellablePromise<string> {
-    return $Call.ByID(422456457, input);
+    return $Call.ByID(2077588421, input);
 }
 
 export function GenJsonSvg(input: string): $CancellablePromise<string> {
-    return $Call.ByID(760749191, input);
+    return $Call.ByID(1376781579, input);
 }
 
 export function GenTomlSvg(input: string): $CancellablePromise<string> {
-    return $Call.ByID(122256601, input);
+    return $Call.ByID(3358813901, input);
 }
 
 export function GenYamlSvg(input: string): $CancellablePromise<string> {
-    return $Call.ByID(2197162996, input);
+    return $Call.ByID(3440321640, input);
 }

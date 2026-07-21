@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import TextImager from "./TextImager";
-import { GenJsonSvg, GenTomlSvg, GenYamlSvg } from "../../bindings/github.com/zrcoder/ttoy/app";
+import { GenJsonSvg, GenTomlSvg, GenYamlSvg } from "../../bindings/github.com/zrcoder/ttoy/service/service";
 
 const DataViewer = () => {
   const [lang, setLang] = useState("json");

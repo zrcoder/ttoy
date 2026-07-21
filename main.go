@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/wailsapp/wails/v3/pkg/application"
+	"github.com/zrcoder/ttoy/service"
 )
 
 //go:embed all:frontend/dist
@@ -15,7 +16,7 @@ func main() {
 		Name:        "TToy",
 		Description: "A smart APP contains dev tools",
 		Services: []application.Service{
-			application.NewService(NewApp()),
+			application.NewService(service.New()),
 		},
 		Assets: application.AssetOptions{
 			Handler: application.AssetFileServerFS(assets),
@@ -23,11 +24,11 @@ func main() {
 	})
 
 	app.Window.NewWithOptions(application.WebviewWindowOptions{
-		Title:  "TToy",
-		Width:  1536,
-		Height: 1024,
+		Title:            "TToy",
+		Width:            1536,
+		Height:           1024,
 		BackgroundColour: application.NewRGB(27, 38, 54),
-		URL:    "/",
+		URL:              "/",
 	})
 
 	log.Fatal(app.Run())

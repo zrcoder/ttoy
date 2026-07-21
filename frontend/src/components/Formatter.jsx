@@ -4,7 +4,7 @@ import {
   FormatJson,
   FormatToml,
   FormatYaml,
-} from "../../bindings/github.com/zrcoder/ttoy/app";
+} from "../../bindings/github.com/zrcoder/ttoy/service/service";
 import { useTransformer } from "./util";
 import { useState } from "react";
 
