@@ -9,8 +9,6 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/sergi/go-diff v1.4.0
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
-	github.com/spf13/cobra v1.10.2
-	github.com/spf13/pflag v1.0.10
 	github.com/tuotoo/qrcode v0.0.0-20220425170535-52ccc2bebf5d
 	github.com/wailsapp/wails/v3 v3.0.0-alpha2.117
 	github.com/yosssi/gohtml v0.0.0-20201013000340-ee4748c638f4
@@ -50,7 +48,6 @@ require (
 	github.com/goplus/mod v0.20.2 // indirect
 	github.com/goplus/reflectx v1.6.4 // indirect
 	github.com/goplus/xgo v1.7.2-0.20260414235301-df19f4a1b7c2 // indirect
-	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jchv/go-winloader v0.0.0-20250406163304-c1995be93bd1 // indirect
 	github.com/lucasb-eyer/go-colorful v1.3.0 // indirect
 	github.com/maruel/rs v1.1.0 // indirect
