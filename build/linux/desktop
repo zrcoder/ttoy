@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Name=TToy
+Comment=A tempproject application
+# The Exec line includes %u to pass the URL to the application
+Exec=/usr/local/bin/tempproject %u
+Terminal=false
+Type=Application
+Icon=tempproject
+Categories=Utility;
+StartupWMClass=tempproject

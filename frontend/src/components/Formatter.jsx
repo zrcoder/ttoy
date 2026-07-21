@@ -4,7 +4,7 @@ import {
   FormatJson,
   FormatToml,
   FormatYaml,
-} from "../../wailsjs/go/main/App";
+} from "../../bindings/github.com/zrcoder/ttoy/app";
 import { useTransformer } from "./util";
 import { useState } from "react";
 

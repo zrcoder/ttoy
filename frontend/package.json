@@ -5,12 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build --mode production",
+    "build:dev": "vite build --minify false --mode development",
     "preview": "vite preview"
   },
   "dependencies": {
     "@ant-design/icons": "^5.4.0",
     "@monaco-editor/react": "^4.6.0",
+    "@wailsio/runtime": "latest",
     "antd": "^5.20.0",
     "monaco-editor": "^0.50.0",
     "react": "^18.2.0",

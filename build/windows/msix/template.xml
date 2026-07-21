@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MsixPackagingToolTemplate
+    xmlns="http://schemas.microsoft.com/msix/packaging/msixpackagingtool/template/2022">
+    <Settings
+        AllowTelemetry="false"
+        ApplyACLsToPackageFiles="true"
+        GenerateCommandLineFile="true"
+        AllowPromptForPassword="false">
+    </Settings>
+    <Installer
+        Path="tempproject"
+        Arguments=""
+        InstallLocation="C:\Program Files\Rdor\TToy">
+    </Installer>
+    <PackageInformation
+        PackageName="TToy"
+        PackageDisplayName="TToy"
+        PublisherName="CN=Rdor"
+        PublisherDisplayName="Rdor"
+        Version="0.1.0.0"
+        PackageDescription="A tempproject application">
+        <Capabilities>
+            <Capability Name="runFullTrust" />
+
+        </Capabilities>
+        <Applications>
+            <Application
+                Id="edu.io.tempproject"
+                Description="A tempproject application"
+                DisplayName="TToy"
+                ExecutableName="tempproject"
+                EntryPoint="Windows.FullTrustApplication">
+
+            </Application>
+        </Applications>
+        <Resources>
+            <Resource Language="en-us" />
+        </Resources>
+        <Dependencies>
+            <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
+        </Dependencies>
+        <Properties>
+            <Framework>false</Framework>
+            <DisplayName>TToy</DisplayName>
+            <PublisherDisplayName>Rdor</PublisherDisplayName>
+            <Description>A tempproject application</Description>
+            <Logo>Assets\AppIcon.png</Logo>
+        </Properties>
+    </PackageInformation>
+    <SaveLocation PackagePath="tempproject.msix" />
+    <PackageIntegrity>
+        <CertificatePath></CertificatePath>
+    </PackageIntegrity>
+</MsixPackagingToolTemplate>

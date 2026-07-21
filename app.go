@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"context"
 	"encoding/base64"
 
 	"github.com/zrcoder/ttoy/pkg/converter"
@@ -10,23 +9,13 @@ import (
 	"github.com/zrcoder/ttoy/pkg/generator"
 )
 
-// App struct
-type App struct {
-	ctx context.Context
-}
+type App struct{}
 
-// NewApp creates a new App application struct
 func NewApp() *App {
 	return &App{}
 }
 
 type Transformer = func([]byte) (*bytes.Buffer, error)
-
-// startup is called when the app starts. The context is saved
-// so we can call the runtime methods
-func (a *App) startup(ctx context.Context) {
-	a.ctx = ctx
-}
 
 func (a *App) ConvertJsonToYaml(input string) (string, error) {
 	return a.transform([]byte(input), converter.Json2Yaml)
