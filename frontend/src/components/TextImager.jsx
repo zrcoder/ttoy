@@ -61,7 +61,7 @@ const TextImager = ({
               languages={langs}
               onLanguageChange={onLangChange}
               value={text}
-              onChange={handleTextChange}
+              onTextChange={handleTextChange}
               editorDidMount={(editor) => (editorRef.current = editor)}
             />
           </div>
