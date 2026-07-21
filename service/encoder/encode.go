@@ -8,7 +8,7 @@ import (
 
 	decqr "github.com/tuotoo/qrcode"
 
-	"github.com/zrcoder/ttoy/pkg/util"
+	"github.com/zrcoder/ttoy/service/util"
 )
 
 func EncodeHtml(input []byte) {

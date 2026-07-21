@@ -16,7 +16,7 @@ import (
 	"github.com/zrcoder/cdor"
 	ndor "github.com/zrcoder/ndor/pkg"
 
-	"github.com/zrcoder/ttoy/pkg/util"
+	"github.com/zrcoder/ttoy/service/util"
 )
 
 func Hash(input []byte) {

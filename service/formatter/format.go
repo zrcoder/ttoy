@@ -8,7 +8,7 @@ import (
 	"github.com/yosssi/gohtml"
 	"gopkg.in/yaml.v3"
 
-	"github.com/zrcoder/ttoy/pkg/util"
+	"github.com/zrcoder/ttoy/service/util"
 )
 
 func Html(data []byte) (*bytes.Buffer, error) {

@@ -7,7 +7,7 @@ import (
 	"github.com/BurntSushi/toml"
 	"gopkg.in/yaml.v3"
 
-	"github.com/zrcoder/ttoy/pkg/util"
+	"github.com/zrcoder/ttoy/service/util"
 )
 
 func Json2Toml(data []byte) (*bytes.Buffer, error) {

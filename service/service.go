@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"encoding/base64"
 
-	"github.com/zrcoder/ttoy/pkg/converter"
-	"github.com/zrcoder/ttoy/pkg/formatter"
-	"github.com/zrcoder/ttoy/pkg/generator"
+	"github.com/zrcoder/ttoy/service/converter"
+	"github.com/zrcoder/ttoy/service/formatter"
+	"github.com/zrcoder/ttoy/service/generator"
 )
 
 type Service struct{}

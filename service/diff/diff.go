@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/zrcoder/ttoy/pkg/util"
+	"github.com/zrcoder/ttoy/service/util"
 
 	lg "github.com/charmbracelet/lipgloss"
 	dmp "github.com/sergi/go-diff/diffmatchpatch"
