@@ -56,3 +56,7 @@ export function GenTomlSvg(input: string): $CancellablePromise<string> {
 export function GenYamlSvg(input: string): $CancellablePromise<string> {
     return $Call.ByID(3440321640, input);
 }
+
+export function JSONSort(input: string): $CancellablePromise<string> {
+    return $Call.ByID(2931548639, input);
+}

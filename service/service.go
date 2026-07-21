@@ -7,6 +7,7 @@ import (
 	"github.com/zrcoder/ttoy/service/converter"
 	"github.com/zrcoder/ttoy/service/formatter"
 	"github.com/zrcoder/ttoy/service/generator"
+	"github.com/zrcoder/ttoy/service/sort"
 )
 
 type Service struct{}
@@ -67,6 +68,10 @@ func (s *Service) GenYamlSvg(input string) (string, error) {
 
 func (s *Service) GenTomlSvg(input string) (string, error) {
 	return s.regularSvgData(s.transform([]byte(input), generator.Tomal2Svg))
+}
+
+func (s *Service) JSONSort(input string) (string, error) {
+	return sort.JSON(input)
 }
 
 func (s *Service) regularSvgData(input string, err error) (string, error) {

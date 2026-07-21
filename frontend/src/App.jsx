@@ -12,6 +12,7 @@ import Home from "./components/Home";
 import Converter from "./components/Converter";
 import Formatter from "./components/Formatter";
 import TextDiffer from "./components/TextDiffer";
+import JsonDiffer from "./components/JsonDiffer";
 import DataViewer from "./components/DataViewer";
 
 const { Sider, Content } = Layout;
@@ -40,7 +41,10 @@ const menuItems = [
   {
     key: "text", // Unique key for grouping
     groupTitle: "Text",
-    items: [{ key: "diff", icon: <DiffOutlined />, label: "Differ" }],
+    items: [
+      { key: "diff", icon: <DiffOutlined />, label: "Differ" },
+      { key: "json-diff", icon: <DiffOutlined />, label: "JSON Differ" },
+    ],
   },
 ];
 
@@ -84,6 +88,7 @@ const App = () => {
               {selectedKey === "cvt" && <Converter />}
               {selectedKey === "fmt" && <Formatter />}
               {selectedKey === "diff" && <TextDiffer />}
+              {selectedKey === "json-diff" && <JsonDiffer />}
               {selectedKey === "data-view" && <DataViewer />}
             </Content>
           </Layout>
