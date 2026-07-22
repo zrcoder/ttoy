@@ -11,6 +11,7 @@ const Editor = ({
   editorDidMount,
   languages,
   onLanguageChange,
+  hideLanguageSelector = false,
 }) => {
   const handleEditorDidMount = (editor, monaco) => {
     if (editorDidMount) {
@@ -26,6 +27,7 @@ const Editor = ({
           value={language}
           onChange={onLanguageChange}
           languages={languages}
+          hidden={hideLanguageSelector}
         />
       )}
       <MonacoEditor

@@ -29,6 +29,7 @@ const Formatter = () => {
       languages={["json", "yaml", "toml", "html"]}
       onLeftLangChange={(newValue) => setLang(newValue)}
       onRightLangChange={(newValue) => setLang(newValue)}
+      hideRightLangSelector={true}
     />
   );
 };

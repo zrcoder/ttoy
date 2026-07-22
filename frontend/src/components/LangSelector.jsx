@@ -1,9 +1,16 @@
 import React from "react";
 import { Radio } from "antd";
 
-const LangSelector = ({ value, onChange, languages }) => {
+const LangSelector = ({ value, onChange, languages, hidden }) => {
   return (
-    <div style={{ padding: "8px 0", display: "flex", alignItems: "center" }}>
+    <div
+      style={{
+        padding: "8px 0",
+        display: "flex",
+        alignItems: "center",
+        visibility: hidden ? "hidden" : "visible",
+      }}
+    >
       <Radio.Group
         value={value}
         onChange={(e) => onChange(e.target.value)}

@@ -14,6 +14,8 @@ const DualEditor = ({
   languages = [],
   onLeftLangChange,
   onRightLangChange,
+  hideLeftLangSelector = false,
+  hideRightLangSelector = false,
 }) => {
   const [leftValue, setLeftValue] = useState(leftContent || "");
   const [rightValue, setRightValue] = useState(rightContent || "");
@@ -55,6 +57,7 @@ const DualEditor = ({
             readOnly={false} // Always writable
             languages={languages} // Pass languages to Editor component
             onLanguageChange={onLeftLangChange}
+            hideLanguageSelector={hideLeftLangSelector}
           />
         </Col>
         <Col span={12} style={{ paddingLeft: "8px", height: "100%" }}>
@@ -67,6 +70,7 @@ const DualEditor = ({
             editorDidMount={(editor) => (rightEditorRef.current = editor)}
             readOnly={true} // Always read-only
             languages={languages} // Pass languages to Editor component
+            hideLanguageSelector={hideRightLangSelector}
           />
         </Col>
       </Row>
