@@ -1,6 +1,5 @@
 import React from "react";
 import { Editor as MonacoEditor } from "@monaco-editor/react";
-import LangSelector from "./LangSelector";
 
 const Editor = ({
   height,
@@ -9,9 +8,6 @@ const Editor = ({
   readOnly = false,
   onTextChange,
   editorDidMount,
-  languages,
-  onLanguageChange,
-  hideLanguageSelector = false,
 }) => {
   const handleEditorDidMount = (editor, monaco) => {
     if (editorDidMount) {
@@ -21,15 +17,7 @@ const Editor = ({
   };
 
   return (
-    <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      {languages && languages.length > 0 && (
-        <LangSelector
-          value={language}
-          onChange={onLanguageChange}
-          languages={languages}
-          hidden={hideLanguageSelector}
-        />
-      )}
+    <div style={{ height: "100%", display: "flex", flexDirection: "column", minHeight: "300px" }}>
       <MonacoEditor
         loading={null} // 去掉默认的 loading 文字
         height={height}

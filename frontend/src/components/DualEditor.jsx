@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
-import { Button, Col, Row } from "antd";
+import { Button } from "antd";
+import { RightOutlined, LeftOutlined } from "@ant-design/icons";
 import Editor from "./Editor";
 
 const DualEditor = ({
@@ -7,15 +8,10 @@ const DualEditor = ({
   rightLanguage,
   leftContent,
   rightContent,
-  onLeftChange,
-  onRightChange,
-  buttonLabel,
   buttonAction,
-  languages = [],
-  onLeftLangChange,
-  onRightLangChange,
-  hideLeftLangSelector = false,
-  hideRightLangSelector = false,
+  reverseButtonAction,
+  leftReadOnly = false,
+  rightReadOnly = true,
 }) => {
   const [leftValue, setLeftValue] = useState(leftContent || "");
   const [rightValue, setRightValue] = useState(rightContent || "");
@@ -24,12 +20,10 @@ const DualEditor = ({
 
   const handleLeftChange = (value) => {
     setLeftValue(value || "");
-    if (onLeftChange) onLeftChange(value || "");
   };
 
   const handleRightChange = (value) => {
     setRightValue(value || "");
-    if (onRightChange) onRightChange(value || "");
   };
 
   const handleButtonClick = () => {
@@ -38,52 +32,59 @@ const DualEditor = ({
     }
   };
 
+  const handleReverseButtonClick = () => {
+    if (reverseButtonAction) {
+      reverseButtonAction(leftValue, rightValue, setLeftValue, setRightValue);
+    }
+  };
+
   return (
     <div
       style={{
-        padding: "10px",
-        height: "calc(100vh - 40px)",
+        display: "flex",
+        height: "calc(100vh - 120px)",
+        alignItems: "stretch",
         boxSizing: "border-box",
       }}
     >
-      <Row gutter={8} style={{ height: "calc(100% - 40px)", margin: 0 }}>
-        <Col span={12} style={{ paddingRight: "8px", height: "100%" }}>
-          <Editor
-            height="calc(100% - 32px)"
-            language={leftLanguage}
-            value={leftValue}
-            onTextChange={handleLeftChange}
-            editorDidMount={(editor) => (leftEditorRef.current = editor)}
-            readOnly={false} // Always writable
-            languages={languages} // Pass languages to Editor component
-            onLanguageChange={onLeftLangChange}
-            hideLanguageSelector={hideLeftLangSelector}
-          />
-        </Col>
-        <Col span={12} style={{ paddingLeft: "8px", height: "100%" }}>
-          <Editor
-            height="calc(100% - 32px)"
-            language={rightLanguage}
-            value={rightValue}
-            onTextChange={handleRightChange}
-            onLanguageChange={onRightLangChange}
-            editorDidMount={(editor) => (rightEditorRef.current = editor)}
-            readOnly={true} // Always read-only
-            languages={languages} // Pass languages to Editor component
-            hideLanguageSelector={hideRightLangSelector}
-          />
-        </Col>
-      </Row>
-      <div style={{ textAlign: "center", marginTop: "16px" }}>
-        {buttonLabel && (
-          <Button
-            type="primary"
-            onClick={handleButtonClick}
-            style={{ marginRight: "8px" }}
-          >
-            {buttonLabel}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <Editor
+          height="100%"
+          language={leftLanguage}
+          value={leftValue}
+          onTextChange={handleLeftChange}
+          editorDidMount={(editor) => (leftEditorRef.current = editor)}
+          readOnly={leftReadOnly}
+        />
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "8px",
+          padding: "0 8px",
+        }}
+      >
+        <Button  onClick={handleButtonClick}>
+          {"→"}
+        </Button>
+        {reverseButtonAction && (
+          <Button  onClick={handleReverseButtonClick}>
+            {"←"}
           </Button>
         )}
+      </div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <Editor
+          height="100%"
+          language={rightLanguage}
+          value={rightValue}
+          onTextChange={handleRightChange}
+          editorDidMount={(editor) => (rightEditorRef.current = editor)}
+          readOnly={rightReadOnly}
+        />
       </div>
     </div>
   );

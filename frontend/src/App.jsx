@@ -27,8 +27,8 @@ const menuItems = [
     key: "data", // Unique key for grouping
     groupTitle: "Data",
     items: [
-      { key: "cvt", icon: <SyncOutlined />, label: "Convertor" },
       { key: "fmt", icon: <FormatPainterOutlined />, label: "Formater" },
+      { key: "cvt", icon: <SyncOutlined />, label: "Convertor" },
     ],
   },
   {
@@ -85,8 +85,8 @@ const App = () => {
           <Layout>
             <Content style={{ padding: 15 }}>
               {selectedKey === "home" && <Home />}
-              {selectedKey === "cvt" && <Converter />}
               {selectedKey === "fmt" && <Formatter />}
+              {selectedKey === "cvt" && <Converter />}
               {selectedKey === "diff" && <TextDiffer />}
               {selectedKey === "json-diff" && <JsonDiffer />}
               {selectedKey === "data-view" && <DataViewer />}

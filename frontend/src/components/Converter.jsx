@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import DualEditor from "./DualEditor";
 import {
   ConvertJsonToToml,
@@ -7,49 +6,64 @@ import {
   ConvertTomlToYaml,
   ConvertYamlToJson,
   ConvertYamlToToml,
-  FormatJson,
-  FormatToml,
-  FormatYaml,
 } from "../../bindings/github.com/zrcoder/ttoy/service/service";
+import { Tabs } from 'antd';
 import { useTransformer } from "./util";
 
 const Converter = () => {
-  const [leftLang, setLeftLang] = useState("json");
-  const [rightLang, setRightLang] = useState("yaml");
   const transform = useTransformer();
-  const transformers = {
-    "json>yaml": ConvertJsonToYaml,
-    "json>toml": ConvertJsonToToml,
-    "yaml>json": ConvertYamlToJson,
-    "yaml>toml": ConvertYamlToToml,
-    "toml>json": ConvertTomlToJson,
-    "toml>yaml": ConvertTomlToYaml,
-    "json>json": FormatJson,
-    "yaml>yaml": FormatYaml,
-    "toml>toml": FormatToml,
-  };
-  const buttonAction = (leftValue, rightValue, setLeftValue, setRightValue) => {
-    transform(
-      leftValue,
-      transformers[leftLang + ">" + rightLang],
-      setRightValue
-    );
-  };
+
+  const cvtJsonToYaml = (left, right, setL, setR) => transform(left, ConvertJsonToYaml, setR);
+  const cvtYamlToJson = (left, right, setL, setR) => transform(right, ConvertYamlToJson, setL);
+  const cvtJsonToToml = (left, right, setL, setR) => transform(left, ConvertJsonToToml, setR);
+  const cvtTomlToJson = (left, right, setL, setR) => transform(right, ConvertTomlToJson, setL);
+  const cvtYamlToToml = (left, right, setL, setR) => transform(left, ConvertYamlToToml, setR);
+  const cvtTomlToYaml = (left, right, setL, setR) => transform(right, ConvertTomlToYaml, setL);
+
+  const items = [
+    {
+      key: '1',
+      label: 'JSON ↔ YAML',
+      children: (
+        <DualEditor
+          leftLanguage={'json'}
+          rightLanguage={'yaml'}
+          buttonAction={cvtJsonToYaml}
+          reverseButtonAction={cvtYamlToJson}
+          rightReadOnly={false}
+        />
+      ),
+    },
+    {
+      key: '2',
+      label: 'JSON ↔ TOML',
+      children: (
+        <DualEditor
+          leftLanguage={'json'}
+          rightLanguage={'toml'}
+          buttonAction={cvtJsonToToml}
+          reverseButtonAction={cvtTomlToJson}
+          rightReadOnly={false}
+        />
+      ),
+    },
+    {
+      key: '3',
+      label: 'YAML ↔ TOML',
+      children: (
+        <DualEditor
+          leftLanguage={'yaml'}
+          rightLanguage={'toml'}
+          buttonAction={cvtYamlToToml}
+          reverseButtonAction={cvtTomlToYaml}
+          rightReadOnly={false}
+        />
+      ),
+    },
+  ];
 
   return (
-    <DualEditor
-      leftLanguage={leftLang}
-      rightLanguage={rightLang}
-      languages={["json", "yaml", "toml"]}
-      buttonLabel="Convert→" // ←
-      buttonAction={buttonAction}
-      onLeftLangChange={(newVal) => {
-        setLeftLang(newVal);
-      }}
-      onRightLangChange={(newVal) => {
-        setRightLang(newVal);
-      }}
-    />
+    <Tabs defaultActiveKey="1" items={items} />
   );
 };
 
