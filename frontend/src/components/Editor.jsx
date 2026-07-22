@@ -34,7 +34,7 @@ const Editor = ({
         language={language}
         value={value}
         onChange={onTextChange}
-        theme="vs-dark"
+        theme="vs"
         options={{
           minimap: { enabled: false },
           scrollBeyondLastLine: false,

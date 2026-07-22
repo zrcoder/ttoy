@@ -53,7 +53,7 @@ const JsonDiffer = () => {
         <DiffEditor
           height="calc(100% - 40px)"
           language="json"
-          theme="vs-dark"
+          theme="vs"
           original={original}
           modified={modified}
           options={{

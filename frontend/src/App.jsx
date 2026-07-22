@@ -56,7 +56,7 @@ const App = () => {
   };
 
   return (
-    <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
+    <ConfigProvider theme={{ algorithm: theme.defaultAlgorithm }}>
       <AntdApp>
         <Layout style={{ minHeight: "100vh" }}>
           <Sider className="site-layout-background">

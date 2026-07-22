@@ -33,7 +33,7 @@ const TextDiffer = () => {
         <DiffEditor
           height="calc(100% - 40px)" // Adjust height to account for the label
           language="text"
-          theme="vs-dark"
+          theme="vs"
           options={{
             originalEditable: true,
             readOnly: false,
