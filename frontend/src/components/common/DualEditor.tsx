@@ -16,20 +16,20 @@ type DualEditorProps = {
 };
 
 const DualEditor = ({ leftLanguage, rightLanguage, leftContent, rightContent, buttonAction, reverseButtonAction, leftReadOnly = false, rightReadOnly = true }: DualEditorProps) => {
-  const [leftValue, setLeftValue] = useState(leftContent || "");
-  const [rightValue, setRightValue] = useState(rightContent || "");
+  const [leftValue, setLeftValue] = useState(leftContent ?? "");
+  const [rightValue, setRightValue] = useState(rightContent ?? "");
 
   return (
     <div style={{ display: "flex", height: contentHeight, alignItems: "stretch", boxSizing: "border-box" }}>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <Editor height="100%" language={leftLanguage} value={leftValue} onTextChange={(v) => setLeftValue(v || "")} readOnly={leftReadOnly} />
+        <Editor height="100%" language={leftLanguage} value={leftValue} onTextChange={setLeftValue} readOnly={leftReadOnly} />
       </div>
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8, padding: "0 8px" }}>
         <Button onClick={() => buttonAction?.(leftValue, rightValue, setLeftValue, setRightValue)} icon={<CaretRightFilled />} type="primary" />
         {reverseButtonAction && <Button onClick={() => reverseButtonAction(leftValue, rightValue, setLeftValue, setRightValue)} icon={<CaretLeftFilled />} type="primary" />}
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <Editor height="100%" language={rightLanguage} value={rightValue} onTextChange={(v) => setRightValue(v || "")} readOnly={rightReadOnly} />
+        <Editor height="100%" language={rightLanguage} value={rightValue} onTextChange={setRightValue} readOnly={rightReadOnly} />
       </div>
     </div>
   );

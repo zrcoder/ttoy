@@ -85,12 +85,12 @@ type HashResults = Record<string, string> | null;
 const HashTab = () => {
   const { modal } = AntdApp.useApp();
   const [input, setInput] = useState("");
-  const [results, setResults] = useState<HashResults>(null);
+  const [results, setResults] = useState<HashResults | null>(null);
   const [loading, setLoading] = useState(false);
-  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [copiedKey, setCopiedKey] = useState("");
 
   const handleHash = () => {
-    setCopiedKey(null);
+    setCopiedKey("");
     if (!input.trim()) {
       modal.warning({ content: "Please input content first" });
       return;
@@ -114,14 +114,14 @@ const HashTab = () => {
 
   type HashResultProps = {
     label: string;
-    value: string | undefined;
+    value: string;
     hashKey: string;
     onCopy: (key: string) => void;
   };
 
   const HashResult = ({ label, value, hashKey, onCopy }: HashResultProps) => (
     <div style={{ marginBottom: 16 }}>
-      <LabelRow label={label} copyButton={<CopyButton copied={copiedKey === hashKey} onClick={() => { navigator.clipboard.writeText(value || ""); onCopy(hashKey); }} />} />
+      <LabelRow label={label} copyButton={<CopyButton copied={copiedKey === hashKey} onClick={() => { navigator.clipboard.writeText(value); onCopy(hashKey); }} />} />
       <Input disabled value={value || "-"} style={{ fontFamily: "monospace" }} />
     </div>
   );

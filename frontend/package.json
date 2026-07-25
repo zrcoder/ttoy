@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "typecheck": "tsc --noEmit",
     "build": "vite build --mode production",
     "build:dev": "vite build --minify false --mode development",
     "preview": "vite preview"

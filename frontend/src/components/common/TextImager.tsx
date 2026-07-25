@@ -4,6 +4,7 @@ import Editor from "./Editor";
 import { App as AntdApp } from "antd";
 import { CaretRightFilled } from "@ant-design/icons";
 import { contentHeight } from "./layout";
+import type { OnMount } from "@monaco-editor/react";
 
 type TextImagerProps = {
   editorContent?: string;
@@ -14,14 +15,15 @@ type TextImagerProps = {
 
 const TextImager = ({ editorContent, onTextChange, imageGenerator, lang }: TextImagerProps) => {
   const { modal } = AntdApp.useApp();
-  const [text, setText] = useState(editorContent || "");
+  const [text, setText] = useState(editorContent ?? "");
   const [image, setImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const editorRef = useRef(null);
+  const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
 
   const handleTextChange = (value: string | undefined) => {
-    setText(value || "");
-    if (onTextChange) onTextChange(value || "");
+    const newText = value ?? "";
+    setText(newText);
+    if (onTextChange) onTextChange(newText);
   };
 
   const handleButtonClick = () => {
@@ -60,7 +62,7 @@ const TextImager = ({ editorContent, onTextChange, imageGenerator, lang }: TextI
           language={lang}
           value={text}
           onTextChange={handleTextChange}
-          editorDidMount={(editor) => (editorRef.current = editor)}
+          editorDidMount={(editor) => { editorRef.current = editor; }}
         />
       </div>
       <div

@@ -6,8 +6,8 @@ type EditorProps = {
   language: string;
   value: string;
   readOnly?: boolean;
-  onTextChange?: (value: string | undefined) => void;
-  editorDidMount?: (editor: any, monaco: any) => void;
+  onTextChange?: (value: string) => void;
+  editorDidMount?: OnMount;
 };
 
 const Editor = ({ height, language, value, readOnly = false, onTextChange, editorDidMount }: EditorProps) => {
@@ -18,6 +18,12 @@ const Editor = ({ height, language, value, readOnly = false, onTextChange, edito
       editorDidMount(editor, monaco);
     }
     editor.updateOptions({ readOnly: readOnly });
+  };
+
+  const handleChange = (val: string | undefined) => {
+    if (onTextChange) {
+      onTextChange(val ?? "");
+    }
   };
 
   return (
@@ -34,7 +40,7 @@ const Editor = ({ height, language, value, readOnly = false, onTextChange, edito
         height={height}
         language={language}
         value={value}
-        onChange={onTextChange}
+        onChange={handleChange}
         theme={isDark ? "vs-dark" : "vs"}
         options={{
           minimap: { enabled: false },
