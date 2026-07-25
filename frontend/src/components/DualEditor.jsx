@@ -70,11 +70,13 @@ const DualEditor = ({
         <Button
           onClick={handleButtonClick}
           icon={<CaretRightFilled />}
+          type="primary"
         ></Button>
         {reverseButtonAction && (
           <Button
             onClick={handleReverseButtonClick}
             icon={<CaretLeftFilled />}
+            type="primary"
           ></Button>
         )}
       </div>

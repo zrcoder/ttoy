@@ -66,6 +66,7 @@ const TextImager = ({ editorContent, onTextChange, imageGenerator, lang }) => {
           onClick={handleButtonClick}
           loading={loading}
           icon={<CaretRightFilled />}
+          type="primary"
         ></Button>
       </div>
       <div

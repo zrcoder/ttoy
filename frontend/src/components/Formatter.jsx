@@ -5,7 +5,7 @@ import {
   FormatToml,
   FormatYaml,
 } from "../../bindings/github.com/zrcoder/ttoy/service/service";
-import { Tabs } from "antd";
+import AppTabs from "./AppTabs";
 import { useTransformer } from "./util";
 
 const Formatter = () => {
@@ -67,7 +67,7 @@ const Formatter = () => {
     },
   ];
 
-  return <Tabs defaultActiveKey="1" items={items} />;
+  return <AppTabs defaultActiveKey="1" items={items} />;
 };
 
 export default Formatter;

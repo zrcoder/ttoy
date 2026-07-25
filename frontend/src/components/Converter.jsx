@@ -7,7 +7,7 @@ import {
   ConvertYamlToJson,
   ConvertYamlToToml,
 } from "../../bindings/github.com/zrcoder/ttoy/service/service";
-import { Tabs } from "antd";
+import AppTabs from "./AppTabs";
 import { useTransformer } from "./util";
 
 const Converter = () => {
@@ -68,7 +68,7 @@ const Converter = () => {
     },
   ];
 
-  return <Tabs defaultActiveKey="1" items={items} />;
+  return <AppTabs defaultActiveKey="1" items={items} />;
 };
 
 export default Converter;

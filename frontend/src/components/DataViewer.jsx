@@ -1,5 +1,5 @@
 import React from "react";
-import { Tabs } from "antd";
+import AppTabs from "./AppTabs";
 import TextImager from "./TextImager";
 import {
   GenJsonSvg,
@@ -26,7 +26,7 @@ const DataViewer = () => {
     },
   ];
 
-  return <Tabs defaultActiveKey="1" items={items} />;
+  return <AppTabs defaultActiveKey="1" items={items} />;
 };
 
 export default DataViewer;
