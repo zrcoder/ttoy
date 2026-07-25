@@ -2,12 +2,11 @@ import React, { useState, useRef } from "react";
 import { Button, Spin } from "antd";
 import Editor from "./Editor";
 import { App as AntdApp } from "antd";
-
+import { CaretRightFilled } from "@ant-design/icons";
 const TextImager = ({
   editorContent,
   onTextChange,
   imageGenerator,
-  buttonLabel = "→",
   lang,
 }) => {
   const { modal } = AntdApp.useApp();
@@ -68,8 +67,7 @@ const TextImager = ({
           padding: "0 8px",
         }}
       >
-        <Button onClick={handleButtonClick} loading={loading}>
-          {buttonLabel}
+        <Button onClick={handleButtonClick} loading={loading} icon={<CaretRightFilled />}>
         </Button>
       </div>
       <div
@@ -78,7 +76,7 @@ const TextImager = ({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#f5f5f5",
+          background: "transparent",
           overflow: "auto",
           position: "relative",
         }}

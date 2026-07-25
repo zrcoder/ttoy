@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Button } from "antd";
-import { RightOutlined, LeftOutlined } from "@ant-design/icons";
+import { CaretRightFilled, CaretLeftFilled } from "@ant-design/icons";
 import Editor from "./Editor";
 
 const DualEditor = ({
@@ -67,12 +67,10 @@ const DualEditor = ({
           padding: "0 8px",
         }}
       >
-        <Button  onClick={handleButtonClick}>
-          {"→"}
+        <Button onClick={handleButtonClick} icon={<CaretRightFilled />}>
         </Button>
         {reverseButtonAction && (
-          <Button  onClick={handleReverseButtonClick}>
-            {"←"}
+          <Button onClick={handleReverseButtonClick} icon={<CaretLeftFilled />}>
           </Button>
         )}
       </div>
