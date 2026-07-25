@@ -5,6 +5,10 @@
 // @ts-ignore: Unused imports
 import { Call as $Call, CancellablePromise as $CancellablePromise } from "@wailsio/runtime";
 
+export function AsciiArt(input: string, font: string): $CancellablePromise<string> {
+    return $Call.ByID(1492206545, input, font);
+}
+
 export function ConvertJsonToToml(input: string): $CancellablePromise<string> {
     return $Call.ByID(3281720831, input);
 }
@@ -29,6 +33,30 @@ export function ConvertYamlToToml(input: string): $CancellablePromise<string> {
     return $Call.ByID(1501076266, input);
 }
 
+export function DecodeBase64(input: string): $CancellablePromise<string> {
+    return $Call.ByID(2967664636, input);
+}
+
+export function DecodeHtml(input: string): $CancellablePromise<string> {
+    return $Call.ByID(90238054, input);
+}
+
+export function DecodeUrl(input: string): $CancellablePromise<string> {
+    return $Call.ByID(2749879388, input);
+}
+
+export function EncodeBase64(input: string): $CancellablePromise<string> {
+    return $Call.ByID(2660925172, input);
+}
+
+export function EncodeHtml(input: string): $CancellablePromise<string> {
+    return $Call.ByID(969333550, input);
+}
+
+export function EncodeUrl(input: string): $CancellablePromise<string> {
+    return $Call.ByID(2372967092, input);
+}
+
 export function FormatHtml(input: string): $CancellablePromise<string> {
     return $Call.ByID(2635587483, input);
 }
@@ -45,8 +73,16 @@ export function FormatYaml(input: string): $CancellablePromise<string> {
     return $Call.ByID(2077588421, input);
 }
 
+export function GenD2Svg(input: string): $CancellablePromise<string> {
+    return $Call.ByID(4216239331, input);
+}
+
 export function GenJsonSvg(input: string): $CancellablePromise<string> {
     return $Call.ByID(1376781579, input);
+}
+
+export function GenNdorPng(input: string): $CancellablePromise<string> {
+    return $Call.ByID(1940409261, input);
 }
 
 export function GenTomlSvg(input: string): $CancellablePromise<string> {
@@ -55,6 +91,10 @@ export function GenTomlSvg(input: string): $CancellablePromise<string> {
 
 export function GenYamlSvg(input: string): $CancellablePromise<string> {
     return $Call.ByID(3440321640, input);
+}
+
+export function Hash(input: string): $CancellablePromise<{ [_ in string]?: string } | null> {
+    return $Call.ByID(3653345845, input);
 }
 
 export function JSONSort(input: string): $CancellablePromise<string> {

@@ -1,16 +1,25 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { Button, Spin } from "antd";
 import Editor from "./Editor";
 import { App as AntdApp } from "antd";
 import { CaretRightFilled } from "@ant-design/icons";
-const TextImager = ({ editorContent, onTextChange, imageGenerator, lang }) => {
+import { contentHeight } from "./layout";
+
+type TextImagerProps = {
+  editorContent?: string;
+  onTextChange?: (text: string) => void;
+  imageGenerator?: (input: string) => Promise<string>;
+  lang: string;
+};
+
+const TextImager = ({ editorContent, onTextChange, imageGenerator, lang }: TextImagerProps) => {
   const { modal } = AntdApp.useApp();
   const [text, setText] = useState(editorContent || "");
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const editorRef = useRef(null);
 
-  const handleTextChange = (value) => {
+  const handleTextChange = (value: string | undefined) => {
     setText(value || "");
     if (onTextChange) onTextChange(value || "");
   };
@@ -27,8 +36,8 @@ const TextImager = ({ editorContent, onTextChange, imageGenerator, lang }) => {
         .then((res) => {
           setImage(res);
         })
-        .catch((err) => {
-          modal.error({ content: err.toString() });
+        .catch((err: unknown) => {
+          modal.error({ content: (err as Error).toString() });
         })
         .finally(() => {
           setLoading(false);
@@ -40,7 +49,7 @@ const TextImager = ({ editorContent, onTextChange, imageGenerator, lang }) => {
     <div
       style={{
         display: "flex",
-        height: "calc(100vh - 120px)",
+        height: contentHeight,
         alignItems: "stretch",
         boxSizing: "border-box",
       }}

@@ -1,18 +1,19 @@
-import React from "react";
-import { Editor as MonacoEditor } from "@monaco-editor/react";
-import { useTheme } from "../contexts/ThemeContext";
+import { Editor as MonacoEditor, OnMount } from "@monaco-editor/react";
+import { useTheme } from "../../contexts/ThemeContext";
 
-const Editor = ({
-  height,
-  language,
-  value,
-  readOnly = false,
-  onTextChange,
-  editorDidMount,
-}) => {
+type EditorProps = {
+  height: string;
+  language: string;
+  value: string;
+  readOnly?: boolean;
+  onTextChange?: (value: string | undefined) => void;
+  editorDidMount?: (editor: any, monaco: any) => void;
+};
+
+const Editor = ({ height, language, value, readOnly = false, onTextChange, editorDidMount }: EditorProps) => {
   const { isDark } = useTheme();
 
-  const handleEditorDidMount = (editor, monaco) => {
+  const handleEditorDidMount: OnMount = (editor, monaco) => {
     if (editorDidMount) {
       editorDidMount(editor, monaco);
     }
@@ -42,9 +43,8 @@ const Editor = ({
           renderWhitespace: "none",
           renderControlCharacters: false,
           overviewRulerLanes: 0,
-          readOnly: readOnly,
         }}
-        editorDidMount={handleEditorDidMount}
+        onMount={handleEditorDidMount}
       />
     </div>
   );

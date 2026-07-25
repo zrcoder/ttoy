@@ -1,6 +1,11 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
-const ThemeContext = createContext({
+type ThemeContextType = {
+  isDark: boolean;
+  toggleTheme: (checked: boolean) => void;
+};
+
+const ThemeContext = createContext<ThemeContextType>({
   isDark: false,
   toggleTheme: () => {},
 });
@@ -8,17 +13,17 @@ const ThemeContext = createContext({
 const getSystemTheme = () =>
   window.matchMedia("(prefers-color-scheme: dark)").matches;
 
-export const ThemeProvider = ({ children }) => {
+export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [isDark, setIsDark] = useState(getSystemTheme);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handler = (e) => setIsDark(e.matches);
+    const handler = (e: MediaQueryListEvent) => setIsDark(e.matches);
     mediaQuery.addEventListener("change", handler);
     return () => mediaQuery.removeEventListener("change", handler);
   }, []);
 
-  const toggleTheme = (checked) => {
+  const toggleTheme = (checked: boolean) => {
     setIsDark(checked);
   };
 

@@ -1,7 +1,6 @@
-import React from "react";
 import { Switch } from "antd";
 import { MoonFilled, SunFilled } from "@ant-design/icons";
-import { useTheme } from "../contexts/ThemeContext";
+import { useTheme } from "../../contexts/ThemeContext";
 
 const ThemeSwitch = () => {
   const { isDark, toggleTheme } = useTheme();
