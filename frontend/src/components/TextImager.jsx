@@ -74,7 +74,7 @@ const TextImager = ({ editorContent, onTextChange, imageGenerator, lang }) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "transparent",
+          background: "#FFFFFF20",
           overflow: "auto",
           position: "relative",
         }}
