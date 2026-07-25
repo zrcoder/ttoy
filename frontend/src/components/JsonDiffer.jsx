@@ -3,8 +3,10 @@ import { DiffEditor } from "@monaco-editor/react";
 import { Button } from "antd";
 import { JSONSort } from "../../bindings/github.com/zrcoder/ttoy/service/service";
 import { App as AntdApp } from "antd";
+import { useTheme } from "../contexts/ThemeContext";
 
 const JsonDiffer = () => {
+  const { isDark } = useTheme();
   const { modal } = AntdApp.useApp();
   const [original, setOriginal] = useState("");
   const [modified, setModified] = useState("");
@@ -53,7 +55,7 @@ const JsonDiffer = () => {
         <DiffEditor
           height="calc(100% - 40px)"
           language="json"
-          theme="vs"
+          theme={isDark ? "vs-dark" : "vs"}
           original={original}
           modified={modified}
           options={{

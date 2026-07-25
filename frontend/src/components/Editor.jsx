@@ -1,5 +1,6 @@
 import React from "react";
 import { Editor as MonacoEditor } from "@monaco-editor/react";
+import { useTheme } from "../contexts/ThemeContext";
 
 const Editor = ({
   height,
@@ -9,6 +10,8 @@ const Editor = ({
   onTextChange,
   editorDidMount,
 }) => {
+  const { isDark } = useTheme();
+
   const handleEditorDidMount = (editor, monaco) => {
     if (editorDidMount) {
       editorDidMount(editor, monaco);
@@ -19,12 +22,12 @@ const Editor = ({
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column", minHeight: "300px" }}>
       <MonacoEditor
-        loading={null} // 去掉默认的 loading 文字
+        loading={null}
         height={height}
         language={language}
         value={value}
         onChange={onTextChange}
-        theme="vs"
+        theme={isDark ? "vs-dark" : "vs"}
         options={{
           minimap: { enabled: false },
           scrollBeyondLastLine: false,

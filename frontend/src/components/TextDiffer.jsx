@@ -1,7 +1,9 @@
 import React from "react";
 import { DiffEditor } from "@monaco-editor/react";
+import { useTheme } from "../contexts/ThemeContext";
 
 const TextDiffer = () => {
+  const { isDark } = useTheme();
   return (
     <div
       style={{
@@ -33,7 +35,7 @@ const TextDiffer = () => {
         <DiffEditor
           height="calc(100% - 40px)" // Adjust height to account for the label
           language="text"
-          theme="vs"
+          theme={isDark ? "vs-dark" : "vs"}
           options={{
             originalEditable: true,
             readOnly: false,

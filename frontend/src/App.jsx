@@ -14,6 +14,8 @@ import Formatter from "./components/Formatter";
 import TextDiffer from "./components/TextDiffer";
 import JsonDiffer from "./components/JsonDiffer";
 import DataViewer from "./components/DataViewer";
+import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
+import ThemeSwitch from "./components/ThemeSwitch";
 
 const { Sider, Content } = Layout;
 
@@ -48,7 +50,8 @@ const menuItems = [
   },
 ];
 
-const App = () => {
+const AppContent = () => {
+  const { isDark } = useTheme();
   const [selectedKey, setSelectedKey] = useState("home");
 
   const handleMenuClick = (e) => {
@@ -56,7 +59,11 @@ const App = () => {
   };
 
   return (
-    <ConfigProvider theme={{ algorithm: theme.defaultAlgorithm }}>
+    <ConfigProvider
+      theme={{
+        algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
+      }}
+    >
       <AntdApp>
         <Layout style={{ minHeight: "100vh" }}>
           <Sider className="site-layout-background">
@@ -83,7 +90,10 @@ const App = () => {
             </Menu>
           </Sider>
           <Layout>
-            <Content style={{ padding: 15 }}>
+            <Content style={{ padding: 15, position: "relative" }}>
+              <div style={{ position: "absolute", top: 15, right: 15, zIndex: 1 }}>
+                <ThemeSwitch />
+              </div>
               {selectedKey === "home" && <Home />}
               {selectedKey === "fmt" && <Formatter />}
               {selectedKey === "cvt" && <Converter />}
@@ -95,6 +105,14 @@ const App = () => {
         </Layout>
       </AntdApp>
     </ConfigProvider>
+  );
+};
+
+const App = () => {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   );
 };
 
