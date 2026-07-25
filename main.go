@@ -4,14 +4,15 @@ import (
 	"embed"
 	"log"
 
-	"github.com/wailsapp/wails/v3/pkg/application"
 	"github.com/zrcoder/ttoy/service/convert"
 	"github.com/zrcoder/ttoy/service/encode"
 	"github.com/zrcoder/ttoy/service/format"
 	"github.com/zrcoder/ttoy/service/generate"
-	"github.com/zrcoder/ttoy/service/sort"
 	"github.com/zrcoder/ttoy/service/plot"
+	"github.com/zrcoder/ttoy/service/sort"
 	"github.com/zrcoder/ttoy/service/view"
+
+	"github.com/wailsapp/wails/v3/pkg/application"
 )
 
 //go:embed all:frontend/dist

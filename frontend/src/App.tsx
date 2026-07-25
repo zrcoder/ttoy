@@ -7,8 +7,10 @@ import {
   SyncOutlined,
   FormatPainterOutlined,
   DiffOutlined,
+  ThunderboltOutlined,
   DotChartOutlined,
   NodeIndexOutlined,
+  LockOutlined,
 } from "@ant-design/icons";
 import Home from "./components/Home";
 import Format from "./components/Format";
@@ -23,39 +25,45 @@ import ThemeSwitch from "./components/common/ThemeSwitch";
 
 const { Sider, Content } = Layout;
 
-type MenuItemGroup = {
-  key: string;
-  icon?: React.ReactNode;
-  label: string;
-} | {
-  key: string;
-  groupTitle: string;
-  items: Array<{
-    key: string;
-    icon?: React.ReactNode;
-    label: string;
-  }>;
+type MenuKey =
+  | "home"
+  | "fmt"
+  | "cvt"
+  | "codec"
+  | "gen"
+  | "view"
+  | "graph"
+  | "diff"
+  | "hanoi";
+
+type MenuItem = { key: MenuKey; icon?: React.ReactNode; label: string };
+type MenuGroup = { key: string; groupTitle: string; items: MenuItem[] };
+
+const toolsItems: MenuItem[] = [
+  { key: "fmt", icon: <FormatPainterOutlined />, label: "Format" },
+  { key: "cvt", icon: <SyncOutlined />, label: "Convert" },
+  { key: "codec", icon: <LockOutlined />, label: "Encode" },
+  { key: "gen", icon: <ThunderboltOutlined />, label: "Generate" },
+  { key: "view", icon: <DotChartOutlined />, label: "View" },
+  { key: "graph", icon: <NodeIndexOutlined />, label: "Plot" },
+  { key: "diff", icon: <DiffOutlined />, label: "Diff" },
+];
+
+const componentMap: Record<MenuKey, React.ReactNode> = {
+  home: <Home />,
+  fmt: <Format />,
+  cvt: <Convert />,
+  codec: <Encode />,
+  gen: <Generate />,
+  diff: <Diff />,
+  view: <View />,
+  graph: <Plot />,
+  hanoi: "Hi",
 };
 
-const menuItems: MenuItemGroup[] = [
-  {
-    key: "home",
-    icon: <ToolOutlined />,
-    label: "TToy",
-  },
-  {
-    key: "tools",
-    groupTitle: "Tools",
-    items: [
-      { key: "fmt", icon: <FormatPainterOutlined />, label: "Format" },
-      { key: "cvt", icon: <SyncOutlined />, label: "Convert" },
-      { key: "codec", icon: <SyncOutlined />, label: "Encode" },
-      { key: "generator", icon: <DotChartOutlined />, label: "Generate" },
-      { key: "data-view", icon: <DotChartOutlined />, label: "View" },
-      { key: "graph", icon: <NodeIndexOutlined />, label: "Plot" },
-      { key: "diff", icon: <DiffOutlined />, label: "Diff" },
-    ],
-  },
+const menuItems: Array<MenuItem | MenuGroup> = [
+  { key: "home", icon: <ToolOutlined />, label: "TToy" },
+  { key: "tools", groupTitle: "Tools", items: toolsItems },
   {
     key: "games",
     groupTitle: "Games",
@@ -63,13 +71,26 @@ const menuItems: MenuItemGroup[] = [
   },
 ];
 
+const renderMenuItems = (items: typeof menuItems) =>
+  items.map((item) =>
+    "items" in item ? (
+      <Menu.ItemGroup key={item.key} title={item.groupTitle}>
+        {item.items.map((i) => (
+          <Menu.Item key={i.key} icon={i.icon}>
+            {i.label}
+          </Menu.Item>
+        ))}
+      </Menu.ItemGroup>
+    ) : (
+      <Menu.Item key={item.key} icon={item.icon}>
+        {item.label}
+      </Menu.Item>
+    ),
+  );
+
 const AppContent = () => {
   const { isDark } = useTheme();
-  const [selectedKey, setSelectedKey] = useState("home");
-
-  const handleMenuClick = (e: { key: string }) => {
-    setSelectedKey(e.key);
-  };
+  const [selectedKey, setSelectedKey] = useState<MenuKey>("home");
 
   return (
     <ConfigProvider
@@ -78,28 +99,14 @@ const AppContent = () => {
       }}
     >
       <AntdApp>
-        <Layout style={{ minHeight: "100vh", paddingTop: "46px"}}>
+        <Layout style={{ minHeight: "100vh", paddingTop: 46 }}>
           <Sider>
             <Menu
               selectedKeys={[selectedKey]}
-              onClick={handleMenuClick}
+              onClick={({ key }) => setSelectedKey(key as MenuKey)}
               style={{ height: "100%", borderRight: 0, textAlign: "left" }}
             >
-              {menuItems.map((group) =>
-                "items" in group ? (
-                  <Menu.ItemGroup key={group.key} title={group.groupTitle}>
-                    {group.items.map((item) => (
-                      <Menu.Item key={item.key} icon={item.icon}>
-                        {item.label}
-                      </Menu.Item>
-                    ))}
-                  </Menu.ItemGroup>
-                ) : (
-                  <Menu.Item key={group.key} icon={group.icon}>
-                    {group.label}
-                  </Menu.Item>
-                ),
-              )}
+              {renderMenuItems(menuItems)}
             </Menu>
           </Sider>
           <Layout>
@@ -109,15 +116,7 @@ const AppContent = () => {
               >
                 <ThemeSwitch />
               </div>
-              {selectedKey === "home" && <Home />}
-              {selectedKey === "fmt" && <Format />}
-              {selectedKey === "cvt" && <Convert />}
-              {selectedKey === "codec" && <Encode />}
-              {selectedKey === "generator" && <Generate />}
-              {selectedKey === "diff" && <Diff />}
-              {selectedKey === "data-view" && <View />}
-              {selectedKey === "graph" && <Plot />}
-              {selectedKey === "hanoi" && "Hi"}
+              {componentMap[selectedKey]}
             </Content>
           </Layout>
         </Layout>
@@ -126,12 +125,10 @@ const AppContent = () => {
   );
 };
 
-const App = () => {
-  return (
-    <ThemeProvider>
-      <AppContent />
-    </ThemeProvider>
-  );
-};
+const App = () => (
+  <ThemeProvider>
+    <AppContent />
+  </ThemeProvider>
+);
 
 export default App;
