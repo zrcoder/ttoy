@@ -20,7 +20,14 @@ const Editor = ({
   };
 
   return (
-    <div style={{ height: "100%", display: "flex", flexDirection: "column", minHeight: "300px" }}>
+    <div
+      style={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "300px",
+      }}
+    >
       <MonacoEditor
         loading={null}
         height={height}

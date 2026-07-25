@@ -67,11 +67,15 @@ const DualEditor = ({
           padding: "0 8px",
         }}
       >
-        <Button onClick={handleButtonClick} icon={<CaretRightFilled />}>
-        </Button>
+        <Button
+          onClick={handleButtonClick}
+          icon={<CaretRightFilled />}
+        ></Button>
         {reverseButtonAction && (
-          <Button onClick={handleReverseButtonClick} icon={<CaretLeftFilled />}>
-          </Button>
+          <Button
+            onClick={handleReverseButtonClick}
+            icon={<CaretLeftFilled />}
+          ></Button>
         )}
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>

@@ -29,7 +29,6 @@ const JsonDiffer = () => {
       style={{
         height: "calc(100vh - 40px)",
         margin: 0,
-        padding: "10px",
         boxSizing: "border-box",
         backgroundColor: "transparent",
       }}
@@ -40,7 +39,6 @@ const JsonDiffer = () => {
           display: "flex",
           flexDirection: "column",
           backgroundColor: "transparent",
-          padding: "0 4px",
         }}
       >
         <header

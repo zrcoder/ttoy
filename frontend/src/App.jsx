@@ -85,13 +85,15 @@ const AppContent = () => {
                   <Menu.Item key={group.key} icon={group.icon}>
                     {group.label}
                   </Menu.Item>
-                )
+                ),
               )}
             </Menu>
           </Sider>
           <Layout>
             <Content style={{ padding: 15, position: "relative" }}>
-              <div style={{ position: "absolute", top: 15, right: 15, zIndex: 1 }}>
+              <div
+                style={{ position: "absolute", top: 15, right: 15, zIndex: 1 }}
+              >
                 <ThemeSwitch />
               </div>
               {selectedKey === "home" && <Home />}
