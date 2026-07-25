@@ -3,10 +3,7 @@ import { Button, Select, Spin, Input } from "antd";
 import { CopyOutlined, CheckOutlined } from "@ant-design/icons";
 import { App as AntdApp } from "antd";
 import { contentHeight } from "./common/layout";
-import {
-  AsciiArt,
-  Hash,
-} from "../../bindings/github.com/zrcoder/ttoy/service/service";
+import { Generator as Gen } from "../../bindings/github.com/zrcoder/ttoy/service/generate";
 import AppTabs from "./common/AppTabs";
 
 const FONTS = ["big", "block", "chunky", "coinstak", "colossal", "cricket", "cyberlarge", "cybermedium", "doh", "doom", "isometric1", "isometric3", "larry3d", "marquee", "ogre", "pawp", "puffy", "rectangles", "rounded", "slant", "small", "standard", "starwars", "stop"];
@@ -38,18 +35,16 @@ const AsciiArtTab = () => {
   const [font, setFont] = useState("standard");
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [copied, setCopied] = useState(false);
 
   const handleGenerate = () => {
-    setCopied(false);
     if (!input.trim()) {
       modal.warning({ content: "Please input content first" });
       return;
     }
     setLoading(true);
-    AsciiArt(input, font)
+    Gen.AsciiArt(input, font)
       .then((res) => {
-        setOutput(res);
+        setOutput(res ?? "");
       })
       .catch((err: unknown) => {
         modal.error({ content: (err as Error).toString() });
@@ -69,18 +64,13 @@ const AsciiArtTab = () => {
         <Button type="primary" onClick={handleGenerate} loading={loading}>Generate</Button>
       </div>
       <div style={{ flex: 1, minHeight: 0 }}>
-        {loading ? <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}><Spin size="large" /></div> : output && (
-          <>
-            <LabelRow label="Output" copyButton={<CopyButton copied={copied} onClick={() => { navigator.clipboard.writeText(output); setCopied(true); }} />} />
-            <Input.TextArea disabled value={output} style={{ fontFamily: "monospace", height: "96%" }} />
-          </>
-        )}
+        <Input.TextArea value={output} readOnly style={{ height: "100%", fontFamily: "monospace" }} />
       </div>
     </div>
   );
 };
 
-type HashResults = Record<string, string> | null;
+type HashResults = Record<string, string>;
 
 const HashTab = () => {
   const { modal } = AntdApp.useApp();
@@ -96,7 +86,7 @@ const HashTab = () => {
       return;
     }
     setLoading(true);
-    Hash(input)
+    Gen.Hash(input)
       .then((res) => {
         setResults(res as HashResults);
       })

@@ -5,7 +5,13 @@ import (
 	"log"
 
 	"github.com/wailsapp/wails/v3/pkg/application"
-	"github.com/zrcoder/ttoy/service"
+	"github.com/zrcoder/ttoy/service/convert"
+	"github.com/zrcoder/ttoy/service/encode"
+	"github.com/zrcoder/ttoy/service/format"
+	"github.com/zrcoder/ttoy/service/generate"
+	"github.com/zrcoder/ttoy/service/sort"
+	"github.com/zrcoder/ttoy/service/plot"
+	"github.com/zrcoder/ttoy/service/view"
 )
 
 //go:embed all:frontend/dist
@@ -16,7 +22,13 @@ func main() {
 		Name:        "TToy",
 		Description: "A smart APP contains dev tools",
 		Services: []application.Service{
-			application.NewService(service.New()),
+			application.NewService(convert.New()),
+			application.NewService(format.New()),
+			application.NewService(encode.New()),
+			application.NewService(generate.New()),
+			application.NewService(view.New()),
+			application.NewService(plot.New()),
+			application.NewService(sort.New()),
 		},
 		Assets: application.AssetOptions{
 			Handler: application.AssetFileServerFS(assets),

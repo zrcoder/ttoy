@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { DiffEditor } from "@monaco-editor/react";
 import { Button } from "antd";
-import { JSONSort } from "../../bindings/github.com/zrcoder/ttoy/service/service";
+import { Sorter } from "../../bindings/github.com/zrcoder/ttoy/service/sort";
 import { App as AntdApp } from "antd";
 import { useTheme } from "../contexts/ThemeContext";
 import AppTabs from "./common/AppTabs";
@@ -43,11 +43,11 @@ const JsonDiffTab = () => {
   const handleCompare = async () => {
     try {
       const [sortedOriginal, sortedModified] = await Promise.all([
-        original.trim() ? JSONSort(original) : Promise.resolve(""),
-        modified.trim() ? JSONSort(modified) : Promise.resolve(""),
+        original.trim() ? Sorter.JSON(original) : Promise.resolve(""),
+        modified.trim() ? Sorter.JSON(modified) : Promise.resolve(""),
       ]);
-      setOriginal(sortedOriginal);
-      setModified(sortedModified);
+      setOriginal(sortedOriginal ?? "");
+      setModified(sortedModified ?? "");
     } catch (err: unknown) {
       modal.error({ content: (err as Error).toString() });
     }
@@ -80,7 +80,6 @@ const Diff = () => {
       children: <JsonDiffTab />,
     },
   ];
-
   return <AppTabs defaultActiveKey="text" items={items} />;
 };
 
