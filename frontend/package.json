@@ -12,21 +12,21 @@
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json}\""
   },
   "dependencies": {
-    "@ant-design/icons": "^5.6.1",
+    "@ant-design/icons": "^6.3.2",
     "@monaco-editor/react": "^4.7.0",
     "@wailsio/runtime": "latest",
-    "antd": "^5.29.3",
-    "monaco-editor": "^0.50.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "antd": "^6.5.2",
+    "monaco-editor": "^0.56.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
   },
   "devDependencies": {
-    "@types/node": "^26.1.1",
-    "@types/react": "^18.3.31",
-    "@types/react-dom": "^18.3.7",
-    "@vitejs/plugin-react": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.4",
     "prettier": "^3.9.6",
-    "typescript": "^7.0.2",
+    "typescript": "^5.7.3",
     "vite": "^8.1.5"
   }
 }
