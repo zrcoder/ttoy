@@ -1,5 +1,5 @@
-import { Typography, Row, Col } from "antd";
 import { ToolOutlined } from "@ant-design/icons";
+import { Col, Row, Typography } from "antd";
 
 const { Title, Paragraph } = Typography;
 

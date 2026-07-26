@@ -1,6 +1,6 @@
-import DualEditor from "./common/DualEditor";
 import { Encode as SvcEncode } from "../../bindings/github.com/zrcoder/ttoy/service";
 import AppTabs from "./common/AppTabs";
+import DualEditor from "./common/DualEditor";
 import { useTransformer } from "./common/useTransformer";
 
 const Encode = () => {

@@ -1,10 +1,9 @@
-import { useState, useRef } from "react";
-import { Button, Spin } from "antd";
-import Editor from "./Editor";
-import { App as AntdApp } from "antd";
 import { CaretRightFilled } from "@ant-design/icons";
-import { contentHeight } from "./layout";
 import type { OnMount } from "@monaco-editor/react";
+import { App as AntdApp, Button, Spin } from "antd";
+import { useRef, useState } from "react";
+import Editor from "./Editor";
+import { contentHeight } from "./layout";
 
 type TextImagerProps = {
   editorContent?: string;

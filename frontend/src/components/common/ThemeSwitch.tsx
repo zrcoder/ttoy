@@ -1,5 +1,5 @@
-import { Switch } from "antd";
 import { MoonFilled, SunFilled } from "@ant-design/icons";
+import { Switch } from "antd";
 import { useTheme } from "../../contexts/ThemeContext";
 
 const ThemeSwitch = () => {

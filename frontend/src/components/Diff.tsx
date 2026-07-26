@@ -1,8 +1,7 @@
-import { useState } from "react";
 import { DiffEditor } from "@monaco-editor/react";
-import { Button } from "antd";
+import { App as AntdApp, Button } from "antd";
+import { useState } from "react";
 import { Sort as SvcSort } from "../../bindings/github.com/zrcoder/ttoy/service";
-import { App as AntdApp } from "antd";
 import { useTheme } from "../contexts/ThemeContext";
 import AppTabs from "./common/AppTabs";
 import { contentHeight } from "./common/layout";

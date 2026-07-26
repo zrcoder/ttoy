@@ -1,6 +1,6 @@
+import { View as SvcView } from "../../bindings/github.com/zrcoder/ttoy/service";
 import AppTabs from "./common/AppTabs";
 import TextImager from "./common/TextImager";
-import { View as SvcView } from "../../bindings/github.com/zrcoder/ttoy/service";
 
 const View = () => (
   <AppTabs

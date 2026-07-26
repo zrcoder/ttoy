@@ -1,27 +1,27 @@
+import {
+  DiffOutlined,
+  DotChartOutlined,
+  FormatPainterOutlined,
+  LockOutlined,
+  NodeIndexOutlined,
+  SyncOutlined,
+  ThunderboltOutlined,
+  ToolOutlined,
+} from "@ant-design/icons";
+import { App as AntdApp, ConfigProvider, Layout, Menu, theme } from "antd";
 import { useState } from "react";
-import { Layout, Menu, ConfigProvider, theme, App as AntdApp } from "antd";
 // @ts-ignore
 import "antd/dist/reset.css";
-import {
-  ToolOutlined,
-  SyncOutlined,
-  FormatPainterOutlined,
-  DiffOutlined,
-  ThunderboltOutlined,
-  DotChartOutlined,
-  NodeIndexOutlined,
-  LockOutlined,
-} from "@ant-design/icons";
-import Home from "./components/Home";
-import Format from "./components/Format";
-import Convert from "./components/Convert";
-import Encode from "./components/Encode";
-import Generate from "./components/Generate";
-import View from "./components/View";
-import Plot from "./components/Plot";
-import Diff from "./components/Diff";
-import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import ThemeSwitch from "./components/common/ThemeSwitch";
+import Convert from "./components/Convert";
+import Diff from "./components/Diff";
+import Encode from "./components/Encode";
+import Format from "./components/Format";
+import Generate from "./components/Generate";
+import Home from "./components/Home";
+import Plot from "./components/Plot";
+import View from "./components/View";
+import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 
 const { Sider, Content } = Layout;
 

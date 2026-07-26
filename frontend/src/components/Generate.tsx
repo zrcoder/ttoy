@@ -1,10 +1,9 @@
+import { CheckOutlined, CopyOutlined } from "@ant-design/icons";
+import { App as AntdApp, Button, Input, Select, Spin } from "antd";
 import { useState } from "react";
-import { Button, Select, Spin, Input } from "antd";
-import { CopyOutlined, CheckOutlined } from "@ant-design/icons";
-import { App as AntdApp } from "antd";
-import { contentHeight } from "./common/layout";
 import { Generate as SvcGenerate } from "../../bindings/github.com/zrcoder/ttoy/service";
 import AppTabs from "./common/AppTabs";
+import { contentHeight } from "./common/layout";
 
 const FONTS = [
   "big",

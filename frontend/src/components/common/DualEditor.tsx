@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { CaretLeftFilled, CaretRightFilled } from "@ant-design/icons";
 import { Button } from "antd";
-import { CaretRightFilled, CaretLeftFilled } from "@ant-design/icons";
+import { useState } from "react";
 import Editor from "./Editor";
 import { contentHeight } from "./layout";
 

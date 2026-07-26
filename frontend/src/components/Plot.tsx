@@ -1,6 +1,6 @@
+import { Plot as SvcPlot } from "../../bindings/github.com/zrcoder/ttoy/service";
 import AppTabs from "./common/AppTabs";
 import TextImager from "./common/TextImager";
-import { Plot as SvcPlot } from "../../bindings/github.com/zrcoder/ttoy/service";
 
 const Plot = () => (
   <AppTabs
