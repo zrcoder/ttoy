@@ -56,7 +56,7 @@ tasks:
     cmds:
       - pnpm install
 
-  install:frontend:deps:cnpm:
+  install:frontend:deps:npm:
     dir: frontend
     sources:
       - package.json
@@ -64,10 +64,10 @@ tasks:
     generates:
       - node_modules
     preconditions:
-      - sh: cnpm --version
-        msg: "cnpm not found"
+      - sh: npm --version
+        msg: "npm not found"
     cmds:
-      - cnpm install
+      - npm install
 
   install:frontend:deps:yarn:
     dir: frontend
@@ -142,10 +142,10 @@ tasks:
     vars:
       SCRIPT: "{{.SCRIPT}}"
 
-  frontend:run:cnpm:
+  frontend:run:npm:
     dir: frontend
     cmds:
-      - cnpm run {{.SCRIPT}}
+      - npm run {{.SCRIPT}}
     vars:
       SCRIPT: "{{.SCRIPT}}"
 
@@ -245,10 +245,10 @@ tasks:
     cmds:
       - pnpm dev --port {{.VITE_PORT}} --strictPort
 
-  frontend:dev:cnpm:
+  frontend:dev:npm:
     dir: frontend
     cmds:
-      - cnpm run dev -- --port {{.VITE_PORT}} --strictPort
+      - npm run dev -- --port {{.VITE_PORT}} --strictPort
 
   frontend:dev:bun:
     dir: frontend
