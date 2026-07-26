@@ -9,17 +9,35 @@ const View = () => (
       {
         key: "1",
         label: "JSON",
-        children: <TextImager lang="json" imageGenerator={SvcView.Json} />,
+        children: (
+          <TextImager
+            lang="json"
+            imageGenerator={SvcView.Json}
+            filename="view.json.svg"
+          />
+        ),
       },
       {
         key: "2",
         label: "YAML",
-        children: <TextImager lang="yaml" imageGenerator={SvcView.Yaml} />,
+        children: (
+          <TextImager
+            lang="yaml"
+            imageGenerator={SvcView.Yaml}
+            filename="view.yaml.svg"
+          />
+        ),
       },
       {
         key: "3",
         label: "TOML",
-        children: <TextImager lang="toml" imageGenerator={SvcView.Toml} />,
+        children: (
+          <TextImager
+            lang="toml"
+            imageGenerator={SvcView.Toml}
+            filename="view.toml.svg"
+          />
+        ),
       },
     ]}
   />

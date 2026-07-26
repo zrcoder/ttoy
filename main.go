@@ -24,6 +24,7 @@ func main() {
 			application.NewService(new(service.View)),
 			application.NewService(new(service.Plot)),
 			application.NewService(new(service.Sort)),
+			application.NewService(new(service.Save)),
 		},
 		Assets: application.AssetOptions{
 			Handler: application.AssetFileServerFS(assets),

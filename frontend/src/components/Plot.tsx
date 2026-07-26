@@ -9,13 +9,23 @@ const Plot = () => (
       {
         key: "d2",
         label: "D2",
-        children: <TextImager lang="python" imageGenerator={SvcPlot.D2} />,
+        children: (
+          <TextImager
+            lang="python"
+            imageGenerator={SvcPlot.D2}
+            filename="d2.svg"
+          />
+        ),
       },
       {
         key: "ndor",
         label: "Ndor",
         children: (
-          <TextImager lang="coffeescript" imageGenerator={SvcPlot.Ndor} />
+          <TextImager
+            lang="coffeescript"
+            imageGenerator={SvcPlot.Ndor}
+            filename="ndor.png"
+          />
         ),
       },
     ]}

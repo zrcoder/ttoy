@@ -6,6 +6,7 @@ import * as Encode from "./encode.js";
 import * as Format from "./format.js";
 import * as Generate from "./generate.js";
 import * as Plot from "./plot.js";
+import * as Save from "./save.js";
 import * as Sort from "./sort.js";
 import * as View from "./view.js";
 export {
@@ -14,6 +15,7 @@ export {
     Format,
     Generate,
     Plot,
+    Save,
     Sort,
     View
 };

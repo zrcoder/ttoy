@@ -3,6 +3,7 @@ import type { OnMount } from "@monaco-editor/react";
 import { App as AntdApp, Button, Spin } from "antd";
 import { useRef, useState } from "react";
 import Editor from "./Editor";
+import { ImageWithDownload } from "./ImageWithDownload";
 import { contentHeight } from "./layout";
 
 type TextImagerProps = {
@@ -10,6 +11,7 @@ type TextImagerProps = {
   onTextChange?: (text: string) => void;
   imageGenerator?: (input: string) => Promise<string>;
   lang: string;
+  filename?: string;
 };
 
 const TextImager = ({
@@ -17,6 +19,7 @@ const TextImager = ({
   onTextChange,
   imageGenerator,
   lang,
+  filename,
 }: TextImagerProps) => {
   const { modal } = AntdApp.useApp();
   const [text, setText] = useState(editorContent ?? "");
@@ -99,15 +102,7 @@ const TextImager = ({
       >
         {loading && <Spin size="large" />}
         {image && (
-          <img
-            src={image}
-            alt="Generated"
-            style={{
-              maxWidth: "100%",
-              maxHeight: "100%",
-              objectFit: "contain",
-            }}
-          />
+          <ImageWithDownload src={image} alt="Generated" filename={filename} />
         )}
         {!image && !loading && <span style={{ color: "#aaa" }}>No image</span>}
       </div>

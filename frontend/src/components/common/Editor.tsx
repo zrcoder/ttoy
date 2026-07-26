@@ -1,5 +1,6 @@
 import { Editor as MonacoEditor, OnMount } from "@monaco-editor/react";
 import { useTheme } from "../../contexts/ThemeContext";
+import { CopyButton } from "./CopyButton";
 
 type EditorProps = {
   height: string;
@@ -40,8 +41,10 @@ const Editor = ({
         display: "flex",
         flexDirection: "column",
         minHeight: "300px",
+        position: "relative",
       }}
     >
+      <CopyButton text={value} />
       <MonacoEditor
         loading={null}
         height={height}

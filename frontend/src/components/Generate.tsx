@@ -1,8 +1,8 @@
-import { CheckOutlined, CopyOutlined } from "@ant-design/icons";
 import { App as AntdApp, Button, Input, Select, Spin } from "antd";
 import { useState } from "react";
 import { Generate as SvcGenerate } from "../../bindings/github.com/zrcoder/ttoy/service";
 import AppTabs from "./common/AppTabs";
+import { CopyButton } from "./common/CopyButton";
 import { contentHeight } from "./common/layout";
 
 const FONTS = [
@@ -31,22 +31,6 @@ const FONTS = [
   "starwars",
   "stop",
 ];
-
-type CopyButtonProps = {
-  copied: boolean;
-  onClick: () => void;
-};
-
-const CopyButton = ({ copied, onClick }: CopyButtonProps) => (
-  <Button
-    type="text"
-    size="small"
-    icon={
-      copied ? <CheckOutlined style={{ color: "#52c41a" }} /> : <CopyOutlined />
-    }
-    onClick={onClick}
-  />
-);
 
 type LabelRowProps = {
   label: string;
@@ -122,7 +106,8 @@ const AsciiArtTab = () => {
           Generate
         </Button>
       </div>
-      <div style={{ flex: 1, minHeight: 0 }}>
+      <div style={{ flex: 1, minHeight: 0, position: "relative" }}>
+        <CopyButton text={output} />
         <Input.TextArea
           value={output}
           readOnly
@@ -140,10 +125,8 @@ const HashTab = () => {
   const [input, setInput] = useState("");
   const [results, setResults] = useState<HashResults | null>(null);
   const [loading, setLoading] = useState(false);
-  const [copiedKey, setCopiedKey] = useState("");
 
   const handleHash = () => {
-    setCopiedKey("");
     if (!input.trim()) {
       modal.warning({ content: "Please input content first" });
       return;
@@ -161,36 +144,15 @@ const HashTab = () => {
       });
   };
 
-  const handleCopy = (hashKey: string) => {
-    setCopiedKey(hashKey);
-  };
-
   type HashResultProps = {
     label: string;
     value: string;
-    hashKey: string;
-    onCopy: (key: string) => void;
   };
 
-  const HashResult = ({ label, value, hashKey, onCopy }: HashResultProps) => (
+  const HashResult = ({ label, value }: HashResultProps) => (
     <div style={{ marginBottom: 16 }}>
-      <LabelRow
-        label={label}
-        copyButton={
-          <CopyButton
-            copied={copiedKey === hashKey}
-            onClick={() => {
-              navigator.clipboard.writeText(value);
-              onCopy(hashKey);
-            }}
-          />
-        }
-      />
-      <Input
-        disabled
-        value={value || "-"}
-        style={{ fontFamily: "monospace" }}
-      />
+      <LabelRow label={label} copyButton={<CopyButton text={value} inline />} />
+      <Input value={value || "-"} style={{ fontFamily: "monospace" }} />
     </div>
   );
 
@@ -236,8 +198,6 @@ const HashTab = () => {
               key={algo}
               label={algo}
               value={results[algo.toLowerCase()]}
-              hashKey={algo.toLowerCase()}
-              onCopy={handleCopy}
             />
           ))
         )}
