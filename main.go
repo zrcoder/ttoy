@@ -4,6 +4,7 @@ import (
 	"embed"
 	"log"
 
+	"github.com/zrcoder/ttoy/game/icemagic"
 	"github.com/zrcoder/ttoy/service"
 
 	"github.com/wailsapp/wails/v3/pkg/application"
@@ -30,6 +31,7 @@ func main() {
 			Handler: application.AssetFileServerFS(assets),
 		},
 	})
+	app.RegisterService(application.NewService(icemagic.New(app)))
 
 	app.Window.NewWithOptions(application.WebviewWindowOptions{
 		Title:            "TToy",

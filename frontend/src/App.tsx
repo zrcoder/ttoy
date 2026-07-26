@@ -1,6 +1,7 @@
 import {
   DiffOutlined,
   DotChartOutlined,
+  FireOutlined,
   FormatPainterOutlined,
   LockOutlined,
   NodeIndexOutlined,
@@ -22,6 +23,7 @@ import Home from "./components/Home";
 import Plot from "./components/Plot";
 import View from "./components/View";
 import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
+import IceMagic from "./games/IceMagic";
 
 const { Sider, Content } = Layout;
 
@@ -34,12 +36,12 @@ type MenuKey =
   | "view"
   | "graph"
   | "diff"
-  | "hanoi";
+  | "icemagic";
 
 type MenuItem = { key: MenuKey; icon?: React.ReactNode; label: string };
 type MenuGroup = { key: string; groupTitle: string; items: MenuItem[] };
 
-const toolsItems: MenuItem[] = [
+const toolItems: MenuItem[] = [
   { key: "fmt", icon: <FormatPainterOutlined />, label: "Format" },
   { key: "cvt", icon: <SyncOutlined />, label: "Convert" },
   { key: "codec", icon: <LockOutlined />, label: "Encode" },
@@ -47,6 +49,10 @@ const toolsItems: MenuItem[] = [
   { key: "view", icon: <DotChartOutlined />, label: "View" },
   { key: "graph", icon: <NodeIndexOutlined />, label: "Plot" },
   { key: "diff", icon: <DiffOutlined />, label: "Diff" },
+];
+
+const gameItems: MenuItem[] = [
+  { key: "icemagic", icon: <FireOutlined />, label: "IceMagic" },
 ];
 
 const componentMap: Record<MenuKey, React.ReactNode> = {
@@ -58,16 +64,16 @@ const componentMap: Record<MenuKey, React.ReactNode> = {
   diff: <Diff />,
   view: <View />,
   graph: <Plot />,
-  hanoi: "Hi",
+  icemagic: <IceMagic />,
 };
 
 const menuItems: Array<MenuItem | MenuGroup> = [
   { key: "home", icon: <ToolOutlined />, label: "TToy" },
-  { key: "tools", groupTitle: "Tools", items: toolsItems },
+  { key: "tools", groupTitle: "Tools", items: toolItems },
   {
     key: "games",
     groupTitle: "Games",
-    items: [{ key: "hanoi", label: "Hanoi" }],
+    items: gameItems,
   },
 ];
 
