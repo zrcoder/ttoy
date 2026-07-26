@@ -5,18 +5,14 @@
 // @ts-ignore: Unused imports
 import { Call as $Call, CancellablePromise as $CancellablePromise } from "@wailsio/runtime";
 
-export function Html(data: string): $CancellablePromise<string> {
-    return $Call.ByID(1255849589, data);
-}
-
 export function Json(data: string): $CancellablePromise<string> {
-    return $Call.ByID(1647851362, data);
+    return $Call.ByID(3090650873, data);
 }
 
 export function Toml(data: string): $CancellablePromise<string> {
-    return $Call.ByID(1653295408, data);
+    return $Call.ByID(2573874263, data);
 }
 
 export function Yaml(data: string): $CancellablePromise<string> {
-    return $Call.ByID(2296061631, data);
+    return $Call.ByID(619218492, data);
 }

@@ -1,14 +1,14 @@
-package sort
+package service
 
 import "encoding/json"
 
-type Sorter struct{}
+type Sort struct{}
 
-func New() *Sorter {
-	return &Sorter{}
+func New() *Sort {
+	return &Sort{}
 }
 
-func (s *Sorter) JSON(input string) (output string, err error) {
+func (s *Sort) JSON(input string) (output string, err error) {
 	jsonb := []byte(input)
 	var obj any
 	err = json.Unmarshal(jsonb, &obj)

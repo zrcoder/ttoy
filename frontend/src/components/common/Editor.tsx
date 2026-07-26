@@ -10,7 +10,14 @@ type EditorProps = {
   editorDidMount?: OnMount;
 };
 
-const Editor = ({ height, language, value, readOnly = false, onTextChange, editorDidMount }: EditorProps) => {
+const Editor = ({
+  height,
+  language,
+  value,
+  readOnly = false,
+  onTextChange,
+  editorDidMount,
+}: EditorProps) => {
   const { isDark } = useTheme();
 
   const handleEditorDidMount: OnMount = (editor, monaco) => {

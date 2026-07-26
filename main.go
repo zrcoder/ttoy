@@ -4,13 +4,7 @@ import (
 	"embed"
 	"log"
 
-	"github.com/zrcoder/ttoy/service/convert"
-	"github.com/zrcoder/ttoy/service/encode"
-	"github.com/zrcoder/ttoy/service/format"
-	"github.com/zrcoder/ttoy/service/generate"
-	"github.com/zrcoder/ttoy/service/plot"
-	"github.com/zrcoder/ttoy/service/sort"
-	"github.com/zrcoder/ttoy/service/view"
+	"github.com/zrcoder/ttoy/service"
 
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
@@ -23,13 +17,13 @@ func main() {
 		Name:        "TToy",
 		Description: "A smart APP contains dev tools",
 		Services: []application.Service{
-			application.NewService(convert.New()),
-			application.NewService(format.New()),
-			application.NewService(encode.New()),
-			application.NewService(generate.New()),
-			application.NewService(view.New()),
-			application.NewService(plot.New()),
-			application.NewService(sort.New()),
+			application.NewService(new(service.Convert)),
+			application.NewService(new(service.Format)),
+			application.NewService(new(service.Encode)),
+			application.NewService(new(service.Generate)),
+			application.NewService(new(service.View)),
+			application.NewService(new(service.Plot)),
+			application.NewService(new(service.Sort)),
 		},
 		Assets: application.AssetOptions{
 			Handler: application.AssetFileServerFS(assets),

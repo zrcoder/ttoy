@@ -6,25 +6,25 @@
 import { Call as $Call, CancellablePromise as $CancellablePromise } from "@wailsio/runtime";
 
 export function Json2Toml(data: string): $CancellablePromise<string> {
-    return $Call.ByID(1710518952, data);
+    return $Call.ByID(1619034867, data);
 }
 
 export function Json2Yaml(data: string): $CancellablePromise<string> {
-    return $Call.ByID(2793242359, data);
+    return $Call.ByID(2247453176, data);
 }
 
 export function Toml2Json(data: string): $CancellablePromise<string> {
-    return $Call.ByID(871597048, data);
+    return $Call.ByID(2872147207, data);
 }
 
 export function Toml2Yaml(data: string): $CancellablePromise<string> {
-    return $Call.ByID(3236081181, data);
+    return $Call.ByID(3503250274, data);
 }
 
 export function Yaml2Json(data: string): $CancellablePromise<string> {
-    return $Call.ByID(2854281405, data);
+    return $Call.ByID(132096138, data);
 }
 
 export function Yaml2Toml(data: string): $CancellablePromise<string> {
-    return $Call.ByID(4131770875, data);
+    return $Call.ByID(3249865560, data);
 }

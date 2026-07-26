@@ -6,7 +6,11 @@ type ResultHandler = (result: string) => void;
 export const useTransformer = () => {
   const { modal } = AntdApp.useApp();
 
-  const fn = (input: string, transformer: Transformer, resultHandler: ResultHandler) => {
+  const fn = (
+    input: string,
+    transformer: Transformer,
+    resultHandler: ResultHandler,
+  ) => {
     transformer(input)
       .then((result) => {
         resultHandler(result);

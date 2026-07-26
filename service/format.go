@@ -1,4 +1,4 @@
-package format
+package service
 
 import (
 	"bytes"
@@ -9,24 +9,20 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type Formatter struct{}
+type Format struct{}
 
-func New() *Formatter {
-	return &Formatter{}
-}
-
-func (f *Formatter) Html(data string) (string, error) {
+func (f *Format) Html(data string) (string, error) {
 	res := gohtml.FormatBytes([]byte(data))
 	return string(res), nil
 }
 
-func (f *Formatter) Json(data string) (string, error) {
+func (f *Format) Json(data string) (string, error) {
 	buf := bytes.NewBuffer(nil)
 	err := json.Indent(buf, []byte(data), "", "    ")
 	return buf.String(), err
 }
 
-func (f *Formatter) Toml(data string) (string, error) {
+func (f *Format) Toml(data string) (string, error) {
 	var obj any
 	err := toml.Unmarshal([]byte(data), &obj)
 	if err != nil {
@@ -37,7 +33,7 @@ func (f *Formatter) Toml(data string) (string, error) {
 	return buf.String(), err
 }
 
-func (f *Formatter) Yaml(data string) (string, error) {
+func (f *Format) Yaml(data string) (string, error) {
 	var obj any
 	err := yaml.Unmarshal([]byte(data), &obj)
 	if err != nil {

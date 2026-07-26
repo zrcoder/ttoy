@@ -5,10 +5,10 @@
 // @ts-ignore: Unused imports
 import { Call as $Call, CancellablePromise as $CancellablePromise } from "@wailsio/runtime";
 
-export function D2(data: string): $CancellablePromise<string> {
-    return $Call.ByID(3547150142, data);
+export function AsciiArt(input: string, font: string): $CancellablePromise<string> {
+    return $Call.ByID(343530981, input, font);
 }
 
-export function Ndor(input: string): $CancellablePromise<string> {
-    return $Call.ByID(2609509691, input);
+export function Hash(input: string): $CancellablePromise<{ [_ in string]?: string } | null> {
+    return $Call.ByID(2197541025, input);
 }

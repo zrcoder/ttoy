@@ -3,10 +3,35 @@ import { Button, Select, Spin, Input } from "antd";
 import { CopyOutlined, CheckOutlined } from "@ant-design/icons";
 import { App as AntdApp } from "antd";
 import { contentHeight } from "./common/layout";
-import { Generator as Gen } from "../../bindings/github.com/zrcoder/ttoy/service/generate";
+import { Generate as SvcGenerate } from "../../bindings/github.com/zrcoder/ttoy/service";
 import AppTabs from "./common/AppTabs";
 
-const FONTS = ["big", "block", "chunky", "coinstak", "colossal", "cricket", "cyberlarge", "cybermedium", "doh", "doom", "isometric1", "isometric3", "larry3d", "marquee", "ogre", "pawp", "puffy", "rectangles", "rounded", "slant", "small", "standard", "starwars", "stop"];
+const FONTS = [
+  "big",
+  "block",
+  "chunky",
+  "coinstak",
+  "colossal",
+  "cricket",
+  "cyberlarge",
+  "cybermedium",
+  "doh",
+  "doom",
+  "isometric1",
+  "isometric3",
+  "larry3d",
+  "marquee",
+  "ogre",
+  "pawp",
+  "puffy",
+  "rectangles",
+  "rounded",
+  "slant",
+  "small",
+  "standard",
+  "starwars",
+  "stop",
+];
 
 type CopyButtonProps = {
   copied: boolean;
@@ -14,7 +39,14 @@ type CopyButtonProps = {
 };
 
 const CopyButton = ({ copied, onClick }: CopyButtonProps) => (
-  <Button type="text" size="small" icon={copied ? <CheckOutlined style={{ color: "#52c41a" }} /> : <CopyOutlined />} onClick={onClick} />
+  <Button
+    type="text"
+    size="small"
+    icon={
+      copied ? <CheckOutlined style={{ color: "#52c41a" }} /> : <CopyOutlined />
+    }
+    onClick={onClick}
+  />
 );
 
 type LabelRowProps = {
@@ -23,7 +55,9 @@ type LabelRowProps = {
 };
 
 const LabelRow = ({ label, copyButton }: LabelRowProps) => (
-  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+  <div
+    style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}
+  >
     <span style={{ fontWeight: "bold" }}>{label}</span>
     {copyButton}
   </div>
@@ -42,7 +76,7 @@ const AsciiArtTab = () => {
       return;
     }
     setLoading(true);
-    Gen.AsciiArt(input, font)
+    SvcGenerate.AsciiArt(input, font)
       .then((res) => {
         setOutput(res ?? "");
       })
@@ -55,16 +89,46 @@ const AsciiArtTab = () => {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: contentHeight }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        height: contentHeight,
+      }}
+    >
       <div style={{ marginBottom: 16 }}>
-        <Input value={input} onChange={(e) => setInput(e.target.value.replace(/[^\x00-\x7F]/g, ""))} placeholder="Enter text (ASCII only)" />
+        <Input
+          value={input}
+          onChange={(e) =>
+            setInput(e.target.value.replace(/[^\x00-\x7F]/g, ""))
+          }
+          placeholder="Enter text (ASCII only)"
+        />
       </div>
-      <div style={{ display: "flex", gap: 8, marginBottom: 16, alignItems: "center" }}>
-        <Select value={font} onChange={setFont} options={FONTS.map((f) => ({ value: f, label: f }))} style={{ width: 200 }} />
-        <Button type="primary" onClick={handleGenerate} loading={loading}>Generate</Button>
+      <div
+        style={{
+          display: "flex",
+          gap: 8,
+          marginBottom: 16,
+          alignItems: "center",
+        }}
+      >
+        <Select
+          value={font}
+          onChange={setFont}
+          options={FONTS.map((f) => ({ value: f, label: f }))}
+          style={{ width: 200 }}
+        />
+        <Button type="primary" onClick={handleGenerate} loading={loading}>
+          Generate
+        </Button>
       </div>
       <div style={{ flex: 1, minHeight: 0 }}>
-        <Input.TextArea value={output} readOnly style={{ height: "100%", fontFamily: "monospace" }} />
+        <Input.TextArea
+          value={output}
+          readOnly
+          style={{ height: "100%", fontFamily: "monospace" }}
+        />
       </div>
     </div>
   );
@@ -86,7 +150,7 @@ const HashTab = () => {
       return;
     }
     setLoading(true);
-    Gen.Hash(input)
+    SvcGenerate.Hash(input)
       .then((res) => {
         setResults(res as HashResults);
       })
@@ -111,20 +175,72 @@ const HashTab = () => {
 
   const HashResult = ({ label, value, hashKey, onCopy }: HashResultProps) => (
     <div style={{ marginBottom: 16 }}>
-      <LabelRow label={label} copyButton={<CopyButton copied={copiedKey === hashKey} onClick={() => { navigator.clipboard.writeText(value); onCopy(hashKey); }} />} />
-      <Input disabled value={value || "-"} style={{ fontFamily: "monospace" }} />
+      <LabelRow
+        label={label}
+        copyButton={
+          <CopyButton
+            copied={copiedKey === hashKey}
+            onClick={() => {
+              navigator.clipboard.writeText(value);
+              onCopy(hashKey);
+            }}
+          />
+        }
+      />
+      <Input
+        disabled
+        value={value || "-"}
+        style={{ fontFamily: "monospace" }}
+      />
     </div>
   );
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: contentHeight }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        height: contentHeight,
+      }}
+    >
       <div style={{ marginBottom: 16, height: 500 }}>
-        <Input.TextArea value={input} onChange={(e) => setInput(e.target.value)} placeholder="Enter text" style={{ height: "100%" }} />
+        <Input.TextArea
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Enter text"
+          style={{ height: "100%" }}
+        />
       </div>
-      <Button type="primary" onClick={handleHash} loading={loading} style={{ marginBottom: 16, alignSelf: "flex-start" }}>Hash</Button>
+      <Button
+        type="primary"
+        onClick={handleHash}
+        loading={loading}
+        style={{ marginBottom: 16, alignSelf: "flex-start" }}
+      >
+        Hash
+      </Button>
       <div style={{ flex: 1, overflow: "auto" }}>
-        {loading ? <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}><Spin size="large" /></div> : results && (
-          ["MD5", "SHA1", "SHA256", "SHA512"].map((algo) => <HashResult key={algo} label={algo} value={results[algo.toLowerCase()]} hashKey={algo.toLowerCase()} onCopy={handleCopy} />)
+        {loading ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Spin size="large" />
+          </div>
+        ) : (
+          results &&
+          ["MD5", "SHA1", "SHA256", "SHA512"].map((algo) => (
+            <HashResult
+              key={algo}
+              label={algo}
+              value={results[algo.toLowerCase()]}
+              hashKey={algo.toLowerCase()}
+              onCopy={handleCopy}
+            />
+          ))
         )}
       </div>
     </div>
@@ -132,10 +248,13 @@ const HashTab = () => {
 };
 
 const Generator = () => (
-  <AppTabs defaultActiveKey="1" items={[
-    { key: "1", label: "AsciiArt", children: <AsciiArtTab /> },
-    { key: "2", label: "Hash", children: <HashTab /> },
-  ]} />
+  <AppTabs
+    defaultActiveKey="1"
+    items={[
+      { key: "1", label: "AsciiArt", children: <AsciiArtTab /> },
+      { key: "2", label: "Hash", children: <HashTab /> },
+    ]}
+  />
 );
 
 export default Generator;

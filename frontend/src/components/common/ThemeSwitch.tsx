@@ -4,7 +4,6 @@ import { useTheme } from "../../contexts/ThemeContext";
 
 const ThemeSwitch = () => {
   const { isDark, toggleTheme } = useTheme();
-
   return (
     <Switch
       checked={isDark}

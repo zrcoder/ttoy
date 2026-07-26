@@ -13,7 +13,12 @@ type TextImagerProps = {
   lang: string;
 };
 
-const TextImager = ({ editorContent, onTextChange, imageGenerator, lang }: TextImagerProps) => {
+const TextImager = ({
+  editorContent,
+  onTextChange,
+  imageGenerator,
+  lang,
+}: TextImagerProps) => {
   const { modal } = AntdApp.useApp();
   const [text, setText] = useState(editorContent ?? "");
   const [image, setImage] = useState<string | null>(null);
@@ -62,7 +67,9 @@ const TextImager = ({ editorContent, onTextChange, imageGenerator, lang }: TextI
           language={lang}
           value={text}
           onTextChange={handleTextChange}
-          editorDidMount={(editor) => { editorRef.current = editor; }}
+          editorDidMount={(editor) => {
+            editorRef.current = editor;
+          }}
         />
       </div>
       <div
@@ -78,7 +85,7 @@ const TextImager = ({ editorContent, onTextChange, imageGenerator, lang }: TextI
           loading={loading}
           icon={<CaretRightFilled />}
           type="primary"
-        ></Button>
+        />
       </div>
       <div
         style={{

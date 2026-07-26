@@ -6,25 +6,25 @@
 import { Call as $Call, CancellablePromise as $CancellablePromise } from "@wailsio/runtime";
 
 export function Base64Decode(input: string): $CancellablePromise<string> {
-    return $Call.ByID(4119418432, input);
+    return $Call.ByID(1593701683, input);
 }
 
 export function Base64Encode(input: string): $CancellablePromise<string> {
-    return $Call.ByID(2278369876, input);
+    return $Call.ByID(1126958715, input);
 }
 
 export function HTMLDecode(input: string): $CancellablePromise<string> {
-    return $Call.ByID(3450012150, input);
+    return $Call.ByID(1673334453, input);
 }
 
 export function HTMLEncode(input: string): $CancellablePromise<string> {
-    return $Call.ByID(2859933054, input);
+    return $Call.ByID(2059452641, input);
 }
 
 export function URLDecode(input: string): $CancellablePromise<string> {
-    return $Call.ByID(4044000620, input);
+    return $Call.ByID(4234813465, input);
 }
 
 export function URLEncode(input: string): $CancellablePromise<string> {
-    return $Call.ByID(628365712, input);
+    return $Call.ByID(3164389733, input);
 }
