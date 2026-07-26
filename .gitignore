@@ -1,5 +1,6 @@
 build/bin
 frontend/dist
+frontend/npminstall-debug.log
 .task
 bin
 frontend/node_modules
