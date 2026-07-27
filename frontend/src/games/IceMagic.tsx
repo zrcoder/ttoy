@@ -2,22 +2,23 @@ import { Events } from "@wailsio/runtime";
 import { Button, message, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import * as Game from "../../bindings/github.com/zrcoder/ttoy/game/icemagic/game";
-import { GridUI } from "../../bindings/github.com/zrcoder/ttoy/game/internal";
+import { Sprite } from "../../bindings/github.com/zrcoder/ttoy/game/icemagic";
+
 import { contentHeight } from "../components/common/layout";
 
 type State = "succeed" | "failed" | "playing";
 
 const IceMagic: React.FC = () => {
-  const [grid, setGrid] = useState<GridUI | null>(null);
+  const [grid, setGrid] = useState<Sprite[][] | null>(null);
   const [state, setState] = useState<State>("playing");
   const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
-    Game.UI().then((g) => setGrid(g));
+    Game.Grid().then((g) => setGrid(g as Sprite[][] | null));
 
     const stop = Events.On(
       "icemagic:update",
-      (ev: { data: { Grid: GridUI; State: State } }) => {
+      (ev: { data: { Grid: Sprite[][]; State: State } }) => {
         setGrid(ev.data.Grid);
         setState(ev.data.State);
       },
@@ -61,18 +62,9 @@ const IceMagic: React.FC = () => {
     };
   }, []);
 
-  const renderCell = (
-    cell: {
-      Images: string[] | null;
-      BorderTop: boolean;
-      BorderBottom: boolean;
-      BorderLeft: boolean;
-      BorderRight: boolean;
-    },
-    rowIndex: number,
-    colIndex: number,
-  ) => {
-    const imgPath = cell.Images?.[0];
+  const renderCell = (sprite: Sprite, rowIndex: number, colIndex: number) => {
+    const cell = sprite.Cell;
+    const imgPath = cell?.Images?.[0];
 
     return (
       <div
@@ -84,16 +76,16 @@ const IceMagic: React.FC = () => {
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: "transparent",
-          borderTop: cell.BorderTop
+          borderTop: cell?.BorderTop
             ? "1px solid rgba(255,255,255,0.5)"
             : "none",
-          borderBottom: cell.BorderBottom
+          borderBottom: cell?.BorderBottom
             ? "1px solid rgba(255,255,255,0.5)"
             : "none",
-          borderLeft: cell.BorderLeft
+          borderLeft: cell?.BorderLeft
             ? "1px solid rgba(255,255,255,0.5)"
             : "none",
-          borderRight: cell.BorderRight
+          borderRight: cell?.BorderRight
             ? "1px solid rgba(255,255,255,0.5)"
             : "none",
           userSelect: "none",
@@ -107,7 +99,7 @@ const IceMagic: React.FC = () => {
   };
 
   const renderGrid = () => {
-    if (!grid || !grid.Cells || grid.Cells.length === 0) {
+    if (!grid || grid.length === 0) {
       return (
         <div
           style={{
@@ -131,9 +123,11 @@ const IceMagic: React.FC = () => {
           backgroundColor: "white",
         }}
       >
-        {grid.Cells.map((row, rowIndex) => (
+        {grid.map((row, rowIndex) => (
           <div key={rowIndex} style={{ display: "flex" }}>
-            {row?.map((cell, colIndex) => renderCell(cell, rowIndex, colIndex))}
+            {row?.map((sprite, colIndex) =>
+              renderCell(sprite, rowIndex, colIndex),
+            )}
           </div>
         ))}
       </div>

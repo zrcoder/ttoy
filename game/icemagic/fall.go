@@ -7,16 +7,16 @@ type Bar struct {
 }
 
 func (b *Bar) canFall() bool {
-	g := b.Left.Game
-	if b.Left.Y >= len(g.grid)-1 {
+	g := b.Left.game
+	if b.Left.y >= len(g.grid)-1 {
 		return false
 	}
 	if b.iceFixed() {
 		return false
 	}
-	down := g.grid[b.Left.Y+1]
-	for x := b.Left.X; x <= b.Right.X; x++ {
-		switch down[x].Kind {
+	down := g.grid[b.Left.y+1]
+	for x := b.Left.x; x <= b.Right.x; x++ {
+		switch down[x].kind {
 		case Fire, Blank:
 		default:
 			return false
@@ -26,21 +26,21 @@ func (b *Bar) canFall() bool {
 }
 
 func (b *Bar) getUpFallBars() []*Bar {
-	if b.Left.Y == 0 {
+	if b.Left.y == 0 {
 		return nil
 	}
-	upRow := b.Left.Game.grid[b.Left.Y-1]
+	upRow := b.Left.game.grid[b.Left.y-1]
 	var res []*Bar
 	preX := -1
-	for x := b.Left.X; x <= b.Right.X; x++ {
+	for x := b.Left.x; x <= b.Right.x; x++ {
 		up := upRow[x]
-		switch up.Kind {
+		switch up.kind {
 		case Wall, Blank:
 		default:
 			bar := up.bar()
-			if bar.Left.X > preX {
+			if bar.Left.x > preX {
 				res = append(res, bar)
-				preX = bar.Right.X
+				preX = bar.Right.x
 			}
 		}
 	}
@@ -48,19 +48,19 @@ func (b *Bar) getUpFallBars() []*Bar {
 }
 
 func (b *Bar) fallBar1StepQuietly() []*Bar {
-	g := b.Left.Game
-	y := b.Left.Y
+	g := b.Left.game
+	y := b.Left.y
 	if y >= len(g.grid)-1 {
 		return nil
 	}
 	row := g.grid[y]
 	downRow := g.grid[y+1]
 	var res []*Bar
-	preX := b.Left.X
-	for x := b.Left.X; x <= b.Right.X; x++ {
+	preX := b.Left.x
+	for x := b.Left.x; x <= b.Right.x; x++ {
 		cur, down := row[x], downRow[x]
-		if down.Kind == Fire {
-			switch cur.Kind {
+		if down.kind == Fire {
+			switch cur.kind {
 			case Player:
 				cur.PlayerDie()
 				g.updateUI()
@@ -75,21 +75,21 @@ func (b *Bar) fallBar1StepQuietly() []*Bar {
 			}
 		}
 	}
-	if preX <= b.Right.X {
-		res = append(res, &Bar{row[preX], row[b.Right.X]})
+	if preX <= b.Right.x {
+		res = append(res, &Bar{row[preX], row[b.Right.x]})
 	}
-	for x := b.Left.X; x <= b.Right.X; x++ {
+	for x := b.Left.x; x <= b.Right.x; x++ {
 		g.swapQuietly(row[x], downRow[x])
 	}
 	return res
 }
 
 func (b *Bar) iceFixed() bool {
-	return b.Left.LeftFixed || b.Right.RightFixed
+	return b.Left.leftFixed || b.Right.rightFixed
 }
 
 func (g *Game) checkFall(s *Sprite) {
-	if s == nil || s.Kind == Blank || s.Kind == Wall {
+	if s == nil || s.kind == Blank || s.kind == Wall {
 		return
 	}
 	g.fallBars(s.bar())
@@ -133,15 +133,15 @@ func (s *Sprite) getIceBar() *Bar {
 	if s == nil || !s.IsIce() {
 		return nil
 	}
-	x1, x2 := s.X, s.X
-	row := s.Game.grid[s.Y]
-	for x1 >= 0 && row[x1].IsIce() && row[x1].LeftFixed {
+	x1, x2 := s.x, s.x
+	row := s.game.grid[s.y]
+	for x1 >= 0 && row[x1].IsIce() && row[x1].leftFixed {
 		x1--
 	}
 	if !row[x1].IsIce() {
 		x1++
 	}
-	for x2 < len(row) && row[x2].IsIce() && row[x2].RightFixed {
+	for x2 < len(row) && row[x2].IsIce() && row[x2].rightFixed {
 		x2++
 	}
 	if !row[x2].IsIce() {
@@ -151,5 +151,5 @@ func (s *Sprite) getIceBar() *Bar {
 }
 
 func (s *Sprite) fall() bool {
-	return s.Game.fallBars(&Bar{s, s})
+	return s.game.fallBars(&Bar{s, s})
 }

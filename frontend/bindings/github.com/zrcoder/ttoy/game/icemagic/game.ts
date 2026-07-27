@@ -7,7 +7,11 @@ import { Call as $Call, CancellablePromise as $CancellablePromise } from "@wails
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore: Unused imports
-import * as internal$0 from "../internal/models.js";
+import * as $models from "./models.js";
+
+export function Grid(): $CancellablePromise<(($models.Sprite | null)[] | null)[] | null> {
+    return $Call.ByID(2127874272);
+}
 
 export function MagicLeft(): $CancellablePromise<void> {
     return $Call.ByID(1925835130);
@@ -23,8 +27,4 @@ export function MoveLeft(): $CancellablePromise<boolean> {
 
 export function MoveRight(): $CancellablePromise<boolean> {
     return $Call.ByID(1999623053);
-}
-
-export function UI(): $CancellablePromise<internal$0.GridUI> {
-    return $Call.ByID(3891339554);
 }

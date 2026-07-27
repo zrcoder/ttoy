@@ -38,6 +38,6 @@ type ChapterLevelOptionInput struct {
 	LevelSelect LevelMeta `json:"levelSelect"`
 }
 
-func (b *Base) EmitEvent(eventName string, data any) bool {
-	return b.app.Event.Emit(eventName, data)
+func (b *Base) EmitEvent(eventName string, data any) {
+	b.app.Event.Emit(eventName, data)
 }

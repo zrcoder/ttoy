@@ -21,32 +21,13 @@ var (
 )
 
 type Sprite struct {
-	*Game
-	Kind       byte
-	X          int
-	Y          int
-	LeftFixed  bool
-	RightFixed bool
-}
-
-func (s *Sprite) moveLeft() bool {
-	switch s.Kind {
-	case Player:
-		return s.MoveLeft()
-	case Ice:
-		return s.iceSlideLeft()
-	}
-	return false
-}
-
-func (s *Sprite) moveRight() bool {
-	switch s.Kind {
-	case Player:
-		return s.MoveRight()
-	case Ice:
-		return s.iceSlideRight()
-	}
-	return false
+	game       *Game
+	kind       byte
+	x          int
+	y          int
+	leftFixed  bool
+	rightFixed bool
+	Cell       internal.Cell
 }
 
 func (s *Sprite) iceSlideLeft() bool {
@@ -54,24 +35,24 @@ func (s *Sprite) iceSlideLeft() bool {
 	if left == nil {
 		return false
 	}
-	switch left.Kind {
+	switch left.kind {
 	case Fire:
 		left.FireDie()
 		s.IceDie()
 		time.Sleep(stepTime)
-		s.Game.updateUI()
-		s.Game.checkFall(left.Up())
-		s.Game.checkFall(s.Up())
+		s.game.updateUI()
+		s.game.checkFall(left.Up())
+		s.game.checkFall(s.Up())
 		return true
 	case Blank:
 		up := s.Up()
-		if ok := s.Game.swap(left, s, stepTime); !ok {
+		if ok := s.game.swap(left, s, stepTime); !ok {
 			return false
 		}
 		if ok := s.fall(); !ok {
 			s.iceSlideLeft()
 		}
-		s.Game.checkFall(up)
+		s.game.checkFall(up)
 		return true
 	}
 	return false
@@ -81,24 +62,24 @@ func (s *Sprite) iceSlideRight() bool {
 	if right == nil {
 		return false
 	}
-	switch right.Kind {
+	switch right.kind {
 	case Fire:
 		right.FireDie()
 		s.IceDie()
 		time.Sleep(stepTime)
-		s.Game.updateUI()
-		s.Game.checkFall(right.Up())
-		s.Game.checkFall(s.Up())
+		s.game.updateUI()
+		s.game.checkFall(right.Up())
+		s.game.checkFall(s.Up())
 		return true
 	case Blank:
 		up := s.Up()
-		if ok := s.Game.swap(s, right, stepTime); !ok {
+		if ok := s.game.swap(s, right, stepTime); !ok {
 			return false
 		}
 		if ok := s.fall(); !ok {
 			s.iceSlideRight()
 		}
-		s.Game.checkFall(up)
+		s.game.checkFall(up)
 		return true
 	}
 	return false
@@ -114,40 +95,40 @@ func (s *Sprite) climbRight() bool {
 
 func (s *Sprite) climb(dst *Sprite) bool {
 	up := s.Up()
-	if up != nil && up.Kind != Blank {
+	if up != nil && up.kind != Blank {
 		return false
 	}
-	if dst == nil || dst.Kind != Blank {
+	if dst == nil || dst.kind != Blank {
 		return false
 	}
-	return s.Game.swap(s, dst, 2*stepTime)
+	return s.game.swap(s, dst, 2*stepTime)
 }
 
 func (s *Sprite) Left() *Sprite {
-	if s.X == 0 {
+	if s.x == 0 {
 		return nil
 	}
-	return s.Game.grid[s.Y][s.X-1]
+	return s.game.grid[s.y][s.x-1]
 }
 func (s *Sprite) Right() *Sprite {
-	row := s.Game.grid[s.Y]
+	row := s.game.grid[s.y]
 	n := len(row)
-	if s.X == n-1 {
+	if s.x == n-1 {
 		return nil
 	}
-	return row[s.X+1]
+	return row[s.x+1]
 }
 func (s *Sprite) Up() *Sprite {
-	if s.Y == 0 {
+	if s.y == 0 {
 		return nil
 	}
-	return s.Game.grid[s.Y-1][s.X]
+	return s.game.grid[s.y-1][s.x]
 }
 func (s *Sprite) Down() *Sprite {
-	if s.Y == len(s.Game.grid)-1 {
+	if s.y == len(s.game.grid)-1 {
 		return nil
 	}
-	return s.Game.grid[s.Y+1][s.X]
+	return s.game.grid[s.y+1][s.x]
 }
 func (s *Sprite) LeftUp() *Sprite {
 	left := s.Left()
@@ -179,42 +160,45 @@ func (s *Sprite) RightDown() *Sprite {
 }
 
 func (s *Sprite) IsIce() bool {
-	return s.Kind == Ice || s.Kind == IceFixed
+	return s.kind == Ice || s.kind == IceFixed
 }
 
 func (s *Sprite) IceDie() {
-	s.Kind = Blank
+	s.kind = Blank
 	s.UnFix()
+	s.regularCell()
 }
 func (s *Sprite) FireDie() {
-	s.Game.fires--
-	s.Kind = Blank
+	s.game.fires--
+	s.kind = Blank
+	s.regularCell()
 }
 func (s *Sprite) PlayerDie() {
-	s.Game.failed = true
-	s.Kind = Blank
+	s.game.failed = true
+	s.kind = Blank
+	s.regularCell()
 }
 func (s *Sprite) UnFix() {
-	s.LeftFixed = false
-	s.RightFixed = false
+	s.leftFixed = false
+	s.rightFixed = false
 	left, right := s.Left(), s.Right()
 	if left != nil {
-		left.RightFixed = false
+		left.rightFixed = false
 	}
 	if right != nil {
-		right.LeftFixed = false
+		right.leftFixed = false
 	}
 }
 
 func (s *Sprite) magicLeft() {
-	if s.Kind != Player {
+	if s.kind != Player {
 		return
 	}
 	s.magic(s.LeftDown())
 
 }
 func (s *Sprite) magicRight() {
-	if s.Kind != Player {
+	if s.kind != Player {
 		return
 	}
 	s.magic((s.RightDown()))
@@ -224,35 +208,35 @@ func (s *Sprite) magic(dst *Sprite) {
 	if dst == nil {
 		return
 	}
-	switch dst.Kind {
+	switch dst.kind {
 	case Blank:
-		dst.Kind = Ice
+		dst.kind = Ice
 		left := dst.Left()
 		right := dst.Right()
-		if left != nil && (left.Kind == Ice || left.Kind == Wall) {
-			left.RightFixed = true
-			dst.LeftFixed = true
+		if left != nil && (left.kind == Ice || left.kind == Wall) {
+			left.rightFixed = true
+			dst.leftFixed = true
 		}
-		if right != nil && (right.Kind == Ice || right.Kind == Wall) {
-			right.LeftFixed = true
-			dst.RightFixed = true
+		if right != nil && (right.kind == Ice || right.kind == Wall) {
+			right.leftFixed = true
+			dst.rightFixed = true
 		}
-		s.Game.updateUI()
+		s.game.updateUI()
 	case Ice:
 		up, left, right := dst.Up(), dst.Left(), dst.Right()
 		dst.IceDie()
-		s.Game.updateUI()
-		s.Game.checkFall(up)
-		s.Game.checkFall(left)
-		s.Game.checkFall(right)
+		s.game.updateUI()
+		s.game.checkFall(up)
+		s.game.checkFall(left)
+		s.game.checkFall(right)
 	}
 }
 
-func (s *Sprite) uiCell() internal.Cell {
+func (s *Sprite) regularCell() {
 	imgPath := ""
-	switch s.Kind {
+	switch s.kind {
 	case Wall:
-		i := s.Game.rd.Intn(5) + 1
+		i := s.game.rd.Intn(5) + 1
 		imgPath = "images/icemagic/wall" + strconv.Itoa(i) + ".png"
 	case Fire:
 		imgPath = "images/icemagic/fire.gif"
@@ -261,16 +245,13 @@ func (s *Sprite) uiCell() internal.Cell {
 	case Ice, IceFixed:
 		imgPath = "images/icemagic/ice.png"
 	}
-	cell := internal.Cell{
-		Images: []string{imgPath},
+	s.Cell.Images = []string{imgPath}
+	if s.kind == Wall || s.kind == Ice || s.kind == IceFixed {
+		s.Cell.BorderTop = true
+		s.Cell.BorderBottom = true
 	}
-	if s.Kind == Wall || s.Kind == Ice || s.Kind == IceFixed {
-		cell.BorderTop = true
-		cell.BorderBottom = true
+	if s.kind == Ice || s.kind == IceFixed {
+		s.Cell.BorderLeft = !s.leftFixed
+		s.Cell.BorderRight = !s.rightFixed
 	}
-	if s.Kind == Ice || s.Kind == IceFixed {
-		cell.BorderLeft = !s.LeftFixed
-		cell.BorderRight = !s.RightFixed
-	}
-	return cell
 }

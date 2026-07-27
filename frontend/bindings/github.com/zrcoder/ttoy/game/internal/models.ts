@@ -8,7 +8,3 @@ export interface Cell {
     "BorderLeft": boolean;
     "BorderRight": boolean;
 }
-
-export interface GridUI {
-    "Cells": (Cell[] | null)[] | null;
-}

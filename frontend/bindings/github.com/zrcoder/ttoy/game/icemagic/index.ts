@@ -5,3 +5,7 @@ import * as Game from "./game.js";
 export {
     Game
 };
+
+export type {
+    Sprite
+} from "./models.js";

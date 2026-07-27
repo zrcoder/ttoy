@@ -3,13 +3,13 @@ package icemagic
 import "github.com/zrcoder/ttoy/game/internal"
 
 type Event struct {
-	Grid  internal.GridUI
+	Grid  [][]*Sprite
 	State internal.State
 }
 
-func (g *Game) updateUI() bool {
-	return g.base.EmitEvent("icemagic:update", Event{
-		Grid:  g.UI(),
+func (g *Game) updateUI() {
+	g.base.EmitEvent("icemagic:update", Event{
+		Grid:  g.Grid(),
 		State: g.state(),
 	})
 }

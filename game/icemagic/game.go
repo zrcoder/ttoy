@@ -31,17 +31,8 @@ func New(app *application.App) *Game {
 	return g
 }
 
-func (g *Game) UI() internal.GridUI {
-	cells := make([][]internal.Cell, len(g.grid))
-	for i := range g.grid {
-		cells[i] = make([]internal.Cell, len(g.grid[i]))
-		for j := range g.grid[i] {
-			cells[i][j] = g.grid[i][j].uiCell()
-		}
-	}
-	return internal.GridUI{
-		Cells: cells,
-	}
+func (g *Game) Grid() [][]*Sprite {
+	return g.grid
 }
 
 func (g *Game) MoveLeft() bool {
@@ -50,7 +41,7 @@ func (g *Game) MoveLeft() bool {
 	if left == nil {
 		return false
 	}
-	switch left.Kind {
+	switch left.kind {
 	case Blank:
 		up := player.Up()
 		if ok := g.swap(left, player, stepTime); !ok {
@@ -76,7 +67,7 @@ func (g *Game) MoveLeft() bool {
 func (g *Game) MoveRight() bool {
 	player := g.player
 	right := player.Right()
-	switch right.Kind {
+	switch right.kind {
 	case Blank:
 		up := player.Up()
 		if ok := g.swap(player, right, stepTime); !ok {
@@ -119,17 +110,20 @@ func (g *Game) swap(src, dst *Sprite, duration time.Duration) bool {
 		return false
 	}
 	time.Sleep(duration)
-	return g.updateUI()
+	g.updateUI()
+	return true
 }
 
 func (g *Game) swapQuietly(src, dst *Sprite) bool {
 	if src == nil || dst == nil {
 		return false
 	}
-	sRow := g.grid[src.Y]
-	dRow := g.grid[dst.Y]
-	sRow[src.X], dRow[dst.X] = dst, src
-	src.X, dst.X = dst.X, src.X
-	src.Y, dst.Y = dst.Y, src.Y
+	sRow := g.grid[src.y]
+	dRow := g.grid[dst.y]
+	sRow[src.x], dRow[dst.x] = dst, src
+	src.x, dst.x = dst.x, src.x
+	src.y, dst.y = dst.y, src.y
+	src.regularCell()
+	dst.regularCell()
 	return true
 }

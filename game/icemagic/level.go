@@ -67,7 +67,7 @@ func (g *Game) parseGrid(chapter, level int) {
 		g.grid[y] = make([]*Sprite, len(line))
 		for x := range line {
 			typeFlag := line[x]
-			sprite := &Sprite{Kind: typeFlag, X: x, Y: y, Game: g}
+			sprite := &Sprite{kind: typeFlag, x: x, y: y, game: g}
 			g.grid[y][x] = sprite
 			switch typeFlag {
 			case Blank:
@@ -79,9 +79,14 @@ func (g *Game) parseGrid(chapter, level int) {
 				sprite.checkToFixLeft()
 			}
 			left := sprite.Left()
-			if left != nil && left.Kind == IceFixed {
-				left.Kind = Ice
+			if left != nil && left.kind == IceFixed {
+				left.kind = Ice
 			}
+		}
+	}
+	for _, line := range g.grid {
+		for _, sprite := range line {
+			sprite.regularCell()
 		}
 	}
 }
@@ -93,16 +98,16 @@ func (s *Sprite) checkToFixLeft() {
 	}
 	var fix = func(condition bool) {
 		if condition {
-			s.LeftFixed = true
-			left.RightFixed = true
+			s.leftFixed = true
+			left.rightFixed = true
 		}
 	}
-	switch left.Kind {
+	switch left.kind {
 	case Wall:
-		fix(s.Kind == IceFixed || s.Kind == Wall)
+		fix(s.kind == IceFixed || s.kind == Wall)
 	case IceFixed:
-		fix(s.Kind == Ice || s.Kind == IceFixed || s.Kind == Wall)
+		fix(s.kind == Ice || s.kind == IceFixed || s.kind == Wall)
 	case Ice:
-		fix(s.Kind == IceFixed)
+		fix(s.kind == IceFixed)
 	}
 }
