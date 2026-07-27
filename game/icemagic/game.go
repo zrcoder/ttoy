@@ -5,29 +5,24 @@ import (
 	"time"
 
 	"github.com/wailsapp/wails/v3/pkg/application"
-	"github.com/zrcoder/ttoy/game/internal"
 )
 
+// TODO: fix border, 2-7 UI issue
 type Game struct {
-	base     *internal.Base
-	chapters []internal.Chapter
-	grid     [][]*Sprite
-	player   *Sprite
-	failed   bool // failed if the play is burned
-	fires    int
-	rd       *rand.Rand
+	app     *application.App
+	grid    [][]*Sprite
+	player  *Sprite
+	failed  bool // failed if the play is burned
+	fires   int
+	rd      *rand.Rand
+	chapter int
+	level   int
 }
 
 func New(app *application.App) *Game {
-	g := &Game{}
-	g.initLevels()
-	base := internal.New(
-		app,
-		internal.WithChapters(g.chapters, g.reset),
-	)
-	g.base = base
+	g := &Game{app: app}
 	g.rd = rand.New(rand.NewSource(time.Now().UnixNano()))
-	g.reset()
+	g.Reset()
 	return g
 }
 
@@ -35,15 +30,19 @@ func (g *Game) Grid() [][]*Sprite {
 	return g.grid
 }
 
+func (g *Game) Chapters() []Chapter {
+	return []Chapter{9, 9, 9, 9, 9, 2}
+}
+
 func (g *Game) MoveLeft() bool {
 	player := g.player
-	left := player.Left()
+	left := player.left()
 	if left == nil {
 		return false
 	}
 	switch left.kind {
 	case Blank:
-		up := player.Up()
+		up := player.up()
 		if ok := g.swap(left, player, stepTime); !ok {
 			return false
 		}
@@ -55,7 +54,7 @@ func (g *Game) MoveLeft() bool {
 		}
 		return false
 	case Fire:
-		player.PlayerDie()
+		player.playerDie()
 		g.updateUI()
 	case Wall:
 		return g.player.climbLeft()
@@ -66,10 +65,10 @@ func (g *Game) MoveLeft() bool {
 
 func (g *Game) MoveRight() bool {
 	player := g.player
-	right := player.Right()
+	right := player.right()
 	switch right.kind {
 	case Blank:
-		up := player.Up()
+		up := player.up()
 		if ok := g.swap(player, right, stepTime); !ok {
 			return false
 		}
@@ -81,7 +80,7 @@ func (g *Game) MoveRight() bool {
 		}
 		return false
 	case Fire:
-		player.PlayerDie()
+		player.playerDie()
 		g.updateUI()
 	case Wall:
 		return g.player.climbRight()
@@ -98,11 +97,16 @@ func (g *Game) MagicRight() {
 	g.player.magicRight()
 }
 
-func (g *Game) reset() {
-	chapter, level := g.base.ChapterIndex(), g.base.LevelIndex()
+func (g *Game) Reset() {
 	g.fires = 0
 	g.failed = false
-	g.parseGrid(chapter, level)
+	g.parseGrid(g.chapter, g.level)
+}
+
+func (g *Game) SelectLevel(chapter, level int) {
+	g.chapter = chapter - 1
+	g.level = level - 1
+	g.Reset()
 }
 
 func (g *Game) swap(src, dst *Sprite, duration time.Duration) bool {

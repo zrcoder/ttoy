@@ -1,4 +1,4 @@
-package internal
+package common
 
 type State string
 

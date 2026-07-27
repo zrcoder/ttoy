@@ -6,53 +6,9 @@ import (
 	"log/slog"
 
 	"github.com/zrcoder/ttoy/game/icemagic/levels"
-	"github.com/zrcoder/ttoy/game/internal"
 )
 
-const (
-	sceneName = "ice-magic"
-)
-
-type Level struct {
-	HideMagicButton bool
-}
-
-func (g *Game) initLevels() {
-	g.chapters = []internal.Chapter{
-		{
-			Children: []internal.Level{
-				{Data: &Level{HideMagicButton: true}},
-				{}, {}, {}, {}, {}, {}, {}, {},
-			},
-		},
-		{
-			Children: []internal.Level{
-				{}, {}, {}, {}, {}, {}, {}, {}, {},
-			},
-		},
-		{
-			Children: []internal.Level{
-				{}, {}, {}, {}, {}, {}, {}, {}, {},
-			},
-		},
-		{
-			Children: []internal.Level{
-				{}, {}, {}, {}, {}, {}, {}, {}, {},
-			},
-		},
-		{
-			Children: []internal.Level{
-				{}, {},
-			},
-		},
-	}
-	for i := range g.chapters {
-		g.chapters[i].Label = fmt.Sprintf("Chapter %d", i+1)
-		for j := range g.chapters[i].Children {
-			g.chapters[i].Children[j].Label = fmt.Sprintf("%d-%d", i+1, j+1)
-		}
-	}
-}
+type Chapter int // Chapter represents the number of levels in a chapter.
 
 func (g *Game) parseGrid(chapter, level int) {
 	data, err := levels.FS.ReadFile(fmt.Sprintf("%d/%d.txt", chapter+1, level+1))
@@ -78,7 +34,7 @@ func (g *Game) parseGrid(chapter, level int) {
 			case IceFixed, Ice, Wall:
 				sprite.checkToFixLeft()
 			}
-			left := sprite.Left()
+			left := sprite.left()
 			if left != nil && left.kind == IceFixed {
 				left.kind = Ice
 			}
@@ -92,7 +48,7 @@ func (g *Game) parseGrid(chapter, level int) {
 }
 
 func (s *Sprite) checkToFixLeft() {
-	left := s.Left()
+	left := s.left()
 	if left == nil {
 		return
 	}

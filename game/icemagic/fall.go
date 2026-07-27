@@ -62,12 +62,12 @@ func (b *Bar) fallBar1StepQuietly() []*Bar {
 		if down.kind == Fire {
 			switch cur.kind {
 			case Player:
-				cur.PlayerDie()
+				cur.playerDie()
 				g.updateUI()
 				return nil
 			case Ice, IceFixed:
-				cur.IceDie()
-				down.FireDie()
+				cur.iceDie()
+				down.fireDie()
 				if preX < x {
 					res = append(res, &Bar{row[preX], row[x-1]})
 				}
@@ -123,28 +123,28 @@ func (s *Sprite) bar() *Bar {
 	if s == nil {
 		return nil
 	}
-	if s.IsIce() {
+	if s.isIce() {
 		return s.getIceBar()
 	}
 	return &Bar{Left: s, Right: s}
 }
 
 func (s *Sprite) getIceBar() *Bar {
-	if s == nil || !s.IsIce() {
+	if s == nil || !s.isIce() {
 		return nil
 	}
 	x1, x2 := s.x, s.x
 	row := s.game.grid[s.y]
-	for x1 >= 0 && row[x1].IsIce() && row[x1].leftFixed {
+	for x1 >= 0 && row[x1].isIce() && row[x1].leftFixed {
 		x1--
 	}
-	if !row[x1].IsIce() {
+	if !row[x1].isIce() {
 		x1++
 	}
-	for x2 < len(row) && row[x2].IsIce() && row[x2].rightFixed {
+	for x2 < len(row) && row[x2].isIce() && row[x2].rightFixed {
 		x2++
 	}
-	if !row[x2].IsIce() {
+	if !row[x2].isIce() {
 		x2--
 	}
 	return &Bar{Left: row[x1], Right: row[x2]}

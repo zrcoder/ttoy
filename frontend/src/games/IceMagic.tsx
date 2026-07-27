@@ -1,8 +1,11 @@
 import { Events } from "@wailsio/runtime";
-import { Button, message, Typography } from "antd";
-import React, { useEffect, useState } from "react";
+import { Button, message, Select, Typography } from "antd";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Chapter,
+  Sprite,
+} from "../../bindings/github.com/zrcoder/ttoy/game/icemagic";
 import * as Game from "../../bindings/github.com/zrcoder/ttoy/game/icemagic/game";
-import { Sprite } from "../../bindings/github.com/zrcoder/ttoy/game/icemagic";
 
 import { contentHeight } from "../components/common/layout";
 
@@ -11,10 +14,24 @@ type State = "succeed" | "failed" | "playing";
 const IceMagic: React.FC = () => {
   const [grid, setGrid] = useState<Sprite[][] | null>(null);
   const [state, setState] = useState<State>("playing");
+  const [chapters, setChapters] = useState<Chapter[]>([]);
+  const [selectedChapter, setSelectedChapter] = useState<number>(1);
+  const [selectedLevel, setSelectedLevel] = useState<number>(1);
+  const chapterRef = useRef(selectedChapter);
+  const setSelectedChapterWithRef = (v: number) => {
+    chapterRef.current = v;
+    setSelectedChapter(v);
+  };
   const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
-    Game.Grid().then((g) => setGrid(g as Sprite[][] | null));
+    Game.Chapters().then((c) => {
+      const cs = (c || []) as Chapter[];
+      setChapters(cs);
+      Game.SelectLevel(1, 1).then(() => {
+        Game.Grid().then((g) => setGrid(g as Sprite[][] | null));
+      });
+    });
 
     const stop = Events.On(
       "icemagic:update",
@@ -62,6 +79,13 @@ const IceMagic: React.FC = () => {
     };
   }, []);
 
+  const handleReset = () => {
+    Game.Reset().then(() => {
+      Game.Grid().then((g) => setGrid(g as Sprite[][] | null));
+      setState("playing");
+    });
+  };
+
   const renderCell = (sprite: Sprite, rowIndex: number, colIndex: number) => {
     const cell = sprite.Cell;
     const imgPath = cell?.Images?.[0];
@@ -76,18 +100,10 @@ const IceMagic: React.FC = () => {
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: "transparent",
-          borderTop: cell?.BorderTop
-            ? "1px solid rgba(255,255,255,0.5)"
-            : "none",
-          borderBottom: cell?.BorderBottom
-            ? "1px solid rgba(255,255,255,0.5)"
-            : "none",
-          borderLeft: cell?.BorderLeft
-            ? "1px solid rgba(255,255,255,0.5)"
-            : "none",
-          borderRight: cell?.BorderRight
-            ? "1px solid rgba(255,255,255,0.5)"
-            : "none",
+          borderTop: cell?.BorderTop ? "2px solid white" : "none",
+          borderBottom: cell?.BorderBottom ? "2px solid white" : "none",
+          borderLeft: cell?.BorderLeft ? "2px solid white" : "none",
+          borderRight: cell?.BorderRight ? "2px solid white" : "none",
           userSelect: "none",
         }}
       >
@@ -120,7 +136,7 @@ const IceMagic: React.FC = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          backgroundColor: "white",
+          backgroundColor: "#f0f0f0",
         }}
       >
         {grid.map((row, rowIndex) => (
@@ -152,16 +168,65 @@ const IceMagic: React.FC = () => {
       </Typography.Title>
       <div
         style={{
-          flex: 1,
           display: "flex",
           justifyContent: "center",
+          gap: 8,
+          marginBottom: 8,
+        }}
+      >
+        <Select
+          value={selectedChapter}
+          onChange={(v) => {
+            setSelectedChapterWithRef(v);
+            setSelectedLevel(1);
+            Game.SelectLevel(v, 1).then(() => {
+              Game.Grid().then((g) => setGrid(g as Sprite[][] | null));
+              (document.activeElement as HTMLElement | null)?.blur();
+            });
+          }}
+          style={{ width: 80 }}
+          options={chapters.map((_, i) => ({
+            value: i + 1,
+            label: `${i + 1}`,
+          }))}
+        />
+        <Select
+          value={selectedLevel}
+          onChange={(v) => {
+            setSelectedLevel(v);
+            Game.SelectLevel(chapterRef.current, v).then(() => {
+              Game.Grid().then((g) => setGrid(g as Sprite[][] | null));
+              (document.activeElement as HTMLElement | null)?.blur();
+            });
+          }}
+          style={{ width: 80 }}
+          options={Array.from(
+            { length: chapters[selectedChapter - 1] || 1 },
+            (_, i) => ({ value: i + 1, label: `${selectedChapter}-${i + 1}` }),
+          )}
+        />
+        <Button
+          onClick={() => {
+            handleReset();
+            document.body.focus();
+          }}
+        >
+          Reset
+        </Button>
+      </div>
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
           alignItems: "center",
+          gap: 32,
         }}
       >
         {renderGrid()}
         <div
           style={{
-            marginLeft: 32,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",

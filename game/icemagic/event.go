@@ -1,26 +1,26 @@
 package icemagic
 
-import "github.com/zrcoder/ttoy/game/internal"
+import "github.com/zrcoder/ttoy/game/common"
 
 type Event struct {
 	Grid  [][]*Sprite
-	State internal.State
+	State common.State
 }
 
 func (g *Game) updateUI() {
-	g.base.EmitEvent("icemagic:update", Event{
+	g.app.Event.Emit("icemagic:update", Event{
 		Grid:  g.Grid(),
 		State: g.state(),
 	})
 }
 
-func (g *Game) state() internal.State {
+func (g *Game) state() common.State {
 	switch {
 	case g.failed:
-		return internal.StateFailed
+		return common.StateFailed
 	case g.fires == 0:
-		return internal.StateSucceed
+		return common.StateSucceed
 	default:
-		return internal.StatePlaying
+		return common.StatePlaying
 	}
 }

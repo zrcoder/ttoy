@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/zrcoder/ttoy/game/internal"
+	"github.com/zrcoder/ttoy/game/common"
 )
 
 const (
@@ -27,25 +27,25 @@ type Sprite struct {
 	y          int
 	leftFixed  bool
 	rightFixed bool
-	Cell       internal.Cell
+	Cell       common.Cell
 }
 
 func (s *Sprite) iceSlideLeft() bool {
-	left := s.Left()
+	left := s.left()
 	if left == nil {
 		return false
 	}
 	switch left.kind {
 	case Fire:
-		left.FireDie()
-		s.IceDie()
+		left.fireDie()
+		s.iceDie()
 		time.Sleep(stepTime)
 		s.game.updateUI()
-		s.game.checkFall(left.Up())
-		s.game.checkFall(s.Up())
+		s.game.checkFall(left.up())
+		s.game.checkFall(s.up())
 		return true
 	case Blank:
-		up := s.Up()
+		up := s.up()
 		if ok := s.game.swap(left, s, stepTime); !ok {
 			return false
 		}
@@ -58,21 +58,21 @@ func (s *Sprite) iceSlideLeft() bool {
 	return false
 }
 func (s *Sprite) iceSlideRight() bool {
-	right := s.Right()
+	right := s.right()
 	if right == nil {
 		return false
 	}
 	switch right.kind {
 	case Fire:
-		right.FireDie()
-		s.IceDie()
+		right.fireDie()
+		s.iceDie()
 		time.Sleep(stepTime)
 		s.game.updateUI()
-		s.game.checkFall(right.Up())
-		s.game.checkFall(s.Up())
+		s.game.checkFall(right.up())
+		s.game.checkFall(s.up())
 		return true
 	case Blank:
-		up := s.Up()
+		up := s.up()
 		if ok := s.game.swap(s, right, stepTime); !ok {
 			return false
 		}
@@ -86,15 +86,15 @@ func (s *Sprite) iceSlideRight() bool {
 }
 
 func (s *Sprite) climbLeft() bool {
-	return s.climb(s.LeftUp())
+	return s.climb(s.leftUp())
 }
 
 func (s *Sprite) climbRight() bool {
-	return s.climb(s.RightUp())
+	return s.climb(s.rightUp())
 }
 
 func (s *Sprite) climb(dst *Sprite) bool {
-	up := s.Up()
+	up := s.up()
 	if up != nil && up.kind != Blank {
 		return false
 	}
@@ -104,13 +104,13 @@ func (s *Sprite) climb(dst *Sprite) bool {
 	return s.game.swap(s, dst, 2*stepTime)
 }
 
-func (s *Sprite) Left() *Sprite {
+func (s *Sprite) left() *Sprite {
 	if s.x == 0 {
 		return nil
 	}
 	return s.game.grid[s.y][s.x-1]
 }
-func (s *Sprite) Right() *Sprite {
+func (s *Sprite) right() *Sprite {
 	row := s.game.grid[s.y]
 	n := len(row)
 	if s.x == n-1 {
@@ -118,70 +118,70 @@ func (s *Sprite) Right() *Sprite {
 	}
 	return row[s.x+1]
 }
-func (s *Sprite) Up() *Sprite {
+func (s *Sprite) up() *Sprite {
 	if s.y == 0 {
 		return nil
 	}
 	return s.game.grid[s.y-1][s.x]
 }
-func (s *Sprite) Down() *Sprite {
+func (s *Sprite) down() *Sprite {
 	if s.y == len(s.game.grid)-1 {
 		return nil
 	}
 	return s.game.grid[s.y+1][s.x]
 }
-func (s *Sprite) LeftUp() *Sprite {
-	left := s.Left()
+func (s *Sprite) leftUp() *Sprite {
+	left := s.left()
 	if left == nil {
 		return nil
 	}
-	return left.Up()
+	return left.up()
 }
-func (s *Sprite) RightUp() *Sprite {
-	right := s.Right()
+func (s *Sprite) rightUp() *Sprite {
+	right := s.right()
 	if right == nil {
 		return nil
 	}
-	return right.Up()
+	return right.up()
 }
-func (s *Sprite) LeftDown() *Sprite {
-	left := s.Left()
+func (s *Sprite) leftDown() *Sprite {
+	left := s.left()
 	if left == nil {
 		return nil
 	}
-	return left.Down()
+	return left.down()
 }
-func (s *Sprite) RightDown() *Sprite {
-	right := s.Right()
+func (s *Sprite) rightDown() *Sprite {
+	right := s.right()
 	if right == nil {
 		return nil
 	}
-	return right.Down()
+	return right.down()
 }
 
-func (s *Sprite) IsIce() bool {
+func (s *Sprite) isIce() bool {
 	return s.kind == Ice || s.kind == IceFixed
 }
 
-func (s *Sprite) IceDie() {
+func (s *Sprite) iceDie() {
 	s.kind = Blank
-	s.UnFix()
+	s.unFix()
 	s.regularCell()
 }
-func (s *Sprite) FireDie() {
+func (s *Sprite) fireDie() {
 	s.game.fires--
 	s.kind = Blank
 	s.regularCell()
 }
-func (s *Sprite) PlayerDie() {
+func (s *Sprite) playerDie() {
 	s.game.failed = true
 	s.kind = Blank
 	s.regularCell()
 }
-func (s *Sprite) UnFix() {
+func (s *Sprite) unFix() {
 	s.leftFixed = false
 	s.rightFixed = false
-	left, right := s.Left(), s.Right()
+	left, right := s.left(), s.right()
 	if left != nil {
 		left.rightFixed = false
 	}
@@ -194,14 +194,14 @@ func (s *Sprite) magicLeft() {
 	if s.kind != Player {
 		return
 	}
-	s.magic(s.LeftDown())
+	s.magic(s.leftDown())
 
 }
 func (s *Sprite) magicRight() {
 	if s.kind != Player {
 		return
 	}
-	s.magic((s.RightDown()))
+	s.magic((s.rightDown()))
 }
 
 func (s *Sprite) magic(dst *Sprite) {
@@ -211,8 +211,8 @@ func (s *Sprite) magic(dst *Sprite) {
 	switch dst.kind {
 	case Blank:
 		dst.kind = Ice
-		left := dst.Left()
-		right := dst.Right()
+		left := dst.left()
+		right := dst.right()
 		if left != nil && (left.kind == Ice || left.kind == Wall) {
 			left.rightFixed = true
 			dst.leftFixed = true
@@ -223,13 +223,14 @@ func (s *Sprite) magic(dst *Sprite) {
 		}
 		s.game.updateUI()
 	case Ice:
-		up, left, right := dst.Up(), dst.Left(), dst.Right()
-		dst.IceDie()
+		up, left, right := dst.up(), dst.left(), dst.right()
+		dst.iceDie()
 		s.game.updateUI()
 		s.game.checkFall(up)
 		s.game.checkFall(left)
 		s.game.checkFall(right)
 	}
+	dst.regularCell()
 }
 
 func (s *Sprite) regularCell() {
@@ -245,6 +246,10 @@ func (s *Sprite) regularCell() {
 	case Ice, IceFixed:
 		imgPath = "images/icemagic/ice.png"
 	}
+	s.Cell.BorderBottom = false
+	s.Cell.BorderTop = false
+	s.Cell.BorderLeft = false
+	s.Cell.BorderRight = false
 	s.Cell.Images = []string{imgPath}
 	if s.kind == Wall || s.kind == Ice || s.kind == IceFixed {
 		s.Cell.BorderTop = true
