@@ -7,7 +7,6 @@ import (
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
 
-// TODO: fix border, 2-7 UI issue
 type Game struct {
 	app     *application.App
 	grid    [][]*Sprite

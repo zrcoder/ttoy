@@ -184,10 +184,29 @@ func (s *Sprite) unFix() {
 	left, right := s.left(), s.right()
 	if left != nil {
 		left.rightFixed = false
+		left.regularCell()
 	}
 	if right != nil {
 		right.leftFixed = false
+		right.regularCell()
 	}
+	s.regularCell()
+}
+
+func (s *Sprite) fix() {
+	left := s.left()
+	right := s.right()
+	if left != nil && (left.kind == Ice || left.kind == Wall) {
+		left.rightFixed = true
+		s.leftFixed = true
+		left.regularCell()
+	}
+	if right != nil && (right.kind == Ice || right.kind == Wall) {
+		right.leftFixed = true
+		s.rightFixed = true
+		right.regularCell()
+	}
+	s.regularCell()
 }
 
 func (s *Sprite) magicLeft() {
@@ -211,16 +230,7 @@ func (s *Sprite) magic(dst *Sprite) {
 	switch dst.kind {
 	case Blank:
 		dst.kind = Ice
-		left := dst.left()
-		right := dst.right()
-		if left != nil && (left.kind == Ice || left.kind == Wall) {
-			left.rightFixed = true
-			dst.leftFixed = true
-		}
-		if right != nil && (right.kind == Ice || right.kind == Wall) {
-			right.leftFixed = true
-			dst.rightFixed = true
-		}
+		dst.fix()
 		s.game.updateUI()
 	case Ice:
 		up, left, right := dst.up(), dst.left(), dst.right()
@@ -246,16 +256,14 @@ func (s *Sprite) regularCell() {
 	case Ice, IceFixed:
 		imgPath = "images/icemagic/ice.png"
 	}
+	s.Cell.Images = []string{imgPath}
 	s.Cell.BorderBottom = false
 	s.Cell.BorderTop = false
 	s.Cell.BorderLeft = false
 	s.Cell.BorderRight = false
-	s.Cell.Images = []string{imgPath}
 	if s.kind == Wall || s.kind == Ice || s.kind == IceFixed {
 		s.Cell.BorderTop = true
 		s.Cell.BorderBottom = true
-	}
-	if s.kind == Ice || s.kind == IceFixed {
 		s.Cell.BorderLeft = !s.leftFixed
 		s.Cell.BorderRight = !s.rightFixed
 	}

@@ -32,7 +32,7 @@ func (g *Game) parseGrid(chapter, level int) {
 			case Player:
 				g.player = sprite
 			case IceFixed, Ice, Wall:
-				sprite.checkToFixLeft()
+				sprite.checkToFixWithLeft()
 			}
 			left := sprite.left()
 			if left != nil && left.kind == IceFixed {
@@ -47,7 +47,7 @@ func (g *Game) parseGrid(chapter, level int) {
 	}
 }
 
-func (s *Sprite) checkToFixLeft() {
+func (s *Sprite) checkToFixWithLeft() {
 	left := s.left()
 	if left == nil {
 		return
