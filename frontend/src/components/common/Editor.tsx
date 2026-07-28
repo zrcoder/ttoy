@@ -7,6 +7,7 @@ type EditorProps = {
   language: string;
   value: string;
   readOnly?: boolean;
+  autoFocus?: boolean;
   onTextChange?: (value: string) => void;
   editorDidMount?: OnMount;
 };
@@ -16,6 +17,7 @@ const Editor = ({
   language,
   value,
   readOnly = false,
+  autoFocus = false,
   onTextChange,
   editorDidMount,
 }: EditorProps) => {
@@ -26,6 +28,9 @@ const Editor = ({
       editorDidMount(editor, monaco);
     }
     editor.updateOptions({ readOnly: readOnly });
+    if (autoFocus) {
+      editor.focus();
+    }
   };
 
   const handleChange = (val: string | undefined) => {

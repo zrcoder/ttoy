@@ -44,6 +44,7 @@ const DiffTab = ({
           renderOverviewRuler: false,
         }}
         onMount={(editor) => {
+          editor.getOriginalEditor().focus();
           editor
             .getOriginalEditor()
             .onDidChangeModelContent(() =>

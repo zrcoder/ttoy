@@ -69,6 +69,7 @@ const TextImager = ({
           language={lang}
           value={text}
           onTextChange={handleTextChange}
+          autoFocus
           editorDidMount={(editor) => {
             editorRef.current = editor;
           }}

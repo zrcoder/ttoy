@@ -86,6 +86,7 @@ const AsciiArtTab = () => {
             setInput(e.target.value.replace(/[^\x00-\x7F]/g, ""))
           }
           placeholder="Enter text (ASCII only)"
+          autoFocus
         />
       </div>
       <div
@@ -170,6 +171,7 @@ const HashTab = () => {
           onChange={(e) => setInput(e.target.value)}
           placeholder="Enter text"
           style={{ height: "100%" }}
+          autoFocus
         />
       </div>
       <Button

@@ -54,6 +54,7 @@ const DualEditor = ({
           value={leftValue}
           onTextChange={setLeftValue}
           readOnly={leftReadOnly}
+          autoFocus
         />
       </div>
       <div
