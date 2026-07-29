@@ -5,11 +5,6 @@
 // @ts-ignore: Unused imports
 import * as common$0 from "../common/models.js";
 
-/**
- * Chapter represents the number of levels in a chapter.
- */
-export type Chapter = number;
-
 export interface Sprite {
     "Cell": common$0.Cell;
 }

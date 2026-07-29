@@ -8,19 +8,23 @@ import (
 )
 
 type Game struct {
-	app     *application.App
-	grid    [][]*Sprite
-	player  *Sprite
-	failed  bool // failed if the play is burned
-	fires   int
-	rd      *rand.Rand
-	chapter int
-	level   int
+	app      *application.App
+	grid     [][]*Sprite
+	player   *Sprite
+	failed   bool // failed if the play is burned
+	fires    int
+	rd       *rand.Rand
+	chapter  int
+	level    int
+	chpaters []int
 }
 
 func New(app *application.App) *Game {
-	g := &Game{app: app}
-	g.rd = rand.New(rand.NewSource(time.Now().UnixNano()))
+	g := &Game{
+		app:      app,
+		chpaters: []int{9, 9, 9, 9, 9, 2},
+		rd:       rand.New(rand.NewSource(time.Now().UnixNano())),
+	}
 	g.Reset()
 	return g
 }
@@ -29,8 +33,8 @@ func (g *Game) Grid() [][]*Sprite {
 	return g.grid
 }
 
-func (g *Game) Chapters() []Chapter {
-	return []Chapter{9, 9, 9, 9, 9, 2}
+func (g *Game) Chapters() []int {
+	return g.chpaters
 }
 
 func (g *Game) MoveLeft() bool {

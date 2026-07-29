@@ -1,16 +1,14 @@
 import { Events } from "@wailsio/runtime";
 import { Button, message, Select } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Chapter,
-  Sprite,
-} from "../../bindings/github.com/zrcoder/ttoy/game/icemagic";
+import { Sprite } from "../../bindings/github.com/zrcoder/ttoy/game/icemagic";
+import type { Cell } from "../../bindings/github.com/zrcoder/ttoy/game/common";
 import * as Game from "../../bindings/github.com/zrcoder/ttoy/game/icemagic/game";
 import { contentHeight } from "../components/common/layout";
 
 type State = "succeed" | "failed" | "playing";
 
-const cellStyle = (cell: Sprite["Cell"]) => ({
+const cellStyle = (cell: Cell) => ({
   width: 32,
   height: 32,
   display: "flex",
@@ -34,7 +32,7 @@ const btnCol = {
 const IceMagic: React.FC = () => {
   const [grid, setGrid] = useState<Sprite[][] | null>(null);
   const [state, setState] = useState<State>("playing");
-  const [chapters, setChapters] = useState<Chapter[]>([]);
+  const [chapters, setChapters] = useState<number[]>([]);
   const [selectedChapter, setSelectedChapter] = useState(1);
   const [selectedLevel, setSelectedLevel] = useState(1);
   const [messageApi, contextHolder] = message.useMessage();
@@ -43,7 +41,7 @@ const IceMagic: React.FC = () => {
 
   useEffect(() => {
     Game.Chapters().then((c) => {
-      const cs = (c || []) as Chapter[];
+      const cs = (c || []) as number[];
       setChapters(cs);
       Game.SelectLevel(1, 1).then(() =>
         Game.Grid().then((g) => setGrid(g as Sprite[][] | null)),

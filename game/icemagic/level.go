@@ -8,8 +8,6 @@ import (
 	"github.com/zrcoder/ttoy/game/icemagic/levels"
 )
 
-type Chapter int // Chapter represents the number of levels in a chapter.
-
 func (g *Game) parseGrid(chapter, level int) {
 	data, err := levels.FS.ReadFile(fmt.Sprintf("%d/%d.txt", chapter+1, level+1))
 	if err != nil {

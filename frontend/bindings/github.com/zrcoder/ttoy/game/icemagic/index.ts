@@ -7,6 +7,5 @@ export {
 };
 
 export type {
-    Chapter,
     Sprite
 } from "./models.js";
