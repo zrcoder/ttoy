@@ -1,10 +1,12 @@
 import { Events } from "@wailsio/runtime";
-import { Button, message, Select } from "antd";
+import { Button, message, Select, Switch } from "antd";
+import { MutedOutlined, SoundOutlined } from "@ant-design/icons";
 import React, { useEffect, useRef, useState } from "react";
 import { Sprite } from "../../bindings/github.com/zrcoder/ttoy/game/icemagic";
 import type { Cell } from "../../bindings/github.com/zrcoder/ttoy/game/common";
 import * as Game from "../../bindings/github.com/zrcoder/ttoy/game/icemagic/game";
 import { contentHeight } from "../components/common/layout";
+import { playMagicSound, playMoveSound, setSoundEnabled } from "./audio";
 
 type State = "succeed" | "failed" | "playing";
 
@@ -35,6 +37,7 @@ const IceMagic: React.FC = () => {
   const [chapters, setChapters] = useState<number[]>([]);
   const [selectedChapter, setSelectedChapter] = useState(1);
   const [selectedLevel, setSelectedLevel] = useState(1);
+  const [soundEnabled, setSoundEnabledState] = useState(true);
   const [messageApi, contextHolder] = message.useMessage();
 
   const chapterRef = useRef(selectedChapter);
@@ -66,13 +69,20 @@ const IceMagic: React.FC = () => {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      const actions: Record<string, () => void> = {
-        J: Game.MoveLeft,
-        L: Game.MoveRight,
-        A: Game.MagicLeft,
-        D: Game.MagicRight,
-      };
-      actions[e.key.toUpperCase()]?.();
+      const key = e.key.toUpperCase();
+      if (key === "J") {
+        Game.MoveLeft();
+        playMoveSound();
+      } else if (key === "L") {
+        Game.MoveRight();
+        playMoveSound();
+      } else if (key === "A") {
+        Game.MagicLeft();
+        playMagicSound();
+      } else if (key === "D") {
+        Game.MagicRight();
+        playMagicSound();
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -98,6 +108,11 @@ const IceMagic: React.FC = () => {
   const handleLevelChange = (v: number) => {
     setSelectedLevel(v);
     selectLevel(chapterRef.current, v);
+  };
+
+  const handleSoundToggle = (checked: boolean) => {
+    setSoundEnabled(checked);
+    setSoundEnabledState(checked);
   };
 
   const handleReset = () => {
@@ -256,6 +271,14 @@ const IceMagic: React.FC = () => {
       }}
     >
       {contextHolder}
+      <div style={{ position: "absolute", top: 40, right: 25, zIndex: 1 }}>
+        <Switch
+          checkedChildren={<SoundOutlined />}
+          unCheckedChildren={<MutedOutlined />}
+          checked={soundEnabled}
+          onChange={handleSoundToggle}
+        />
+      </div>
       <div
         style={{
           flex: 1,

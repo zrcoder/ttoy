@@ -114,14 +114,22 @@ const AppContent = () => {
             >
               {renderMenuItems(menuItems)}
             </Menu>
-          </Sider>
-          <Layout>
-            <Content style={{ padding: "0 15px 15px", position: "relative" }}>
-              <div
-                style={{ position: "absolute", top: 0, right: 15, zIndex: 1 }}
-              >
+            <div
+              style={{
+                position: "absolute",
+                bottom: 16,
+                left: 0,
+                right: 0,
+                padding: "0 16px",
+              }}
+            >
+              <div style={{ width: "100%" }}>
                 <ThemeSwitch />
               </div>
+            </div>
+          </Sider>
+          <Layout>
+            <Content style={{ padding: "0 15px 15px" }}>
               {componentMap[selectedKey]}
             </Content>
           </Layout>
