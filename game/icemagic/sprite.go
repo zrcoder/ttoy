@@ -2,7 +2,6 @@ package icemagic
 
 import (
 	"strconv"
-	"time"
 
 	"github.com/zrcoder/ttoy/game/common"
 )
@@ -14,10 +13,6 @@ const (
 	Player   = 'M'
 	Ice      = 'i'
 	IceFixed = 'I'
-)
-
-var (
-	stepTime = 100 * time.Millisecond
 )
 
 type Sprite struct {
@@ -37,9 +32,9 @@ func (s *Sprite) iceSlideLeft() bool {
 	}
 	switch left.kind {
 	case Fire:
-		left.fireDie()
 		s.iceDie()
-		time.Sleep(stepTime)
+		s.game.updateUI()
+		left.fireDie()
 		s.game.updateUI()
 		s.game.checkFall(left.up())
 		s.game.checkFall(s.up())
@@ -64,9 +59,9 @@ func (s *Sprite) iceSlideRight() bool {
 	}
 	switch right.kind {
 	case Fire:
-		right.fireDie()
 		s.iceDie()
-		time.Sleep(stepTime)
+		s.game.updateUI()
+		right.fireDie()
 		s.game.updateUI()
 		s.game.checkFall(right.up())
 		s.game.checkFall(s.up())

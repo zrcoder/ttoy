@@ -1,27 +1,33 @@
-import { Events } from "@wailsio/runtime";
-import { Button, message, Select, Switch } from "antd";
 import { MutedOutlined, SoundOutlined } from "@ant-design/icons";
+import { Events } from "@wailsio/runtime";
+import { Alert, Button, Modal, Select, Switch } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import { Sprite } from "../../bindings/github.com/zrcoder/ttoy/game/icemagic";
 import type { Cell } from "../../bindings/github.com/zrcoder/ttoy/game/common";
+import { Sprite } from "../../bindings/github.com/zrcoder/ttoy/game/icemagic";
 import * as Game from "../../bindings/github.com/zrcoder/ttoy/game/icemagic/game";
 import { contentHeight } from "../components/common/layout";
 import { playMagicSound, playMoveSound, setSoundEnabled } from "./audio";
 
 type State = "succeed" | "failed" | "playing";
 
-const cellStyle = (cell: Cell) => ({
+const cellStyle = {
   width: 32,
   height: 32,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   backgroundColor: "transparent",
-  borderTop: "2px solid" + (cell?.BorderTop ? " white" : " transparent"),
-  borderBottom: "2px solid" + (cell?.BorderBottom ? " white" : " transparent"),
-  borderLeft: "2px solid" + (cell?.BorderLeft ? " white" : " transparent"),
-  borderRight: "2px solid" + (cell?.BorderRight ? " white" : " transparent"),
   userSelect: "none" as const,
+};
+
+const imgStyle = (cell: Cell): React.CSSProperties => ({
+  width: 32,
+  height: 32,
+  boxSizing: "border-box",
+  borderTop: cell?.BorderTop ? "1px solid #e8f4f8" : "none",
+  borderBottom: cell?.BorderBottom ? "1px solid #e8f4f8" : "none",
+  borderLeft: cell?.BorderLeft ? "1px solid #e8f4f8" : "none",
+  borderRight: cell?.BorderRight ? "1px solid #e8f4f8" : "none",
 });
 
 const btnCol = {
@@ -38,7 +44,6 @@ const IceMagic: React.FC = () => {
   const [selectedChapter, setSelectedChapter] = useState(1);
   const [selectedLevel, setSelectedLevel] = useState(1);
   const [soundEnabled, setSoundEnabledState] = useState(true);
-  const [messageApi, contextHolder] = message.useMessage();
 
   const chapterRef = useRef(selectedChapter);
 
@@ -61,11 +66,13 @@ const IceMagic: React.FC = () => {
     return stop;
   }, []);
 
-  useEffect(() => {
-    if (state === "succeed") messageApi.success("Congratulations! You won!");
-    else if (state === "failed")
-      messageApi.error("Game Over! You were burned!");
-  }, [state, messageApi]);
+  const handleResultClose = () => {
+    if (state === "succeed") {
+      handleNext();
+    } else {
+      handleReset();
+    }
+  };
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -146,8 +153,8 @@ const IceMagic: React.FC = () => {
     const cell = sprite.Cell;
     const img = cell?.Images?.[0];
     return (
-      <div key={`${row}-${col}`} style={cellStyle(cell)}>
-        {img && <img src={img} alt="" style={{ width: 32, height: 32 }} />}
+      <div key={`${row}-${col}`} style={cellStyle}>
+        {img && <img src={img} alt="" style={imgStyle(cell)} />}
       </div>
     );
   };
@@ -173,7 +180,7 @@ const IceMagic: React.FC = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          backgroundColor: "lightblue",
+          backgroundColor: "white",
         }}
       >
         {grid.map((row, ri) => (
@@ -239,7 +246,6 @@ const IceMagic: React.FC = () => {
       >
         Reset
       </Button>
-      <Button onClick={handleNext}>Next</Button>
     </div>
   );
 
@@ -270,7 +276,22 @@ const IceMagic: React.FC = () => {
         padding: 16,
       }}
     >
-      {contextHolder}
+      {(state === "succeed" || state === "failed") && (
+        <Modal
+          open
+          title={state === "succeed" ? "Congratulations!" : "Game Over"}
+          footer={null}
+          onCancel={handleResultClose}
+          centered
+          width={220}
+        >
+          <Alert
+            title={state === "succeed" ? "You won!" : "You were burned!"}
+            type={state === "succeed" ? "success" : "error"}
+            showIcon
+          />
+        </Modal>
+      )}
       <div style={{ position: "absolute", top: 40, right: 25, zIndex: 1 }}>
         <Switch
           checkedChildren={<SoundOutlined />}

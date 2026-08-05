@@ -116,7 +116,6 @@ func (g *Game) swap(src, dst *Sprite, duration time.Duration) bool {
 	if !g.swapQuietly(src, dst) {
 		return false
 	}
-	time.Sleep(duration)
 	g.updateUI()
 	return true
 }

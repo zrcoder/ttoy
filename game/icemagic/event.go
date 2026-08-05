@@ -1,6 +1,12 @@
 package icemagic
 
-import "github.com/zrcoder/ttoy/game/common"
+import (
+	"time"
+
+	"github.com/zrcoder/ttoy/game/common"
+)
+
+const stepTime = 100 * time.Millisecond
 
 type Event struct {
 	Grid  [][]*Sprite
@@ -8,6 +14,7 @@ type Event struct {
 }
 
 func (g *Game) updateUI() {
+	time.Sleep(stepTime)
 	g.app.Event.Emit("icemagic:update", Event{
 		Grid:  g.Grid(),
 		State: g.state(),
