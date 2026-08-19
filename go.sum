@@ -111,8 +111,8 @@ github.com/yosssi/gohtml v0.0.0-20201013000340-ee4748c638f4 h1:0sw0nJM544SpsihWx
 github.com/yosssi/gohtml v0.0.0-20201013000340-ee4748c638f4/go.mod h1:+ccdNT0xMY1dtc5XBxumbYfOUhmduiGudqaDgD2rVRE=
 github.com/yuin/goldmark v1.8.4 h1:oat/nd3U6NeQqFEL3xpEJq7d7c86NI+DbSNGAs4xnjA=
 github.com/yuin/goldmark v1.8.4/go.mod h1:ip/1k0VRfGynBgxOz0yCqHrbZXhcjxyuS66Brc7iBKg=
-github.com/zrcoder/cdor v0.2.2-0.20260725044810-a99c12659347 h1:eynPmKO7Czn5a8BOHHFmbu74/Om4znE4z8Q2bo+UayE=
-github.com/zrcoder/cdor v0.2.2-0.20260725044810-a99c12659347/go.mod h1:agkRhdDwGBvreyWpqs7cJpeRXJVr2IVIqtswGvGN37I=
+github.com/zrcoder/cdor v0.2.3 h1:W9M1O97wWbeVen+B5Bh/JWRUJMf+2xd3r5HYXXhV2eU=
+github.com/zrcoder/cdor v0.2.3/go.mod h1:agkRhdDwGBvreyWpqs7cJpeRXJVr2IVIqtswGvGN37I=
 github.com/zrcoder/ndor v0.0.0-20260509140506-70027a2a820f h1:+C3LbPDbCvWgRBVJTDwcnsTuOK8+UmjF3ZzTbfKdgU4=
 github.com/zrcoder/ndor v0.0.0-20260509140506-70027a2a820f/go.mod h1:S+oSMEb9FVTPfLsa400lF3pPnZDF9gUpTHepuVqHGoQ=
 go.uber.org/multierr v1.11.0 h1:blXXJkSxSSfBVBlC76pxqeO+LN3aDfLQo+309xJstO0=
