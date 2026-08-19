@@ -41,7 +41,7 @@ func (s *Sprite) iceSlideLeft() bool {
 		return true
 	case Blank:
 		up := s.up()
-		if ok := s.game.swap(left, s, stepTime); !ok {
+		if ok := s.game.swap(left, s); !ok {
 			return false
 		}
 		if ok := s.fall(); !ok {
@@ -68,7 +68,7 @@ func (s *Sprite) iceSlideRight() bool {
 		return true
 	case Blank:
 		up := s.up()
-		if ok := s.game.swap(s, right, stepTime); !ok {
+		if ok := s.game.swap(s, right); !ok {
 			return false
 		}
 		if ok := s.fall(); !ok {
@@ -96,7 +96,7 @@ func (s *Sprite) climb(dst *Sprite) bool {
 	if dst == nil || dst.kind != Blank {
 		return false
 	}
-	return s.game.swap(s, dst, 2*stepTime)
+	return s.game.swap(s, dst)
 }
 
 func (s *Sprite) left() *Sprite {

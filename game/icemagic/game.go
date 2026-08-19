@@ -46,7 +46,7 @@ func (g *Game) MoveLeft() bool {
 	switch left.kind {
 	case Blank:
 		up := player.up()
-		if ok := g.swap(left, player, stepTime); !ok {
+		if ok := g.swap(left, player); !ok {
 			return false
 		}
 		g.checkFall(up)
@@ -72,7 +72,7 @@ func (g *Game) MoveRight() bool {
 	switch right.kind {
 	case Blank:
 		up := player.up()
-		if ok := g.swap(player, right, stepTime); !ok {
+		if ok := g.swap(player, right); !ok {
 			return false
 		}
 		g.checkFall(up)
@@ -112,7 +112,7 @@ func (g *Game) SelectLevel(chapter, level int) {
 	g.Reset()
 }
 
-func (g *Game) swap(src, dst *Sprite, duration time.Duration) bool {
+func (g *Game) swap(src, dst *Sprite) bool {
 	if !g.swapQuietly(src, dst) {
 		return false
 	}
