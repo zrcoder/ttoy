@@ -1,7 +1,7 @@
 package common
 
 type Cell struct {
-	Images       []string
+	Image        string
 	BorderTop    bool
 	BorderBottom bool
 	BorderLeft   bool

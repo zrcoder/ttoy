@@ -151,7 +151,7 @@ const IceMagic: React.FC = () => {
 
   const renderCell = (sprite: Sprite, row: number, col: number) => {
     const cell = sprite.Cell;
-    const img = cell?.Images?.[0];
+    const img = cell?.Image;
     return (
       <div key={`${row}-${col}`} style={cellStyle}>
         {img && <img src={img} alt="" style={imgStyle(cell)} />}

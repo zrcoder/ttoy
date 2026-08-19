@@ -239,19 +239,19 @@ func (s *Sprite) magic(dst *Sprite) {
 }
 
 func (s *Sprite) regularCell() {
-	imgPath := ""
 	switch s.kind {
 	case Wall:
 		i := s.game.rd.Intn(5) + 1
-		imgPath = "images/icemagic/wall" + strconv.Itoa(i) + ".png"
+		s.Cell.Image = "images/icemagic/wall" + strconv.Itoa(i) + ".png"
 	case Fire:
-		imgPath = "images/icemagic/fire.gif"
+		s.Cell.Image = "images/icemagic/fire.gif"
 	case Player:
-		imgPath = "images/icemagic/player.gif"
+		s.Cell.Image = "images/icemagic/player.gif"
 	case Ice, IceFixed:
-		imgPath = "images/icemagic/ice.png"
+		s.Cell.Image = "images/icemagic/ice.png"
+	default:
+		s.Cell.Image = ""
 	}
-	s.Cell.Images = []string{imgPath}
 	s.Cell.BorderBottom = false
 	s.Cell.BorderTop = false
 	s.Cell.BorderLeft = false
