@@ -1,4 +1,4 @@
-package common
+package icemagic
 
 type Cell struct {
 	Image        string

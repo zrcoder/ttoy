@@ -2,7 +2,7 @@ import { MutedOutlined, SoundOutlined } from "@ant-design/icons";
 import { Events } from "@wailsio/runtime";
 import { Alert, Button, Modal, Select, Switch } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import type { Cell } from "../../bindings/github.com/zrcoder/ttoy/game/common";
+import type { Cell } from "../../bindings/github.com/zrcoder/ttoy/game/icemagic";
 import { Sprite } from "../../bindings/github.com/zrcoder/ttoy/game/icemagic";
 import * as Game from "../../bindings/github.com/zrcoder/ttoy/game/icemagic/game";
 import { contentHeight } from "../components/common/layout";
@@ -204,22 +204,9 @@ const IceMagic: React.FC = () => {
     <div
       style={{
         display: "flex",
-        justifyContent: "center",
         gap: 8,
-        marginBottom: 8,
       }}
     >
-      <span
-        style={{
-          lineHeight: "32px",
-          fontWeight: "bold",
-          fontSize: 14,
-          letterSpacing: 1,
-          marginRight: 8,
-        }}
-      >
-        LEVEL
-      </span>
       <Select
         value={selectedChapter}
         onChange={handleChapterChange}
@@ -238,7 +225,6 @@ const IceMagic: React.FC = () => {
         options={levelOptions}
       />
       <Button
-        style={{ marginLeft: 16 }}
         onClick={() => {
           handleReset();
           blur();
@@ -271,8 +257,7 @@ const IceMagic: React.FC = () => {
     <div
       style={{
         height: "100%",
-        display: "flex",
-        flexDirection: "column",
+        position: "relative",
         padding: 16,
       }}
     >
@@ -292,7 +277,17 @@ const IceMagic: React.FC = () => {
           />
         </Modal>
       )}
-      <div style={{ position: "absolute", top: 40, right: 25, zIndex: 1 }}>
+      <div
+        style={{
+          position: "absolute",
+          top: 16,
+          left: 16,
+          zIndex: 1,
+        }}
+      >
+        {levelBar}
+      </div>
+      <div style={{ position: "absolute", top: 16, right: 25, zIndex: 1 }}>
         <Switch
           checkedChildren={<SoundOutlined />}
           unCheckedChildren={<MutedOutlined />}
@@ -302,7 +297,7 @@ const IceMagic: React.FC = () => {
       </div>
       <div
         style={{
-          flex: 1,
+          height: "100%",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
@@ -310,7 +305,6 @@ const IceMagic: React.FC = () => {
           gap: 32,
         }}
       >
-        {levelBar}
         {renderGrid()}
         {controlPad}
       </div>

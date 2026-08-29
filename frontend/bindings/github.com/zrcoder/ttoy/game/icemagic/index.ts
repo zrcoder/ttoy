@@ -7,5 +7,6 @@ export {
 };
 
 export type {
+    Cell,
     Sprite
 } from "./models.js";

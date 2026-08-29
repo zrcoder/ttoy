@@ -24,6 +24,8 @@ import Plot from "./components/Plot";
 import View from "./components/View";
 import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import IceMagic from "./games/IceMagic";
+import BallSort from "./games/BallSort";
+import Hanoi from "./games/Hanoi";
 
 const { Sider, Content } = Layout;
 
@@ -36,7 +38,9 @@ type MenuKey =
   | "view"
   | "graph"
   | "diff"
-  | "icemagic";
+  | "icemagic"
+  | "ballsort"
+  | "hanoi";
 
 type MenuItem = { key: MenuKey; icon?: React.ReactNode; label: string };
 type MenuGroup = { key: string; groupTitle: string; items: MenuItem[] };
@@ -53,6 +57,8 @@ const toolItems: MenuItem[] = [
 
 const gameItems: MenuItem[] = [
   { key: "icemagic", icon: <FireOutlined />, label: "IceMagic" },
+  { key: "ballsort", icon: <FireOutlined />, label: "BallSort" },
+  { key: "hanoi", icon: <FireOutlined />, label: "Hanoi" },
 ];
 
 const componentMap: Record<MenuKey, React.ReactNode> = {
@@ -65,6 +71,8 @@ const componentMap: Record<MenuKey, React.ReactNode> = {
   view: <View />,
   graph: <Plot />,
   icemagic: <IceMagic />,
+  ballsort: <BallSort />,
+  hanoi: <Hanoi />,
 };
 
 const menuItems: Array<MenuItem | MenuGroup> = [

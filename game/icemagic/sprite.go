@@ -2,8 +2,6 @@ package icemagic
 
 import (
 	"strconv"
-
-	"github.com/zrcoder/ttoy/game/common"
 )
 
 const (
@@ -22,7 +20,7 @@ type Sprite struct {
 	y          int
 	leftFixed  bool
 	rightFixed bool
-	Cell       common.Cell
+	Cell       Cell
 }
 
 func (s *Sprite) iceSlideLeft() bool {

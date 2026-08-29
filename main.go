@@ -4,6 +4,8 @@ import (
 	"embed"
 	"log"
 
+	"github.com/zrcoder/ttoy/game/ballsort"
+	"github.com/zrcoder/ttoy/game/hanoi"
 	"github.com/zrcoder/ttoy/game/icemagic"
 	"github.com/zrcoder/ttoy/service"
 
@@ -32,6 +34,8 @@ func main() {
 		},
 	})
 	app.RegisterService(application.NewService(icemagic.New(app)))
+	app.RegisterService(application.NewService(ballsort.New(app)))
+	app.RegisterService(application.NewService(hanoi.New(app)))
 
 	app.Window.NewWithOptions(application.WebviewWindowOptions{
 		Title:            "TToy",
