@@ -2,7 +2,8 @@ package service
 
 import (
 	"bytes"
-	"encoding/json"
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 
 	"github.com/BurntSushi/toml"
 	"gopkg.in/yaml.v3"
@@ -27,13 +28,11 @@ func (c *Convert) Toml2Json(data string) (string, error) {
 	if _, err := toml.Decode(data, &obj); err != nil {
 		return "", err
 	}
-	var buf bytes.Buffer
-	encoder := json.NewEncoder(&buf)
-	encoder.SetIndent("", "    ")
-	if err := encoder.Encode(obj); err != nil {
+	res, err := json.Marshal(obj, jsontext.WithIndent("    "))
+	if err != nil {
 		return "", err
 	}
-	return buf.String(), nil
+	return string(res), nil
 }
 
 func (c *Convert) Json2Yaml(data string) (string, error) {
@@ -53,13 +52,11 @@ func (c *Convert) Yaml2Json(data string) (string, error) {
 	if err := yaml.Unmarshal([]byte(data), &obj); err != nil {
 		return "", err
 	}
-	var buf bytes.Buffer
-	encoder := json.NewEncoder(&buf)
-	encoder.SetIndent("", "    ")
-	if err := encoder.Encode(obj); err != nil {
+	res, err := json.Marshal(obj, jsontext.WithIndent("    "))
+	if err != nil {
 		return "", err
 	}
-	return buf.String(), nil
+	return string(res), nil
 }
 
 func (c *Convert) Yaml2Toml(data string) (string, error) {

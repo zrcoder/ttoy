@@ -1,8 +1,7 @@
 package icemagic
 
 import (
-	"math/rand"
-	"time"
+	"math/rand/v2"
 
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
@@ -13,7 +12,7 @@ type Game struct {
 	player   *Sprite
 	failed   bool // failed if the play is burned
 	fires    int
-	rd       *rand.Rand
+	rand     *rand.Rand
 	chapter  int
 	level    int
 	chpaters []int
@@ -23,7 +22,7 @@ func New(app *application.App) *Game {
 	g := &Game{
 		app:      app,
 		chpaters: []int{9, 9, 9, 9, 9, 2},
-		rd:       rand.New(rand.NewSource(time.Now().UnixNano())),
+		rand:     rand.New(rand.NewPCG(rand.Uint64(), rand.Uint64())),
 	}
 	g.Reset()
 	return g

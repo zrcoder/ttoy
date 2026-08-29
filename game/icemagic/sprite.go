@@ -241,7 +241,7 @@ func (s *Sprite) magic(dst *Sprite) {
 func (s *Sprite) regularCell() {
 	switch s.kind {
 	case Wall:
-		i := s.game.rd.Intn(5) + 1
+		i := s.game.rand.IntN(5) + 1
 		s.Cell.Image = "images/icemagic/wall" + strconv.Itoa(i) + ".png"
 	case Fire:
 		s.Cell.Image = "images/icemagic/fire.gif"
