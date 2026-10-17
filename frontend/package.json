@@ -14,7 +14,7 @@
   "dependencies": {
     "@ant-design/icons": "^6.3.2",
     "@monaco-editor/react": "^4.7.0",
-    "@wailsio/runtime": "^3.0.0-beta.15",
+    "@wailsio/runtime": "^3.0.0-beta.30",
     "antd": "^6.5.2",
     "monaco-editor": "^0.56.0",
     "react": "^19.2.8",
