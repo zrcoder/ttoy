@@ -1,8 +1,5 @@
-build/bin
-.build
 .task
 bin
-cmd/gui/build
 .DS_Store
 
 /build/
