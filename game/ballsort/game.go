@@ -3,7 +3,6 @@ package ballsort
 import (
 	"math/rand/v2"
 
-	"github.com/wailsapp/wails/v3/pkg/application"
 	"github.com/zrcoder/ttoy/game/common"
 )
 
@@ -13,7 +12,6 @@ const (
 )
 
 type Game struct {
-	app              *application.App
 	Bottles          []*Bottle
 	ShiftBall        *Ball
 	DoneBottlesCount int
@@ -41,18 +39,17 @@ type Ball struct {
 }
 
 type EventData struct {
-	State           string    `json:"State"`
-	Bottles         []*Bottle `json:"Bottles"`
-	DoneCount       int       `json:"DoneCount"`
-	TotalCount      int       `json:"TotalCount"`
-	Cursor          int       `json:"Cursor"`
-	ShiftBallIndex  int       `json:"ShiftBallIndex"`
-	ShiftBallColor  string    `json:"ShiftBallColor"`
+	State          string    `json:"State"`
+	Bottles        []*Bottle `json:"Bottles"`
+	DoneCount      int       `json:"DoneCount"`
+	TotalCount     int       `json:"TotalCount"`
+	Cursor         int       `json:"Cursor"`
+	ShiftBallIndex int       `json:"ShiftBallIndex"`
+	ShiftBallColor string    `json:"ShiftBallColor"`
 }
 
-func New(app *application.App) *Game {
+func New() *Game {
 	g := &Game{
-		app: app,
 		colors: []string{
 			"red", "#7FFF00", "blue", "yellow", "violet", "pink", "green", "orange",
 		},
@@ -91,8 +88,8 @@ func (g *Game) shuffleColors() {
 
 func (g *Game) generateBalls(n int) []*Ball {
 	balls := make([]*Ball, 0, n*BottleBallCount)
-	for i := 0; i < n; i++ {
-		for j := 0; j < BottleBallCount; j++ {
+	for i := range n {
+		for range BottleBallCount {
 			balls = append(balls, &Ball{Color: g.colors[i]})
 		}
 	}
@@ -205,21 +202,8 @@ func (g *Game) State() string {
 }
 
 func (g *Game) updateUI() {
-	shiftBallIndex := -1
-	shiftBallColor := ""
-	if g.ShiftBall != nil {
-		shiftBallIndex = g.ShiftBall.BottleIndex
-		shiftBallColor = g.ShiftBall.Color
-	}
-	g.app.Event.Emit("ballsort:update", EventData{
-		Bottles:        g.Bottles,
-		State:          string(g.state()),
-		DoneCount:      g.DoneBottlesCount,
-		TotalCount:     g.currentBallTubes(),
-		Cursor:         g.cursor,
-		ShiftBallIndex: shiftBallIndex,
-		ShiftBallColor: shiftBallColor,
-	})
+	// No-op: UI polls state directly.
+	_ = g.ShiftBall
 }
 
 func (g *Game) state() common.State {

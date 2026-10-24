@@ -1,60 +1,38 @@
 version: "3"
 
-vars:
-  APP_NAME: "ttoy"
-  BIN_DIR: "bin"
-  PACKAGE_MANAGER: '{{.PACKAGE_MANAGER | default "npm"}}'
-  VITE_PORT: "{{.WAILS_VITE_PORT | default 9245}}"
-  GOOS: "{{.GOOS | default OS}}"
-
-includes:
-  common: ./build/Taskfile.yml
-  windows: ./build/windows/Taskfile.yml
-  darwin: ./build/darwin/Taskfile.yml
-  linux: ./build/linux/Taskfile.yml
-
 tasks:
   build:
     summary: Builds the application
     cmds:
-      - task: "{{.GOOS}}:build"
-
-  package:
-    summary: Packages a production build of the application
-    cmds:
-      - task: "{{.GOOS}}:package"
+      - go tool github.com/egoist/mygo/cmd/mygo build
 
   run:
     summary: Runs the application
     cmds:
-      - task: "{{.GOOS}}:run"
+      - go run .
 
   dev:
     summary: Runs the application in development mode
     cmds:
-      - wails3 dev -config ./build/config.yml -port {{.VITE_PORT}}
+      - go run .
 
-  setup:docker:
-    summary: Builds Docker image for cross-compilation (~800MB download)
+  test:
+    summary: Runs all tests
     cmds:
-      - task common:setup:docker
+      - go test ./...
 
-  build:server:
-    summary: Builds the application in server mode (no GUI, HTTP server only)
+  vet:
+    summary: Runs go vet
     cmds:
-      - task common:build:server
+      - go vet ./...
 
-  run:server:
-    summary: Runs the application in server mode
+  gen:
+    summary: Regenerate bindings (if any)
     cmds:
-      - task common:run:server
+      - go generate
 
-  build:docker:
-    summary: Builds a Docker image for server mode deployment
+  clear:
+    summary: Delete generated files
     cmds:
-      - task common:build:docker
-
-  run:docker:
-    summary: Builds and runs the Docker image
-    cmds:
-      - task common:run:docker
+      - rm -rf build
+      - rm -rf bin

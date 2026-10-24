@@ -3,11 +3,10 @@ package icemagic
 import (
 	"math/rand/v2"
 
-	"github.com/wailsapp/wails/v3/pkg/application"
+	"github.com/zrcoder/ttoy/game/common"
 )
 
 type Game struct {
-	app      *application.App
 	grid     [][]*Sprite
 	player   *Sprite
 	failed   bool // failed if the play is burned
@@ -18,9 +17,8 @@ type Game struct {
 	chpaters []int
 }
 
-func New(app *application.App) *Game {
+func New() *Game {
 	g := &Game{
-		app:      app,
 		chpaters: []int{9, 9, 9, 9, 9, 2},
 		rand:     rand.New(rand.NewPCG(rand.Uint64(), rand.Uint64())),
 	}
@@ -30,6 +28,49 @@ func New(app *application.App) *Game {
 
 func (g *Game) Grid() [][]*Sprite {
 	return g.grid
+}
+
+// PlayerX returns the player's column.
+func (g *Game) PlayerX() int {
+	if g.player == nil {
+		return -1
+	}
+	return g.player.x
+}
+
+// PlayerY returns the player's row.
+func (g *Game) PlayerY() int {
+	if g.player == nil {
+		return -1
+	}
+	return g.player.y
+}
+
+// Kind returns the cell type at (x, y), or Blank if out of bounds.
+func (g *Game) KindAt(x, y int) byte {
+	if y < 0 || y >= len(g.grid) {
+		return Blank
+	}
+	row := g.grid[y]
+	if x < 0 || x >= len(row) {
+		return Blank
+	}
+	if row[x] == nil {
+		return Blank
+	}
+	return row[x].kind
+}
+
+// State returns the current game state.
+func (g *Game) State() common.State {
+	switch {
+	case g.failed:
+		return common.StateFailed
+	case g.fires == 0:
+		return common.StateSucceed
+	default:
+		return common.StatePlaying
+	}
 }
 
 func (g *Game) Chapters() []int {

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"math/rand/v2"
 
-	"github.com/wailsapp/wails/v3/pkg/application"
 	"github.com/zrcoder/ttoy/game/common"
 )
 
@@ -14,7 +13,6 @@ const (
 )
 
 type Game struct {
-	app        *application.App
 	PileA      *Pile
 	PileB      *Pile
 	PileC      *Pile
@@ -53,9 +51,8 @@ type EventData struct {
 	Steps int        `json:"Steps"`
 }
 
-func New(app *application.App) *Game {
+func New() *Game {
 	g := &Game{
-		app: app,
 		colors: []string{
 			"red", "green", "blue", "yellow", "brown", "pink",
 		},
@@ -181,11 +178,8 @@ func (g *Game) SelectPileByIndex(index int) error {
 }
 
 func (g *Game) updateUI() {
-	g.app.Event.Emit("hanoi:update", EventData{
-		Piles: g.Piles(),
-		State: string(g.state()),
-		Steps: g.steps,
-	})
+	// No-op: UI polls state directly.
+	_ = g.ShiftDisk
 }
 
 func (g *Game) state() common.State {
@@ -220,7 +214,7 @@ func (p *Pile) Pop() *Disk {
 func (p *Pile) renewDisks() {
 	p.Disks = p.Disks[:0]
 	n := p.game.CurrentLevel().Disks
-	for i := 0; i < n; i++ {
+	for i := range n {
 		p.Disks = append(p.Disks, NewDisk(p, n-1-i))
 	}
 }

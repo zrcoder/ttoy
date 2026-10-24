@@ -1,7 +1,5 @@
 package icemagic
 
-import "time"
-
 type Bar struct {
 	Left, Right *Sprite
 }
@@ -112,7 +110,6 @@ func (g *Game) fallBars(bars ...*Bar) bool {
 	if !res {
 		return res
 	}
-	time.Sleep(stepTime)
 	g.updateUI()
 	g.fallBars(newBars...)
 	g.fallBars(upBars...)

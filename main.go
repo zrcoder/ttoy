@@ -1,54 +1,27 @@
 package main
 
 import (
-	"embed"
 	"log"
 
-	"github.com/zrcoder/ttoy/game/ballsort"
-	"github.com/zrcoder/ttoy/game/hanoi"
-	"github.com/zrcoder/ttoy/game/icemagic"
-	"github.com/zrcoder/ttoy/service"
-
-	"github.com/wailsapp/wails/v3/pkg/application"
+	"github.com/egoist/mygo"
+	"github.com/egoist/mygo/ui"
 )
 
-//go:embed all:frontend/dist
-var assets embed.FS
+var app = New()
 
 func main() {
-	app := application.New(application.Options{
-		Name:        "TToy",
-		Description: "A smart APP contains dev tools",
-		Services: []application.Service{
-			application.NewService(new(service.Convert)),
-			application.NewService(new(service.Format)),
-			application.NewService(new(service.Encode)),
-			application.NewService(new(service.Generate)),
-			application.NewService(new(service.View)),
-			application.NewService(new(service.Plot)),
-			application.NewService(new(service.Sort)),
-			application.NewService(new(service.Save)),
-		},
-		Assets: application.AssetOptions{
-			Handler: application.AssetFileServerFS(assets),
-		},
-	})
-	app.RegisterService(application.NewService(icemagic.New(app)))
-	app.RegisterService(application.NewService(ballsort.New(app)))
-	app.RegisterService(application.NewService(hanoi.New(app)))
+	log.SetFlags(log.Lshortfile)
 
-	app.Window.NewWithOptions(application.WebviewWindowOptions{
-		Title:            "TToy",
-		Width:            1536,
-		Height:           1024,
-		BackgroundColour: application.NewRGB(27, 38, 54),
-		URL:              "/",
-		Mac: application.MacWindow{
-			InvisibleTitleBarHeight: 50,
-			Backdrop:                application.MacBackdropTranslucent,
-			TitleBar:                application.MacTitleBarHiddenInset,
-		},
+	mygo.App.WhenReady(func() {
+		mygo.NewWindow(mygo.WindowOptions{
+			Title:   "TToy",
+			Width:   1400,
+			Height:  900,
+			Content: ui.View(app.View),
+		})
 	})
 
-	log.Fatal(app.Run())
+	if err := mygo.App.Run(); err != nil {
+		log.Fatal(err)
+	}
 }
