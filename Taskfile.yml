@@ -6,15 +6,10 @@ tasks:
     cmds:
       - go tool github.com/egoist/mygo/cmd/mygo build
 
-  run:
-    summary: Runs the application
-    cmds:
-      - go run .
-
   dev:
     summary: Runs the application in development mode
     cmds:
-      - go run .
+      - go tool github.com/egoist/mygo/cmd/mygo dev
 
   test:
     summary: Runs all tests
@@ -22,9 +17,10 @@ tasks:
       - go test ./...
 
   vet:
-    summary: Runs go vet
+    summary: Runs mygo vet and mygo migrte-ui
     cmds:
-      - go vet ./...
+      - go tool github.com/egoist/mygo/cmd/mygo vet .
+      - go tool github.com/egoist/mygo/cmd/mygo migrate-ui -write .
 
   gen:
     summary: Regenerate bindings (if any)
