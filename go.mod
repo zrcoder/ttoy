@@ -7,9 +7,10 @@ tool github.com/egoist/mygo/cmd/mygo
 require (
 	github.com/BurntSushi/toml v1.6.0
 	github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be
-	github.com/egoist/mygo v0.6.3
+	github.com/egoist/mygo v0.6.4
 	github.com/zrcoder/cdor v0.2.3
 	github.com/zrcoder/ndor v0.0.0-20261017080554-6debac4a49c0
+	golang.org/x/image v0.47.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
@@ -42,7 +43,6 @@ require (
 	github.com/visualfc/xtype v0.3.3 // indirect
 	github.com/yuin/goldmark v1.8.6 // indirect
 	golang.org/x/exp v0.0.0-20240909161429-701f63a606c0 // indirect
-	golang.org/x/image v0.47.0 // indirect
 	golang.org/x/mod v0.41.0 // indirect
 	golang.org/x/net v0.61.0 // indirect
 	golang.org/x/sys v0.49.0 // indirect

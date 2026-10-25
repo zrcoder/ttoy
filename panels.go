@@ -393,7 +393,7 @@ func (p *ViewPanel) viewTab(c *ui.Context, lang string, fn func(string) ([]byte,
 						Toast(c, err.Error(), func() {})
 						return
 					}
-					p.imageView.SetSvg(c, res)
+					p.imageView.SetSvg(res)
 				}).Children(func() {
 				ui.Text(c, "→").FontSize(14)
 			})
@@ -458,7 +458,7 @@ func (p *PlotPanel) plotTab(c *ui.Context, fn func(string) ([]byte, error), code
 						return
 					}
 					if codeType == "d2" {
-						p.imageView.SetSvg(c, res)
+						p.imageView.SetSvg(res)
 					} else {
 						p.imageView.SetPng(res)
 					}

@@ -1,46 +1,44 @@
 package main
 
 import (
-	"sync"
-
+	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
+	"github.com/zrcoder/ttoy/svg"
 )
 
+// ImageViewer shows one picture. MyGo runs views and input handlers on the
+// main thread, and nothing else in the app touches it, so it carries no
+// lock.
 type ImageViewer struct {
-	mu     sync.Mutex
 	bitmap *ui.Bitmap
 	svg    *ui.SVG
+	// data is the SVG as it came, to draw again when the theme flips: a
+	// diagram carries a color scheme for each.
+	data []byte
+	dark bool
 }
 
 func NewImageViewer() *ImageViewer {
 	return &ImageViewer{}
 }
 
-// SetSvg shows SVG data; ones with text are rasterized in the background so
-// their labels survive.
-func (v *ImageViewer) SetSvg(c *ui.Context, data []byte) {
-	var s *ui.SVG
-	if parsed, err := ui.ParseSVG(data); err == nil {
-		s = parsed
+// SetSvg shows SVG data, with its labels drawn as paths from the fonts it
+// carries, as ui.SVG draws shapes but no text.
+func (v *ImageViewer) SetSvg(data []byte) {
+	dark := mygo.Theme.IsDark()
+	v.bitmap, v.svg = nil, readySVG(data, dark)
+	v.data, v.dark = data, dark
+}
+
+// readySVG reads an SVG as ui.SVG can draw it, readying it first, and
+// falls back to the document as it is when that fails.
+func readySVG(data []byte, dark bool) *ui.SVG {
+	src := data
+	if prepared, err := svg.Prepare(data, dark); err == nil {
+		src = prepared
 	}
-	v.mu.Lock()
-	v.bitmap, v.svg = nil, s
-	v.mu.Unlock()
-	if !needsRaster(data) {
-		return
-	}
-	services := c.Services()
-	go func() {
-		img, err := rasterizeSVG(data)
-		if err != nil {
-			return
-		}
-		bm := ui.NewBitmap(img)
-		v.mu.Lock()
-		v.bitmap = bm
-		v.mu.Unlock()
-		services.Invalidate()
-	}()
+	s, _ := ui.ParseSVG(src)
+	return s
 }
 
 func (v *ImageViewer) SetPng(data []byte) {
@@ -48,15 +46,16 @@ func (v *ImageViewer) SetPng(data []byte) {
 	if err != nil {
 		return
 	}
-	v.mu.Lock()
 	v.bitmap, v.svg = bm, nil
-	v.mu.Unlock()
+	v.data = nil
 }
 
 func (v *ImageViewer) View(c *ui.Context) {
-	v.mu.Lock()
-	bitmap, svg := v.bitmap, v.svg
-	v.mu.Unlock()
+	dark := mygo.Theme.IsDark()
+	if v.data != nil && v.dark != dark {
+		v.dark, v.svg = dark, readySVG(v.data, dark)
+	}
+	bitmap, svgSrc := v.bitmap, v.svg
 
 	var img ui.ImageSource
 	var w, h float32
@@ -64,9 +63,9 @@ func (v *ImageViewer) View(c *ui.Context) {
 	case bitmap != nil:
 		bw, bh := bitmap.Size()
 		img, w, h = bitmap, float32(bw), float32(bh)
-	case svg != nil:
-		img = svg
-		w, h = svg.Size()
+	case svgSrc != nil:
+		img = svgSrc
+		w, h = svgSrc.Size()
 	default:
 		ui.Text(c, "No image").TextColor(c.Theme().TextMuted).Fill()
 		return
