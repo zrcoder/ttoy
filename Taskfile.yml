@@ -2,14 +2,12 @@ version: "3"
 
 tasks:
   build:
-    summary: Builds the application
     cmds:
-      - go tool github.com/egoist/mygo/cmd/mygo build
+      - go tool mygo build
 
   dev:
-    summary: Runs the application in development mode
     cmds:
-      - go tool github.com/egoist/mygo/cmd/mygo dev
+      - go tool mygo dev
 
   test:
     summary: Runs all tests
@@ -17,18 +15,20 @@ tasks:
       - go test ./...
 
   vet:
-    summary: Runs mygo vet and mygo migrte-ui
     cmds:
-      - go tool github.com/egoist/mygo/cmd/mygo vet .
-      - go tool github.com/egoist/mygo/cmd/mygo migrate-ui -write .
+      - go tool mygo vet .
+      - go vet ./...
+  fix:
+    cmds:
+      - go tool mygo migrate-ui -write .
+      - go fix ./...
 
   gen:
     summary: Regenerate bindings (if any)
     cmds:
       - go generate
 
-  clear:
-    summary: Delete generated files
+  clean:
     cmds:
       - rm -rf build
       - rm -rf bin

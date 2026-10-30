@@ -1,6 +1,8 @@
 package svg
 
 import (
+	"maps"
+	"slices"
 	"strings"
 )
 
@@ -49,15 +51,15 @@ func parseDecls(s string) []cssDecl {
 
 // declOf reads one name and value pair.
 func declOf(s string) (cssDecl, bool) {
-	i := strings.IndexByte(s, ':')
-	if i < 0 {
+	before, after, ok := strings.Cut(s, ":")
+	if !ok {
 		return cssDecl{}, false
 	}
-	name := strings.ToLower(strings.TrimSpace(s[:i]))
+	name := strings.ToLower(strings.TrimSpace(before))
 	if name == "" {
 		return cssDecl{}, false
 	}
-	return cssDecl{name, strings.TrimSpace(s[i+1:])}, true
+	return cssDecl{name, strings.TrimSpace(after)}, true
 }
 
 // declValue returns the last declaration of a name, which wins.
@@ -99,9 +101,7 @@ func (st *svgStyles) rewrite(root *svgNode, dark bool) {
 		}
 		css, rules, faces := rewriteCSS(n.ownText(), dark)
 		st.rules = append(st.rules, rules...)
-		for family, src := range faces {
-			st.faces[family] = src
-		}
+		maps.Copy(st.faces, faces)
 		kids := n.kids[:0]
 		for _, k := range n.kids {
 			if k.name != "#text" {
@@ -151,10 +151,8 @@ func (st *svgStyles) fonts() map[string][]byte {
 // intersects tells whether two sets of names share one.
 func intersects(a, b []string) bool {
 	for _, x := range a {
-		for _, y := range b {
-			if x == y {
-				return true
-			}
+		if slices.Contains(b, x) {
+			return true
 		}
 	}
 	return false
@@ -233,7 +231,7 @@ func rewriteCSSInto(o *cssOut, s string, dark bool) {
 		end := cssBlockEnd(s, open)
 		decls := parseDecls(s[open+1 : end-1])
 		var sel []string
-		for _, part := range strings.Split(stripCSSComments(s[:open]), ",") {
+		for part := range strings.SplitSeq(stripCSSComments(s[:open]), ",") {
 			if f, ok := flattenSelector(strings.TrimSpace(part)); ok {
 				sel = append(sel, f)
 			}

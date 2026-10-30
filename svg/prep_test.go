@@ -210,7 +210,7 @@ func assertSimpleSelectors(t *testing.T, doc string) {
 	sel := regexp.MustCompile(`([^{@\n]+)\{`)
 	for _, sheet := range sheets {
 		for _, m := range sel.FindAllStringSubmatch(sheet[1], -1) {
-			for _, s := range strings.Split(m[1], ",") {
+			for s := range strings.SplitSeq(m[1], ",") {
 				s = strings.TrimSpace(s)
 				if s == "" || strings.ContainsAny(s, " \t\r\n") {
 					t.Errorf("selector %q has a combinator MyGo would drop", s)

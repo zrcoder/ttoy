@@ -274,14 +274,14 @@ func parseLength(s string, base float64) float64 {
 		{"mm", 96.0 / 25.4},
 		{"in", 96},
 	} {
-		if strings.HasSuffix(s, u.suffix) {
-			if v, err := strconv.ParseFloat(strings.TrimSuffix(s, u.suffix), 64); err == nil {
+		if before, ok := strings.CutSuffix(s, u.suffix); ok {
+			if v, err := strconv.ParseFloat(before, 64); err == nil {
 				return v * u.to
 			}
 		}
 	}
-	if strings.HasSuffix(s, "%") {
-		if v, err := strconv.ParseFloat(strings.TrimSuffix(s, "%"), 64); err == nil {
+	if before, ok := strings.CutSuffix(s, "%"); ok {
+		if v, err := strconv.ParseFloat(before, 64); err == nil {
 			return v / 100 * base
 		}
 	}

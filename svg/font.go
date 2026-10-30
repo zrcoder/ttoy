@@ -46,7 +46,7 @@ func woffToTTF(src []byte) ([]byte, error) {
 		data []byte
 	}
 	tables := make([]table, 0, num)
-	for i := 0; i < num; i++ {
+	for i := range num {
 		e := src[headerLen+entryLen*i : headerLen+entryLen*(i+1)]
 		off := binary.BigEndian.Uint32(e[4:8])
 		comp := binary.BigEndian.Uint32(e[8:12])
