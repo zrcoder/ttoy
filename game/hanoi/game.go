@@ -124,6 +124,15 @@ func (g *Game) MinSteps() int {
 	return (1 << g.CurrentLevel().Disks) - 1
 }
 
+// ShiftPileIndex returns the index of the pile the held disk was taken
+// from, or -1 while no disk is held.
+func (g *Game) ShiftPileIndex() int {
+	if g.ShiftDisk == nil || g.ShiftDisk.pile == nil {
+		return -1
+	}
+	return g.ShiftDisk.pile.Index
+}
+
 func (g *Game) State() string {
 	return fmt.Sprintf("Steps: %d, Minimum: %d", g.steps, g.MinSteps())
 }
