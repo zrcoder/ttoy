@@ -3,6 +3,7 @@ package ballsort
 import (
 	"math/rand/v2"
 
+	"github.com/egoist/mygo/ui"
 	"github.com/zrcoder/ttoy/game/common"
 )
 
@@ -15,7 +16,7 @@ type Game struct {
 	Bottles          []*Bottle
 	ShiftBall        *Ball
 	DoneBottlesCount int
-	colors           []string
+	colors           []ui.Color
 	levelIndex       int
 	levels           []Level
 	rand             *rand.Rand
@@ -35,7 +36,7 @@ type Bottle struct {
 
 type Ball struct {
 	BottleIndex int
-	Color       string
+	Color       ui.Color
 }
 
 type EventData struct {
@@ -50,8 +51,15 @@ type EventData struct {
 
 func New() *Game {
 	g := &Game{
-		colors: []string{
-			"red", "#7FFF00", "blue", "yellow", "violet", "pink", "green", "orange",
+		colors: []ui.Color{
+			{R: 255, G: 0, B: 0, A: 255},
+			{R: 0, G: 128, B: 0, A: 255},
+			{R: 0, G: 0, B: 255, A: 255},
+			{R: 255, G: 255, B: 0, A: 255},
+			{R: 238, G: 130, B: 238, A: 255},
+			{R: 255, G: 192, B: 203, A: 255},
+			{R: 255, G: 165, B: 0, A: 255},
+			{R: 127, G: 255, B: 0, A: 255},
 		},
 		levels: []Level{
 			{Label: "EASY", FullBottles: 5},
@@ -259,6 +267,6 @@ func (b *Bottle) IsDone() bool {
 	return b.checkDone() == 1
 }
 
-func (b *Bottle) IsShiftBall() bool {
+func (b *Bottle) HasShiftBall() bool {
 	return b.Game.ShiftBall != nil && b.Game.ShiftBall.BottleIndex == b.Index
 }

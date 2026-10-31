@@ -4,12 +4,12 @@ import (
 	"errors"
 	"fmt"
 	"math/rand/v2"
-
-	"github.com/zrcoder/ttoy/game/common"
 )
 
 const (
 	PileCount = 3
+
+	MaxDisks = 6
 )
 
 type Game struct {
@@ -17,7 +17,6 @@ type Game struct {
 	PileB      *Pile
 	PileC      *Pile
 	ShiftDisk  *Disk
-	colors     []string
 	steps      int
 	rand       *rand.Rand
 	levelIndex int
@@ -53,9 +52,6 @@ type EventData struct {
 
 func New() *Game {
 	g := &Game{
-		colors: []string{
-			"red", "green", "blue", "yellow", "brown", "pink",
-		},
 		levels: []Level{
 			{Label: "Easy", Disks: 2},
 			{Label: "Medium", Disks: 3},
@@ -67,9 +63,7 @@ func New() *Game {
 	g.PileA = NewPile(g, 0)
 	g.PileB = NewPile(g, 1)
 	g.PileC = NewPile(g, 2)
-	g.Shuffle(len(g.colors), func(i, j int) {
-		g.colors[i], g.colors[j] = g.colors[j], g.colors[i]
-	})
+
 	g.Reset()
 	return g
 }
@@ -78,7 +72,7 @@ func NewPile(g *Game, index int) *Pile {
 	return &Pile{
 		game:  g,
 		Index: index,
-		Disks: make([]*Disk, 0, len(g.colors)),
+		Disks: make([]*Disk, 0, MaxDisks),
 	}
 }
 
@@ -107,14 +101,12 @@ func (g *Game) SelectPile(pile *Pile) error {
 	}
 	if g.ShiftDisk == nil {
 		g.ShiftDisk = pile.Pop()
-		g.updateUI()
 		return nil
 	}
 	if g.ShiftDisk.pile == pile || pile.Empty() || pile.Top().ID > g.ShiftDisk.ID {
 		pile.Push(g.ShiftDisk)
 		g.ShiftDisk = nil
 		g.steps++
-		g.updateUI()
 		return nil
 	}
 	return errors.New("invalid move")
@@ -141,14 +133,9 @@ func (g *Game) Levels() []Level {
 	return g.levels
 }
 
-func (g *Game) LevelIndex() int {
-	return g.levelIndex
-}
-
 func (g *Game) SelectLevel(index int) {
 	g.levelIndex = index
 	g.Reset()
-	g.updateUI()
 }
 
 func (g *Game) CurrentLevel() Level {
@@ -184,18 +171,6 @@ func (g *Game) SelectPileByIndex(index int) error {
 		return errors.New("invalid pile index")
 	}
 	return g.SelectPile(pile)
-}
-
-func (g *Game) updateUI() {
-	// No-op: UI polls state directly.
-	_ = g.ShiftDisk
-}
-
-func (g *Game) state() common.State {
-	if g.IsDone() {
-		return common.StateSucceed
-	}
-	return common.StatePlaying
 }
 
 func (p *Pile) Push(d *Disk) {

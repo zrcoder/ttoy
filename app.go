@@ -3,6 +3,8 @@ package main
 import (
 	_ "embed"
 
+	"github.com/zrcoder/ttoy/view"
+
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 )
@@ -20,7 +22,7 @@ const (
 	KeyEncode   = "codec"
 	KeyGenerate = "gen"
 	KeyDiff     = "diff"
-	KeyView     = "view"
+	KeyDataView = "dataview"
 	KeyPlot     = "graph"
 	KeyIce      = "icemagic"
 	KeyBall     = "ballsort"
@@ -33,21 +35,31 @@ type Ttoy struct {
 	navSelected string
 
 	// Feature panels (lazy-initialized, own their state).
-	convert  *ConvertPanel
-	encode   *EncodePanel
-	format   *FormatPanel
-	generate *GeneratePanel
-	diff     *DiffPanel
-	view     *ViewPanel
-	plot     *PlotPanel
-	ballSort *BallSortPanel
-	hanoi    *HanoiPanel
-	iceMagic *IceMagicPanel
+	convert  *view.Convert
+	encode   *view.Encode
+	format   *view.Format
+	generate *view.Generate
+	diff     *view.Diff
+	dataView *view.DataView
+	plot     *view.Plot
+	ballSort *view.BallSort
+	hanoi    *view.Hanoi
+	iceMagic *view.IceMagic
 }
 
 func New() *Ttoy {
 	return &Ttoy{
 		navSelected: KeyHome,
+		convert:     view.NewConvert(),
+		encode:      view.NewEncode(),
+		format:      view.NewFormat(),
+		generate:    view.NewGenerate(),
+		diff:        view.NewDiff(),
+		dataView:    view.NewDataView(),
+		plot:        view.NewPlot(),
+		ballSort:    view.NewBallSort(),
+		hanoi:       view.NewHanoi(),
+		iceMagic:    view.NewIceMagic(),
 	}
 }
 
@@ -78,7 +90,7 @@ func (t *Ttoy) nav(c *ui.Context) {
 				ui.SidebarItem(c, string(KeyEncode), nil, "Encode")
 				ui.SidebarItem(c, string(KeyGenerate), nil, "Generate")
 				ui.SidebarItem(c, string(KeyDiff), nil, "Diff")
-				ui.SidebarItem(c, string(KeyView), nil, "View")
+				ui.SidebarItem(c, string(KeyDataView), nil, "View")
 				ui.SidebarItem(c, string(KeyPlot), nil, "Plot")
 			})
 			ui.SidebarSection(c, "Games", nil, func() {
@@ -112,25 +124,25 @@ func (t *Ttoy) content(c *ui.Context) {
 		case KeyHome:
 			t.home(c)
 		case KeyFormat:
-			t.ensureFormat().View(c)
+			t.format.View(c)
 		case KeyConvert:
-			t.ensureConvert().View(c)
+			t.convert.View(c)
 		case KeyEncode:
-			t.ensureEncode().View(c)
+			t.encode.View(c)
 		case KeyGenerate:
-			t.ensureGenerate().View(c)
+			t.generate.View(c)
 		case KeyDiff:
-			t.ensureDiff().View(c)
-		case KeyView:
-			t.ensureView().View(c)
+			t.diff.View(c)
+		case KeyDataView:
+			t.dataView.DataView(c)
 		case KeyPlot:
-			t.ensurePlot().View(c)
+			t.plot.View(c)
 		case KeyIce:
-			t.ensureIceMagic().View(c)
+			t.iceMagic.View(c)
 		case KeyBall:
-			t.ensureBallSort().View(c)
+			t.ballSort.View(c)
 		case KeyHanoi:
-			t.ensureHanoi().View(c)
+			t.hanoi.View(c)
 		}
 	})
 }
@@ -140,74 +152,4 @@ func (t *Ttoy) home(c *ui.Context) {
 		ui.Text(c, "TToy").FontSize(32).FontWeight(800).TextColor(c.Theme().TextMuted)
 		ui.Text(c, "My dev tools.").FontSize(16).TextColor(c.Theme().TextMuted).Margin(8, 0, 0, 0)
 	})
-}
-
-func (t *Ttoy) ensureFormat() *FormatPanel {
-	if t.format == nil {
-		t.format = NewFormatPanel()
-	}
-	return t.format
-}
-
-func (t *Ttoy) ensureConvert() *ConvertPanel {
-	if t.convert == nil {
-		t.convert = NewConvertPanel()
-	}
-	return t.convert
-}
-
-func (t *Ttoy) ensureEncode() *EncodePanel {
-	if t.encode == nil {
-		t.encode = NewEncodePanel()
-	}
-	return t.encode
-}
-
-func (t *Ttoy) ensureGenerate() *GeneratePanel {
-	if t.generate == nil {
-		t.generate = NewGeneratePanel()
-	}
-	return t.generate
-}
-
-func (t *Ttoy) ensureDiff() *DiffPanel {
-	if t.diff == nil {
-		t.diff = NewDiffPanel()
-	}
-	return t.diff
-}
-
-func (t *Ttoy) ensureView() *ViewPanel {
-	if t.view == nil {
-		t.view = NewViewPanel()
-	}
-	return t.view
-}
-
-func (t *Ttoy) ensurePlot() *PlotPanel {
-	if t.plot == nil {
-		t.plot = NewPlotPanel()
-	}
-	return t.plot
-}
-
-func (t *Ttoy) ensureBallSort() *BallSortPanel {
-	if t.ballSort == nil {
-		t.ballSort = NewBallSortPanel()
-	}
-	return t.ballSort
-}
-
-func (t *Ttoy) ensureHanoi() *HanoiPanel {
-	if t.hanoi == nil {
-		t.hanoi = NewHanoiPanel()
-	}
-	return t.hanoi
-}
-
-func (t *Ttoy) ensureIceMagic() *IceMagicPanel {
-	if t.iceMagic == nil {
-		t.iceMagic = NewIceMagicPanel()
-	}
-	return t.iceMagic
 }

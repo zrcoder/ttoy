@@ -1,4 +1,4 @@
-package main
+package view
 
 import (
 	"fmt"
@@ -7,8 +7,8 @@ import (
 	"github.com/zrcoder/ttoy/game/icemagic"
 )
 
-// IceMagicPanel renders the IceMagic puzzle grid.
-type IceMagicPanel struct {
+// IceMagic renders the IceMagic puzzle grid.
+type IceMagic struct {
 	game         *icemagic.Game
 	chapterSel   int
 	levelSel     int
@@ -17,16 +17,16 @@ type IceMagicPanel struct {
 	msg          string
 }
 
-func NewIceMagicPanel() *IceMagicPanel {
+func NewIceMagic() *IceMagic {
 	g := icemagic.New()
-	return &IceMagicPanel{
+	return &IceMagic{
 		game:       g,
 		chapterSel: 0,
 		levelSel:   0,
 	}
 }
 
-func (p *IceMagicPanel) View(c *ui.Context) {
+func (p *IceMagic) View(c *ui.Context) {
 	ui.Column(c).Fill().Children(func() {
 		ui.Row(c).Fill().Height(44).Children(func() {
 			ui.Text(c, "IceMagic").FontSize(20).FontWeight(700)
@@ -108,7 +108,7 @@ func (p *IceMagicPanel) View(c *ui.Context) {
 
 var _ = fmt.Sprintf
 
-func (p *IceMagicPanel) cell(c *ui.Context, sprite *icemagic.Sprite, r, col int) {
+func (p *IceMagic) cell(c *ui.Context, sprite *icemagic.Sprite, r, col int) {
 	cell := sprite.Cell
 	img := ""
 	if cell.Image != "" {
@@ -128,7 +128,7 @@ func (p *IceMagicPanel) cell(c *ui.Context, sprite *icemagic.Sprite, r, col int)
 	})
 }
 
-func (p *IceMagicPanel) controlBtn(c *ui.Context, key, icon string, action func()) {
+func (p *IceMagic) controlBtn(c *ui.Context, key, icon string, action func()) {
 	ui.Column(c).AlignItems(ui.Center).Children(func() {
 		ui.ButtonBase(c).Width(44).Height(44).Radius(8).Background(c.Theme().Surface).OnClick(action).Children(func() {
 			ui.Text(c, icon).FontSize(20)
