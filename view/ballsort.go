@@ -7,9 +7,10 @@ import (
 
 // BallSort renders a playable Ball Sort puzzle using native mygo UI.
 type BallSort struct {
-	game   *ballsort.Game
-	levels []string
-	level  int
+	game             *ballsort.Game
+	levels           []string
+	level            int
+	solvedDialogOpen bool
 }
 
 func NewBallSort() *BallSort {
@@ -25,6 +26,14 @@ func NewBallSort() *BallSort {
 
 func (p *BallSort) View(c *ui.Context) {
 	bottles := p.game.GetBottles()
+	// Covering Reset and level switches: a new game has no dialog.
+	if p.game.IsDone() {
+		ui.Modal(c, &p.solvedDialogOpen, func() {
+			ui.Text(c, "Solved!").FontSize(18).FontWeight(700).TextColor(c.Theme().Success)
+		})
+	} else {
+		p.solvedDialogOpen = false
+	}
 	for i := range bottles {
 		if c.Shortcut(0, ui.KeyA+ui.Key(i)) {
 			p.onBottleClick(c, i)
@@ -49,11 +58,7 @@ func (p *BallSort) View(c *ui.Context) {
 
 		})
 		ui.Column(c).AlignItems(ui.Center).Children(func() {
-			if p.game.IsDone() {
-				ui.Text(c, "Solved!").TextColor(c.Theme().Success)
-			} else {
-				ui.Text(c, p.game.State())
-			}
+			ui.Text(c, p.game.State())
 			// Bottles
 			ui.Row(c).Children(func() {
 				for _, bottle := range bottles {
@@ -71,7 +76,11 @@ func (p *BallSort) bottleView(c *ui.Context, b *ballsort.Bottle) {
 		} else {
 			p.ballView(c, nil)
 		}
-		ui.Column(c).Width(70).Height(168).BorderWidth(0, 2, 2, 2).BorderColor(c.Theme().Success).Radius(8).AlignItems(ui.Center).Children(func() {
+		borderColor := ui.RGB(190, 190, 190)
+		if b.IsDone() {
+			borderColor = c.Theme().Success
+		}
+		ui.Column(c).Width(70).Height(168).BorderWidth(0, 2, 2, 2).BorderColor(borderColor).Radius(8).AlignItems(ui.Center).Children(func() {
 			for j := ballsort.BottleBallCount - 1; j >= 0; j-- {
 				ui.Spacer(c).Height(2)
 				if j < len(b.Balls) {
@@ -102,5 +111,6 @@ func (p *BallSort) onBottleClick(c *ui.Context, i int) {
 		return
 	}
 	p.game.SelectBottle(i)
+	p.solvedDialogOpen = p.game.IsDone()
 	c.Invalidate()
 }

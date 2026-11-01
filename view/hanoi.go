@@ -7,7 +7,8 @@ import (
 
 // Hanoi renders a playable Towers of Hanoi puzzle.
 type Hanoi struct {
-	game *hanoi.Game
+	game             *hanoi.Game
+	solvedDialogOpen bool
 
 	level       int
 	levelLabels []string
@@ -35,6 +36,14 @@ func NewHanoi() *Hanoi {
 }
 
 func (p *Hanoi) View(c *ui.Context) {
+	// Covering Reset and level switches: a new game has no dialog.
+	if p.game.IsDone() {
+		ui.Modal(c, &p.solvedDialogOpen, func() {
+			ui.Text(c, "Solved!").FontSize(18).FontWeight(700).TextColor(c.Theme().Success)
+		})
+	} else {
+		p.solvedDialogOpen = false
+	}
 	switch {
 	case c.Shortcut(0, ui.KeyA):
 		p.onPileClick(c, 0)
@@ -62,11 +71,7 @@ func (p *Hanoi) View(c *ui.Context) {
 		})
 
 		ui.Column(c).FillWidth().AlignItems(ui.Center).Children(func() {
-			if p.game.IsDone() {
-				ui.Text(c, "Solved!").FontWeight(800).TextColor(c.Theme().Success)
-			} else {
-				ui.Text(c, p.game.State()).TextColor(c.Theme().TextMuted)
-			}
+			ui.Text(c, p.game.State()).TextColor(c.Theme().TextMuted)
 
 			ui.Row(c).Children(func() {
 				piles := p.game.Piles()
@@ -121,5 +126,6 @@ func (p *Hanoi) onPileClick(c *ui.Context, i int) {
 		return
 	}
 	_ = p.game.SelectPileByIndex(i)
+	p.solvedDialogOpen = p.game.IsDone()
 	c.Invalidate()
 }
