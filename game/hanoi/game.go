@@ -133,6 +133,10 @@ func (g *Game) Levels() []Level {
 	return g.levels
 }
 
+func (g *Game) LevelIndex() int {
+	return g.levelIndex
+}
+
 func (g *Game) SelectLevel(index int) {
 	g.levelIndex = index
 	g.Reset()

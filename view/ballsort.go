@@ -9,11 +9,13 @@ import (
 type BallSort struct {
 	game   *ballsort.Game
 	levels []string
+	level  int
 }
 
 func NewBallSort() *BallSort {
 	b := new(BallSort)
 	b.game = ballsort.New()
+	b.level = b.game.LevelIndex()
 	b.levels = make([]string, len(b.game.Levels()))
 	for i, level := range b.game.Levels() {
 		b.levels[i] = level.Label
@@ -30,12 +32,13 @@ func (p *BallSort) View(c *ui.Context) {
 		}
 	}
 	ui.Column(c).Fill().Children(func() {
-		ui.Text(c, "Ball Sort").FontSize(20).FontWeight(700)
+		ui.Row(c).Height(44).Children(func() {
+			ui.Text(c, "Ball Sort").FontSize(20).FontWeight(700)
+		})
 		// Level selector
 		ui.Row(c).AlignItems(ui.Center).Margin(18, 0, 18, 0).Children(func() {
-			level := -1
-			ui.Segmented(c, &level, p.levels...).OnChange(func() {
-				p.game.SelectLevel(level)
+			ui.Segmented(c, &p.level, p.levels...).OnChange(func() {
+				p.game.SelectLevel(p.level)
 			})
 			ui.Spacer(c).Width(16)
 
@@ -62,7 +65,7 @@ func (p *BallSort) View(c *ui.Context) {
 }
 
 func (p *BallSort) bottleView(c *ui.Context, b *ballsort.Bottle) {
-	ui.Column(c).AlignItems(ui.Center).Margin(0, 12, 0, 12).Children(func() {
+	ui.Column(c).AlignItems(ui.Center).Margin(12).Children(func() {
 		if b.HasShiftBall() {
 			p.ballView(c, b.ShiftBall)
 		} else {

@@ -58,7 +58,7 @@ func (t *diffTab) View(c *ui.Context) {
 	added, deleted := t.diff.Stats()
 	ui.Column(c).Fill().Children(func() {
 		ui.Row(c).AlignItems(ui.Center).Children(func() {
-			ui.Segmented(c, &t.mode, "Edit", "Diff").Margin(18, 18, 18, 0)
+			ui.Segmented(c, &t.mode, "Edit", "Diff").Margin(0, 18, 18, 18)
 			ui.Text(c, fmt.Sprintf("+%d −%d", added, deleted)).FontSize(12).TextColor(c.Theme().TextMuted)
 		})
 		// ui.Spacer(c).Height(8)

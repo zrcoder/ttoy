@@ -9,6 +9,7 @@ import (
 type Hanoi struct {
 	game *hanoi.Game
 
+	level       int
 	levelLabels []string
 	diskColors  []ui.Color
 }
@@ -16,6 +17,7 @@ type Hanoi struct {
 func NewHanoi() *Hanoi {
 	p := new(Hanoi)
 	p.game = hanoi.New()
+	p.level = p.game.LevelIndex()
 	p.diskColors = []ui.Color{
 		{R: 255, G: 0, B: 0, A: 255},
 		{R: 0, G: 128, B: 0, A: 255},
@@ -42,12 +44,13 @@ func (p *Hanoi) View(c *ui.Context) {
 		p.onPileClick(c, 2)
 	}
 	ui.Column(c).Fill().Children(func() {
-		ui.Text(c, "Hanoi").FontSize(20).FontWeight(700)
+		ui.Row(c).Height(44).Children(func() {
+			ui.Text(c, "Hanoi").FontSize(20).FontWeight(700)
+		})
 
 		ui.Row(c).FillWidth().AlignItems(ui.Stretch).Margin(18, 0, 18, 0).Children(func() {
-			level := -1
-			ui.Segmented(c, &level, p.levelLabels...).OnChange(func() {
-				p.game.SelectLevel(level)
+			ui.Segmented(c, &p.level, p.levelLabels...).OnChange(func() {
+				p.game.SelectLevel(p.level)
 			})
 
 			ui.Spacer(c)

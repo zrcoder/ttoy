@@ -119,7 +119,7 @@ func (t *Ttoy) nav(c *ui.Context) {
 }
 
 func (t *Ttoy) content(c *ui.Context) {
-	ui.Column(c.Key("content")).Margin(18).Fill().Children(func() {
+	ui.Box(c.Key("content")).Margin(18).Fill().Children(func() {
 		switch t.navSelected {
 		case KeyHome:
 			t.home(c)

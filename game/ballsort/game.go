@@ -113,9 +113,6 @@ func (g *Game) createBottles(n int, balls []*Ball) []*Bottle {
 	for range n {
 		bottle := &Bottle{Game: g}
 		bottle.Balls = balls[i : i+BottleBallCount]
-		for _, ball := range bottle.Balls {
-			ball.BottleIndex = bottle.Index
-		}
 		i += BottleBallCount
 		bottles = append(bottles, bottle)
 	}
@@ -131,6 +128,9 @@ func (g *Game) createBottles(n int, balls []*Ball) []*Bottle {
 	})
 	for i, bottle := range bottles {
 		bottle.Index = i
+		for _, ball := range bottle.Balls {
+			ball.BottleIndex = i
+		}
 	}
 	return bottles
 }
@@ -149,25 +149,21 @@ func (g *Game) SelectBottle(i int) {
 		}
 		bottle.Push(g.ShiftBall)
 		g.ShiftBall = nil
-		g.updateUI()
 		return
 	}
 	if g.ShiftBall == nil {
 		g.ShiftBall = bottle.Pop()
-		g.updateUI()
 		return
 	}
 	if g.ShiftBall.BottleIndex != i &&
 		(g.ShiftBall.Color != bottle.Top().Color || bottle.IsFull()) {
 		g.Bottles[g.ShiftBall.BottleIndex].Push(g.ShiftBall)
 		g.ShiftBall = bottle.Pop()
-		g.updateUI()
 		return
 	}
 	bottle.Push(g.ShiftBall)
 	g.ShiftBall = nil
 	g.DoneBottlesCount += bottle.checkDone()
-	g.updateUI()
 }
 
 func (g *Game) IsDone() bool {
@@ -202,16 +198,10 @@ func (g *Game) SelectLevel(index int) {
 	g.levelIndex = index
 	g.cursor = 0
 	g.Reset()
-	g.updateUI()
 }
 
 func (g *Game) State() string {
 	return "Done: " + string(rune('0'+g.DoneBottlesCount)) + "/" + string(rune('0'+g.currentBallTubes()))
-}
-
-func (g *Game) updateUI() {
-	// No-op: UI polls state directly.
-	_ = g.ShiftBall
 }
 
 func (g *Game) state() common.State {
