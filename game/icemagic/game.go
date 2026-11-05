@@ -2,6 +2,7 @@ package icemagic
 
 import (
 	"math/rand/v2"
+	"time"
 
 	"github.com/zrcoder/ttoy/game/common"
 )
@@ -157,6 +158,7 @@ func (g *Game) swap(src, dst *Sprite) bool {
 		return false
 	}
 	g.updateUI()
+	time.Sleep(400 * time.Millisecond)
 	return true
 }
 

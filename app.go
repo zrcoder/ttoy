@@ -1,7 +1,7 @@
 package main
 
 import (
-	_ "embed"
+	"embed"
 
 	"github.com/zrcoder/ttoy/view"
 
@@ -14,6 +14,9 @@ var moonIconData []byte
 
 //go:embed resources/icons/sun.svg
 var sunIconData []byte
+
+//go:embed resources/*
+var assertsFS embed.FS
 
 const (
 	KeyHome     = "home"
@@ -59,7 +62,7 @@ func New() *Ttoy {
 		plot:        view.NewPlot(),
 		ballSort:    view.NewBallSort(),
 		hanoi:       view.NewHanoi(),
-		iceMagic:    view.NewIceMagic(),
+		iceMagic:    view.NewIceMagic(assertsFS),
 	}
 }
 
