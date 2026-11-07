@@ -1,24 +1,31 @@
 package view
 
 import (
-	"fmt"
 	"strings"
 
+	"github.com/ELY-Open-Source/CrychicUI/choice"
+	"github.com/ELY-Open-Source/CrychicUI/code"
 	"github.com/egoist/mygo/ui"
 	"github.com/egoist/mygo/ui/editor"
 	"github.com/zrcoder/ttoy/service"
+)
+
+const (
+	modeEdit = iota
+	modeDiff
 )
 
 // diffTab pairs two editable buffers with a diff viewer over them. The
 // diff viewer's old side is read-only, so Edit shows both buffers as
 // editors and Diff compares them with character-level highlights.
 type diffTab struct {
-	diff     *editor.DiffState
-	oldEd    *editor.State
-	newEd    *editor.State
-	mode     int // 0: Edit, 1: Diff
-	lastMode int
-	svc      *service.Sort
+	diff       *editor.DiffState
+	oldEd      *editor.State
+	newEd      *editor.State
+	mode       int // 0: Edit, 1: Diff
+	lastMode   int
+	svc        *service.Sort
+	diffSplite bool
 }
 
 func newDiffTab(lang *editor.Language, sortable bool) *diffTab {
@@ -35,8 +42,11 @@ func newDiffTab(lang *editor.Language, sortable bool) *diffTab {
 			Editable: true,
 			Inline:   editor.DiffInlineChar,
 		},
-		oldEd: &editor.State{Buffer: oldBuf},
-		newEd: &editor.State{Buffer: newBuf},
+		oldEd:      &editor.State{Buffer: oldBuf},
+		newEd:      &editor.State{Buffer: newBuf},
+		mode:       modeEdit,
+		lastMode:   modeEdit,
+		diffSplite: true,
 	}
 	if sortable {
 		t.svc = &service.Sort{}
@@ -45,42 +55,34 @@ func newDiffTab(lang *editor.Language, sortable bool) *diffTab {
 }
 
 func (t *diffTab) View(c *ui.Context) {
-	// Entering Diff formats both texts so that key order does not diff.
 	var sortErr string
-	if t.svc != nil && t.mode == 1 && t.lastMode == 0 {
+	if t.svc != nil && t.mode == modeDiff && t.lastMode == modeEdit {
 		if err := t.sort(); err != nil {
-			t.mode = 0
+			t.mode = modeEdit
 			sortErr = err.Error()
 		}
 	}
-	t.lastMode = t.mode
-
-	added, deleted := t.diff.Stats()
-	ui.Column(c).Fill().Children(func() {
-		ui.Row(c).AlignItems(ui.Center).Children(func() {
-			ui.Segmented(c, &t.mode, "Edit", "Diff").Margin(0, 18, 18, 18)
-			ui.Text(c, fmt.Sprintf("+%d −%d", added, deleted)).FontSize(12).TextColor(c.Theme().TextMuted)
-		})
-		// ui.Spacer(c).Height(8)
-		if t.mode == 0 {
-			t.editView(c)
-			return
-		}
-		editor.DiffView(c, t.diff).Grow(1).FillWidth()
-	})
 	if sortErr != "" {
 		Toast(c, sortErr, func() {})
 	}
+
+	t.lastMode = t.mode
+
+	ui.Column(c).Fill().Children(func() {
+		choice.Segments(c, "Mode", []string{"Edit", "Diff"}, &t.mode).Margin(18, 0)
+		if t.mode == modeEdit {
+			t.editView(c)
+			return
+		}
+		code.DiffView(c, t.diff, &t.diffSplite, code.DiffViewOptions{}).Fill().Margin(0, 0, 18, 0)
+	})
 }
 
 func (t *diffTab) editView(c *ui.Context) {
-	ui.Row(c).Grow(1).FillWidth().Children(func() {
-		ui.Column(c.Key("diff-original")).Fill().Children(func() {
-			editor.View(c, t.oldEd).Fill()
-		})
-		ui.Column(c.Key("diff-modified")).Fill().Children(func() {
-			editor.View(c, t.newEd).Fill()
-		})
+	ui.Row(c).Fill().Margin(0, 0, 18, 0).Children(func() {
+		code.CodeEditor(c, t.oldEd, code.CodeEditorOptions{}).Fill()
+		ui.Spacer(c).Width(18)
+		code.CodeEditor(c, t.newEd, code.CodeEditorOptions{}).Fill()
 	})
 }
 
@@ -122,8 +124,7 @@ func NewDiff() *Diff {
 
 func (p *Diff) View(c *ui.Context) {
 	ui.Column(c).Fill().Children(func() {
-		ui.Tabs(c, &p.activeTab, "Text", "JSON").Margin(18)
-		ui.Spacer(c).Height(8)
+		tabs(c, &p.activeTab, "Text", "JSON")
 		if p.activeTab == 0 {
 			p.text.View(c)
 			return

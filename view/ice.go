@@ -2,11 +2,13 @@ package view
 
 import (
 	"embed"
-	"fmt"
 	"log"
 	"strconv"
 
+	"github.com/ELY-Open-Source/CrychicUI/button"
+	"github.com/ELY-Open-Source/CrychicUI/choice"
 	"github.com/ELY-Open-Source/CrychicUI/sound"
+	"github.com/ELY-Open-Source/CrychicUI/typography"
 	"github.com/egoist/mygo/ui"
 	"github.com/zrcoder/ttoy/game/common"
 	"github.com/zrcoder/ttoy/game/icemagic"
@@ -167,44 +169,37 @@ func (p *IceMagic) nextLevel() {
 
 func (p *IceMagic) menu(c *ui.Context) {
 	chapters := p.game.Chapters()
+	chaLabels := make([]string, len(chapters))
+	for i := range chaLabels {
+		chaLabels[i] = strconv.Itoa(i + 1)
+	}
+	levelLabels := make([]string, chapters[p.chapterSel])
+	for i := range levelLabels {
+		levelLabels[i] = strconv.Itoa(i + 1)
+	}
 	ui.Row(c).Children(func() {
-		p.pickMenu(c, fmt.Sprintf("Chapter %d", p.chapterSel+1), &p.chapterPopoverOpen, len(chapters), func(i int) {
-			if i == p.chapterSel {
+		typography.Title(c, "Chapter:").Margin(0, 5, 0, 0)
+		ch := strconv.Itoa(p.chapterSel + 1)
+		if choice.Dropdown(c, ch, chaLabels, &ch).Margin(0, 18, 0, 0).Changed() {
+			i, _ := strconv.Atoi(ch)
+			if i-1 == p.chapterSel {
 				return
 			}
-			p.pick(i, 0)
-		})
-		p.pickMenu(c, fmt.Sprintf("Level %d", p.levelSel+1), &p.levelPopoverOpen, chapters[p.chapterSel], func(i int) {
-			p.pick(p.chapterSel, i)
-		}).Margin(8)
-		ui.PrimaryButton(c, "Reset").Margin(18).OnClick(p.game.Reset)
-	})
-}
+			p.pick(i-1, 0)
 
-// pickMenu shows a popover of 1..n; picking i calls pick and closes it.
-func (p *IceMagic) pickMenu(c *ui.Context, label string, open *bool, n int, pick func(i int)) ui.Element {
-	btn := ui.Button(c, label+" ▾")
-	if btn.Clicked() {
-		*open = !*open
-		c.Invalidate()
-	}
-	ui.Popover(c, btn, open, func() {
-		for i := range n {
-			name := strconv.Itoa(i + 1)
-			entry := ui.Row(c.Key(name)).Padding(6, 12).Radius(5).Children(func() {
-				ui.Text(c, name)
-			})
-			if entry.Hovered() {
-				entry.Background(c.Theme().Accent).TextColor(c.Theme().AccentText)
-			}
-			if entry.Clicked() {
-				pick(i)
-				*open = false
-				c.Invalidate()
-			}
 		}
+		typography.Title(c, "Level:").Margin(0, 5, 0, 0)
+		lv := strconv.Itoa(p.levelSel + 1)
+		if choice.Dropdown(c, lv, levelLabels, &lv).Margin(0, 18, 0, 0).Changed() {
+			i, _ := strconv.Atoi(lv)
+			if i-1 == p.levelSel {
+				return
+			}
+			p.pick(p.chapterSel, i-1)
+		}
+
+		button.Solid(c, "Reset").Margin(18).OnClick(p.game.Reset)
 	})
-	return btn
 }
 
 // board draws the frame the replay shows right now.
@@ -279,7 +274,7 @@ func (p *IceMagic) controls(c *ui.Context) {
 
 func (p *IceMagic) controlBtn(c *ui.Context, key, icon string, action func()) {
 	ui.Column(c).AlignItems(ui.Center).Margin(10).Children(func() {
-		ui.Button(c, icon).OnClick(action)
-		ui.Text(c, key).FontSize(11).TextColor(c.Theme().TextMuted)
+		button.Outline(c, icon).OnClick(action)
+		ui.Text(c, key).FontSize(10).TextColor(c.Theme().TextMuted)
 	})
 }

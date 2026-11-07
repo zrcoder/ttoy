@@ -49,6 +49,13 @@ type EventData struct {
 	ShiftBallColor string    `json:"ShiftBallColor"`
 }
 
+// BlackBall and WhiteBall are the palette's colors the view paints with
+// a texture.
+var (
+	BlackBall = ui.Color{R: 28, G: 28, B: 28, A: 255}
+	WhiteBall = ui.Color{R: 248, G: 248, B: 248, A: 255}
+)
+
 func New() *Game {
 	g := &Game{
 		colors: []ui.Color{
@@ -57,9 +64,9 @@ func New() *Game {
 			{R: 0, G: 0, B: 255, A: 255},
 			{R: 255, G: 255, B: 0, A: 255},
 			{R: 238, G: 130, B: 238, A: 255},
-			{R: 255, G: 192, B: 203, A: 255},
+			BlackBall,
 			{R: 255, G: 165, B: 0, A: 255},
-			{R: 127, G: 255, B: 0, A: 255},
+			WhiteBall,
 		},
 		levels: []Level{
 			{Label: "EASY", FullBottles: 5},

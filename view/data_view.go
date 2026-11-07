@@ -1,6 +1,8 @@
 package view
 
 import (
+	"github.com/ELY-Open-Source/CrychicUI/button"
+	"github.com/ELY-Open-Source/CrychicUI/code"
 	"github.com/egoist/mygo/ui"
 	"github.com/egoist/mygo/ui/editor"
 	"github.com/zrcoder/ttoy/service"
@@ -24,7 +26,7 @@ func NewDataView() *DataView {
 
 func (p *DataView) DataView(c *ui.Context) {
 	ui.Column(c).Fill().Children(func() {
-		ui.Tabs(c, &p.activeTab, "JSON", "YAML", "TOML").Margin(18)
+		tabs(c, &p.activeTab, "JSON", "YAML", "TOML")
 		switch p.activeTab {
 		case 0:
 			p.viewTab(c, "json", p.svc.Json)
@@ -38,24 +40,19 @@ func (p *DataView) DataView(c *ui.Context) {
 
 func (p *DataView) viewTab(c *ui.Context, lang string, fn func(string) ([]byte, error)) {
 	p.input.ReadOnly = false
+	p.input.Buffer.SetLanguage(editor.LanguageNamed(lang))
 	ui.Row(c).Fill().Children(func() {
 		ui.Column(c).Fill().Children(func() {
-			editor.View(c, p.input).Fill()
+			code.CodeEditor(c, p.input, code.CodeEditorOptions{}).Fill().Margin(18, 0)
 		})
 		ui.Column(c).Width(52).AlignItems(ui.Center).Justify(ui.Center).Children(func() {
-			btn := ui.ButtonBase(c).Width(32).Height(32).Radius(6).BorderWidth(2).BorderColor(c.Theme().Surface).
-				OnClick(func() {
-					res, err := fn(p.input.Buffer.String())
-					if err != nil {
-						Toast(c, err.Error(), func() {})
-						return
-					}
-					p.imageView.SetSvg(res)
-				}).Children(func() {
-				ui.Text(c, "→").FontSize(14)
-			})
-			if btn.Hovered() {
-				btn.Background(c.Theme().SurfaceHover)
+			if button.IconButton(c, "gen", "arrow-right").Radius(999).Clicked() {
+				res, err := fn(p.input.Buffer.String())
+				if err != nil {
+					Toast(c, err.Error(), func() {})
+					return
+				}
+				p.imageView.SetSvg(res)
 			}
 		})
 		ui.Column(c).Fill().Children(func() {

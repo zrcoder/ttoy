@@ -26,8 +26,7 @@ func NewConvert() *Convert {
 
 func (p *Convert) View(c *ui.Context) {
 	ui.Column(c).Fill().Children(func() {
-		ui.Tabs(c, &p.activeTab, "JSON-YAML", "JSON-TOML", "YAML-TOML").Margin(18)
-		ui.Spacer(c).Height(8)
+		tabs(c, &p.activeTab, "JSON-YAML", "JSON-TOML", "YAML-TOML")
 		switch p.activeTab {
 		case 0:
 			p.json2yaml.View(c)

@@ -5,6 +5,10 @@ import (
 
 	"github.com/zrcoder/ttoy/view"
 
+	"github.com/ELY-Open-Source/CrychicUI/button"
+	"github.com/ELY-Open-Source/CrychicUI/choice"
+	"github.com/ELY-Open-Source/CrychicUI/icon"
+	"github.com/ELY-Open-Source/CrychicUI/sound"
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 )
@@ -48,21 +52,24 @@ type Ttoy struct {
 	ballSort *view.BallSort
 	hanoi    *view.Hanoi
 	iceMagic *view.IceMagic
+
+	musicEnabled bool
 }
 
 func New() *Ttoy {
 	return &Ttoy{
-		navSelected: KeyHome,
-		convert:     view.NewConvert(),
-		encode:      view.NewEncode(),
-		format:      view.NewFormat(),
-		generate:    view.NewGenerate(),
-		diff:        view.NewDiff(),
-		dataView:    view.NewDataView(),
-		plot:        view.NewPlot(),
-		ballSort:    view.NewBallSort(),
-		hanoi:       view.NewHanoi(),
-		iceMagic:    view.NewIceMagic(assertsFS),
+		navSelected:  KeyHome,
+		convert:      view.NewConvert(),
+		encode:       view.NewEncode(),
+		format:       view.NewFormat(),
+		generate:     view.NewGenerate(),
+		diff:         view.NewDiff(),
+		dataView:     view.NewDataView(),
+		plot:         view.NewPlot(),
+		ballSort:     view.NewBallSort(),
+		hanoi:        view.NewHanoi(),
+		iceMagic:     view.NewIceMagic(assertsFS),
+		musicEnabled: true,
 	}
 }
 
@@ -73,50 +80,46 @@ func (t *Ttoy) View(c *ui.Context) {
 	})
 }
 
-func (t *Ttoy) toggleTheme(c *ui.Context) {
-	if mygo.Theme.IsDark() {
-		mygo.Theme.SetSource(mygo.ThemeLight)
-	} else {
-		mygo.Theme.SetSource(mygo.ThemeDark)
-	}
-	c.Invalidate()
-}
-
 func (t *Ttoy) nav(c *ui.Context) {
+	sidebarItem := func(c *ui.Context, key string, icon *ui.SVG, label string) {
+		if ui.SidebarItem(c, key, icon, label).Clicked() {
+			sound.Play(sound.Select)
+		}
+	}
 	ui.Column(c.Key("nav")).Width(240).FillHeight().Children(func() {
 		ui.Sidebar(c, &t.navSelected, func() {
-			ui.SidebarItem(c, string(KeyHome), nil, "Home")
-
+			sidebarItem(c, string(KeyHome), icon.Must("home"), "Home")
 			ui.SidebarSection(c, "Tools", nil, func() {
-				ui.SidebarItem(c, string(KeyFormat), nil, "Format")
-				ui.SidebarItem(c, string(KeyConvert), nil, "Convert")
-				ui.SidebarItem(c, string(KeyEncode), nil, "Encode")
-				ui.SidebarItem(c, string(KeyGenerate), nil, "Generate")
-				ui.SidebarItem(c, string(KeyDiff), nil, "Diff")
-				ui.SidebarItem(c, string(KeyDataView), nil, "View")
-				ui.SidebarItem(c, string(KeyPlot), nil, "Plot")
+				sidebarItem(c, KeyFormat, icon.Must("cog"), "Format")
+				sidebarItem(c, KeyConvert, icon.Must("code"), "Convert")
+				sidebarItem(c, KeyEncode, icon.Must("refresh-ccw"), "Encode")
+				sidebarItem(c, KeyGenerate, icon.Must("sparkles"), "Generate")
+				sidebarItem(c, KeyDiff, icon.Must("database-zap"), "Diff")
+				sidebarItem(c, KeyDataView, icon.Must("grid"), "Data View")
+				sidebarItem(c, KeyPlot, icon.Must("chart-bar"), "Plot")
 			})
 			ui.SidebarSection(c, "Games", nil, func() {
-				ui.SidebarItem(c, string(KeyIce), nil, "IceMagic")
-				ui.SidebarItem(c, string(KeyBall), nil, "BallSort")
-				ui.SidebarItem(c, string(KeyHanoi), nil, "Hanoi")
+				sidebarItem(c, KeyIce, icon.Must("snowflake"), "IceMagic")
+				sidebarItem(c, KeyBall, icon.Must("dice-6"), "BallSort")
+				sidebarItem(c, KeyHanoi, icon.Must("radio-tower"), "Hanoi")
 			})
 		}).Fill()
 
-		ui.Row(c).Absolute().Bottom(0).Left(0).Height(40).Children(func() {
-			themeIcon := moonIconData
-			if mygo.Theme.IsDark() {
-				themeIcon = sunIconData
+		ui.Row(c).Absolute().Bottom(10).Left(10).Width(200).Height(40).Children(func() {
+			dark := mygo.Theme.IsDark()
+			if button.ThemeToggle(c, &dark, button.ThemeToggleOptions{}).Changed() {
+				if mygo.Theme.IsDark() {
+					mygo.Theme.SetSource(mygo.ThemeLight)
+				} else {
+					mygo.Theme.SetSource(mygo.ThemeDark)
+				}
 			}
-			btn := ui.ButtonBase(c).Margin(8).Padding(8).Radius(4).OnClick(func() {
-				t.toggleTheme(c)
-			})
-			if btn.Hovered() {
-				btn.Background(c.Theme().SurfaceHover)
+
+			ui.Spacer(c)
+
+			if choice.MuteToggle(c, "music", &t.musicEnabled).Width(36).Height(36).Changed() {
+				sound.SetEnabled(t.musicEnabled)
 			}
-			btn.Children(func() {
-				ui.Icon(c, ui.MustParseSVG(themeIcon)).Size(16, 16).TextColor(c.Theme().Text)
-			})
 		})
 	})
 }

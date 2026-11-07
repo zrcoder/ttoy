@@ -1,6 +1,8 @@
 package view
 
 import (
+	"github.com/ELY-Open-Source/CrychicUI/button"
+	"github.com/ELY-Open-Source/CrychicUI/code"
 	"github.com/egoist/mygo/ui"
 	"github.com/egoist/mygo/ui/editor"
 )
@@ -20,7 +22,7 @@ type DualEditor struct {
 }
 
 func NewDualEditor(leftLang, rightLang string) *DualEditor {
-	return &DualEditor{
+	d := &DualEditor{
 		leftBuf:       &editor.State{Buffer: editor.NewBuffer("")},
 		rightBuf:      &editor.State{Buffer: editor.NewBuffer("")},
 		leftLang:      leftLang,
@@ -28,6 +30,9 @@ func NewDualEditor(leftLang, rightLang string) *DualEditor {
 		leftReadOnly:  false,
 		rightReadOnly: true,
 	}
+	d.leftBuf.Buffer.SetLanguage(editor.LanguageNamed(d.leftLang))
+	d.rightBuf.Buffer.SetLanguage(editor.LanguageNamed(d.rightLang))
+	return d
 }
 
 func (d *DualEditor) LeftReadOnly(v bool) *DualEditor                     { d.leftReadOnly = v; return d }
@@ -40,57 +45,41 @@ func (d *DualEditor) Left() string                                        { retu
 func (d *DualEditor) Right() string                                       { return d.rightBuf.Buffer.String() }
 
 func (d *DualEditor) View(c *ui.Context) {
-	ui.Row(c).Fill().Children(func() {
-		// Left editor
-		ui.Column(c.Key("dual-left")).Fill().Children(func() {
-			d.leftBuf.ReadOnly = d.leftReadOnly
-			editor.View(c, d.leftBuf).Fill()
-		})
+	ui.Row(c).Fill().Margin(18, 0).Children(func() {
 
-		// Transform buttons + copy
-		ui.Column(c).Width(72).AlignItems(ui.Center).Justify(ui.Center).Children(func() {
+		d.leftBuf.ReadOnly = d.leftReadOnly
+		d.rightBuf.ReadOnly = d.rightReadOnly
+
+		code.CodeEditor(c, d.leftBuf, code.CodeEditorOptions{}).Fill()
+
+		ui.Spacer(c).Width(18)
+
+		ui.Column(c).AlignItems(ui.Center).Children(func() {
 			if d.leftFn != nil {
-				btn := ui.ButtonBase(c).Width(32).Height(32).Radius(6).BorderWidth(2).BorderColor(c.Theme().Surface).
-					OnClick(func() {
-						res, err := d.leftFn(d.Left())
-						if err != nil {
-							Toast(c, err.Error(), func() {})
-							return
-						}
-						d.SetRight(res)
-					}).Children(func() {
-					ui.Text(c, "→").FontSize(14)
-				})
-				ui.Spacer(c).Height(8)
-
-				if btn.Hovered() {
-					btn.Background(c.Theme().SurfaceHover)
+				if button.IconButton(c, "left-right", "arrow-right").Radius(999).Clicked() {
+					res, err := d.leftFn(d.Left())
+					if err != nil {
+						Toast(c, err.Error(), func() {})
+						return
+					}
+					d.SetRight(res)
 				}
 			}
+			ui.Spacer(c).Height(18)
 			if d.rightFn != nil {
-				btn := ui.ButtonBase(c).Width(32).Height(32).Radius(6).BorderWidth(2).BorderColor(c.Theme().Surface).
-					OnClick(func() {
-						res, err := d.rightFn(d.Right())
-						if err != nil {
-							Toast(c, err.Error(), func() {})
-							return
-						}
-						d.SetLeft(res)
-					}).Children(func() {
-					ui.Text(c, "←").FontSize(14)
-				})
-
-				if btn.Hovered() {
-					btn.Background(c.Theme().SurfaceHover)
+				if button.IconButton(c, "right-left", "arrow-left").Radius(999).Clicked() {
+					res, err := d.rightFn(d.Right())
+					if err != nil {
+						Toast(c, err.Error(), func() {})
+						return
+					}
+					d.SetLeft(res)
 				}
 			}
-			ui.Spacer(c).Height(16)
 		})
 
-		// Right editor
-		ui.Column(c.Key("dual-right")).Fill().Children(func() {
-			d.rightBuf.ReadOnly = d.rightReadOnly
-			editor.View(c, d.rightBuf).Fill()
-		})
+		ui.Spacer(c).Width(18)
+
+		code.CodeEditor(c, d.rightBuf, code.CodeEditorOptions{}).Fill()
 	})
 }

@@ -1,6 +1,9 @@
 package view
 
 import (
+	"github.com/ELY-Open-Source/CrychicUI/button"
+	"github.com/ELY-Open-Source/CrychicUI/choice"
+	"github.com/ELY-Open-Source/CrychicUI/sound"
 	"github.com/egoist/mygo/ui"
 	"github.com/zrcoder/ttoy/game/hanoi"
 )
@@ -58,13 +61,13 @@ func (p *Hanoi) View(c *ui.Context) {
 		})
 
 		ui.Row(c).FillWidth().AlignItems(ui.Stretch).Margin(18, 0, 18, 0).Children(func() {
-			ui.Segmented(c, &p.level, p.levelLabels...).OnChange(func() {
+			choice.Segments(c, "Levels", p.levelLabels, &p.level).OnChange(func() {
 				p.game.SelectLevel(p.level)
 			})
 
 			ui.Spacer(c)
 
-			ui.Button(c, "Reset").OnClick(func() {
+			button.Outline(c, "Reset").OnClick(func() {
 				p.game.Reset()
 				c.Invalidate()
 			})
@@ -125,7 +128,21 @@ func (p *Hanoi) onPileClick(c *ui.Context, i int) {
 	if p.game.IsDone() {
 		return
 	}
+	lift := p.game.ShiftPileIndex()
 	_ = p.game.SelectPileByIndex(i)
+	// One cue per kind of move, told apart by ShiftPileIndex before and
+	// after: -1 while no disk is held.
+	switch hold := p.game.ShiftPileIndex(); {
+	case lift == -1 && hold != -1:
+		sound.Play(sound.Select)
+	case lift != -1 && hold == -1:
+		sound.Play(sound.Pop)
+	default:
+		sound.Play(sound.Tick) // an invalid move, or nothing to lift
+	}
+	if !p.solvedDialogOpen && p.game.IsDone() {
+		sound.Play(sound.Success)
+	}
 	p.solvedDialogOpen = p.game.IsDone()
 	c.Invalidate()
 }
