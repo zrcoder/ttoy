@@ -12,56 +12,53 @@ import (
 
 // IceMagic renders the IceMagic puzzle grid.
 type IceMagic struct {
-	game         *icemagic.Game
-	chapterSel   int
-	levelSel     int
-	chapterLabel string
-	levelLabel   string
+	game       *icemagic.Game
+	chapterSel int
+	levelSel   int
 
 	bitmaps map[string]*ui.Bitmap
 	gifs    map[string]*ui.VideoPlayer
 
-	// Popover state (keeps popover hidden until button clicked)
+	// hidden until the matching button is clicked
 	chapterPopoverOpen bool
 	levelPopoverOpen   bool
 }
 
 func NewIceMagic(assertsFS embed.FS) *IceMagic {
-	g := icemagic.New()
-	res := &IceMagic{
-		game:               g,
-		chapterSel:         0,
-		levelSel:           0,
-		chapterPopoverOpen: false,
-		levelPopoverOpen:   false,
-	}
+	res := &IceMagic{game: icemagic.New()}
+	res.loadBitmaps(assertsFS)
+	res.loadGifs(assertsFS)
+	return res
+}
 
-	res.bitmaps = map[string]*ui.Bitmap{
-		"images/icemagic/wall1.png": nil,
-		"images/icemagic/wall2.png": nil,
-		"images/icemagic/wall3.png": nil,
-		"images/icemagic/wall4.png": nil,
-		"images/icemagic/wall5.png": nil,
-		"images/icemagic/ice.png":   nil,
-	}
-	for k := range res.bitmaps {
+// loadBitmaps decodes the still cell images once.
+func (p *IceMagic) loadBitmaps(assertsFS embed.FS) {
+	p.bitmaps = make(map[string]*ui.Bitmap)
+	for _, k := range []string{
+		"images/icemagic/wall1.png",
+		"images/icemagic/wall2.png",
+		"images/icemagic/wall3.png",
+		"images/icemagic/wall4.png",
+		"images/icemagic/wall5.png",
+		"images/icemagic/ice.png",
+	} {
 		data, err := assertsFS.ReadFile("resources/" + k)
 		if err != nil {
 			log.Fatal(err)
 		}
-		res.bitmaps[k], err = ui.DecodeBitmap(data)
+		b, err := ui.DecodeBitmap(data)
 		if err != nil {
 			log.Fatal(err)
 		}
+		p.bitmaps[k] = b
 	}
+}
 
-	// Animated GIFs: DecodeBitmap shows only the first frame, so play
-	// them via VideoPlayer (created once, like bitmaps).
-	res.gifs = map[string]*ui.VideoPlayer{
-		"images/icemagic/fire.gif":   nil,
-		"images/icemagic/player.gif": nil,
-	}
-	for k := range res.gifs {
+// loadGifs gives the animated cell sprites looping players: DecodeBitmap
+// shows only the first frame of a GIF.
+func (p *IceMagic) loadGifs(assertsFS embed.FS) {
+	p.gifs = make(map[string]*ui.VideoPlayer)
+	for _, k := range []string{"images/icemagic/fire.gif", "images/icemagic/player.gif"} {
 		data, err := assertsFS.ReadFile("resources/" + k)
 		if err != nil {
 			log.Fatal(err)
@@ -70,15 +67,13 @@ func NewIceMagic(assertsFS embed.FS) *IceMagic {
 		if err != nil {
 			log.Fatal(err)
 		}
-		p, err := ui.NewVideoPlayer(dec)
+		player, err := ui.NewVideoPlayer(dec)
 		if err != nil {
 			log.Fatal(err)
 		}
-		p.SetLoop(true)
-		res.gifs[k] = p
+		player.SetLoop(true)
+		p.gifs[k] = player
 	}
-
-	return res
 }
 
 func (p *IceMagic) View(c *ui.Context) {
@@ -91,114 +86,106 @@ func (p *IceMagic) View(c *ui.Context) {
 		ui.Row(c).Fill().Height(44).Children(func() {
 			ui.Text(c, "IceMagic").FontSize(20).FontWeight(700)
 		})
-
-		// Note: focus is managed at app level (sidebar).
-		// Keys work after clicking because focus moves to game controls.
-		// The c.Key() approach may not work due to sidebar focus management.
-
 		ui.Column(c).FillWidth().AlignItems(ui.Center).Children(func() {
-			ui.Row(c).Children(func() {
-				chapters := p.game.Chapters()
-				chBtn := ui.Button(c, fmt.Sprintf("Chapter %d ▾", p.chapterSel+1))
-				if chBtn.Clicked() {
-					p.chapterPopoverOpen = !p.chapterPopoverOpen
-					c.Invalidate()
-				}
-				ui.Popover(c, chBtn, &p.chapterPopoverOpen, func() {
-					for i := range chapters {
-						label := strconv.Itoa(i + 1)
-						entry := ui.Row(c.Key(label)).Padding(6, 12).Radius(5).Children(func() { ui.Text(c, label) })
-						if entry.Hovered() {
-							entry.Background(c.Theme().Accent).TextColor(c.Theme().AccentText)
-						}
-						if entry.Clicked() {
-							p.chapterSel = i
-							p.game.SelectLevel(p.chapterSel+1, p.levelSel+1)
-							p.chapterPopoverOpen = false
-							c.Invalidate()
-						}
-					}
-				})
-				levelCount := chapters[p.chapterSel]
-				lvBtn := ui.Button(c, fmt.Sprintf("Level %d ▾", p.levelSel+1)).Margin(8)
-				if lvBtn.Clicked() {
-					p.levelPopoverOpen = !p.levelPopoverOpen
-					c.Invalidate()
-				}
-				ui.Popover(c, lvBtn, &p.levelPopoverOpen, func() {
-					for i := range levelCount {
-						label := strconv.Itoa(i + 1)
-						entry := ui.Row(c.Key(label)).Padding(6, 12).Radius(5).Children(func() { ui.Text(c, label) })
-						if entry.Hovered() {
-							entry.Background(c.Theme().Accent).TextColor(c.Theme().AccentText)
-						}
-						if entry.Clicked() {
-							p.levelSel = i
-							p.game.SelectLevel(p.chapterSel+1, p.levelSel+1)
-							p.levelPopoverOpen = false
-							c.Invalidate()
-						}
-					}
-				})
-				ui.PrimaryButton(c, "Reset").Margin(18).OnClick(func() {
-					p.game.Reset()
-					c.Invalidate()
-				})
-			})
-
-			grid := p.game.Grid()
-			if len(grid) == 0 {
-				ui.Text(c, "Loading grid...").TextColor(c.Theme().TextMuted)
-				return
-			}
-
-			ui.Column(c).Margin(28, 0).Children(func() {
-				for _, row := range grid {
-					ui.Row(c).Children(func() {
-						for _, sprite := range row {
-							p.cell(c, sprite)
-						}
-					})
-				}
-			})
-
-			ui.Row(c).Children(func() {
-				p.controlBtn(c, "J", "←", func() { p.game.MoveLeft() })
-				p.controlBtn(c, "L", "→", func() { p.game.MoveRight() })
-			})
-			ui.Row(c).Children(func() {
-				p.controlBtn(c, "A", "↙", func() { p.game.MagicLeft() })
-				p.controlBtn(c, "D", "↘", func() { p.game.MagicRight() })
-			})
+			p.menu(c)
+			p.board(c)
+			p.controls(c)
 		})
 	})
 }
 
-var _ = fmt.Sprintf
-
-func (p *IceMagic) cell(c *ui.Context, sprite *icemagic.Sprite) {
-	cell := sprite.Cell
-
-	ui.Box(c).Width(34).Height(34).BorderColor(c.Theme().Border).BorderWidth(
-		b2f(cell.BorderTop),
-		b2f(cell.BorderRight),
-		b2f(cell.BorderBottom),
-		b2f(cell.BorderLeft),
-	).Children(func() {
-		if gif := p.gifs[cell.Image]; gif != nil {
-			ui.Video(c, gif).Fill().Fit(ui.Cover)
-			return
-		}
-		ui.Image(c, p.bitmaps[cell.Image]).Fill().Fit(ui.Cover)
+// menu shows the chapter and level pickers and the reset button.
+func (p *IceMagic) menu(c *ui.Context) {
+	chapters := p.game.Chapters()
+	ui.Row(c).Children(func() {
+		p.pickMenu(c, fmt.Sprintf("Chapter %d", p.chapterSel+1), &p.chapterPopoverOpen, len(chapters), func(i int) {
+			p.chapterSel = i
+			p.game.SelectLevel(p.chapterSel+1, p.levelSel+1)
+		})
+		p.pickMenu(c, fmt.Sprintf("Level %d", p.levelSel+1), &p.levelPopoverOpen, chapters[p.chapterSel], func(i int) {
+			p.levelSel = i
+			p.game.SelectLevel(p.chapterSel+1, p.levelSel+1)
+		}).Margin(8)
+		ui.PrimaryButton(c, "Reset").Margin(18).OnClick(p.game.Reset)
 	})
 }
 
-// b2f reports a bool border side as a border width.
-func b2f(b bool) float32 {
-	if b {
-		return 1
+// pickMenu is a labeled button that opens a popover listing 1..n, where
+// picking i calls pick with the zero-based index and closes the popover.
+// The anchor button is returned for the caller to decorate.
+func (p *IceMagic) pickMenu(c *ui.Context, label string, open *bool, n int, pick func(i int)) ui.Element {
+	btn := ui.Button(c, label+" ▾")
+	if btn.Clicked() {
+		*open = !*open
+		c.Invalidate()
 	}
-	return 0
+	ui.Popover(c, btn, open, func() {
+		for i := range n {
+			name := strconv.Itoa(i + 1)
+			entry := ui.Row(c.Key(name)).Padding(6, 12).Radius(5).Children(func() {
+				ui.Text(c, name)
+			})
+			if entry.Hovered() {
+				entry.Background(c.Theme().Accent).TextColor(c.Theme().AccentText)
+			}
+			if entry.Clicked() {
+				pick(i)
+				*open = false
+				c.Invalidate()
+			}
+		}
+	})
+	return btn
+}
+
+// board draws the frame the replay shows right now, and while it is
+// still playing asks for the next one.
+func (p *IceMagic) board(c *ui.Context) {
+	images, nextAt, playing := p.game.Present(c.Now())
+	if len(images) == 0 {
+		ui.Text(c, "Loading grid...").TextColor(c.Theme().TextMuted)
+		return
+	}
+	ui.Column(c).Margin(28, 0).Children(func() {
+		for _, row := range images {
+			ui.Row(c).Children(func() {
+				for _, img := range row {
+					p.cell(c, img)
+				}
+			})
+		}
+	})
+	if playing {
+		if d := nextAt.Sub(c.Now()); d > 0 {
+			c.After(d)
+		} else {
+			c.AnimationFrame()
+		}
+	}
+}
+
+// cell draws one 34×34 board cell by its image path: a looping video for
+// the GIF sprites, a bitmap for the rest.
+func (p *IceMagic) cell(c *ui.Context, img string) {
+	ui.Box(c).Width(34).Height(34).Children(func() {
+		if gif := p.gifs[img]; gif != nil {
+			ui.Video(c, gif).Fill().Fit(ui.Cover)
+			return
+		}
+		ui.Image(c, p.bitmaps[img]).Fill().Fit(ui.Cover)
+	})
+}
+
+// controls shows the touch buttons mirrored by the shortcuts above.
+func (p *IceMagic) controls(c *ui.Context) {
+	ui.Row(c).Children(func() {
+		p.controlBtn(c, "J", "←", func() { p.game.MoveLeft() })
+		p.controlBtn(c, "L", "→", func() { p.game.MoveRight() })
+	})
+	ui.Row(c).Children(func() {
+		p.controlBtn(c, "A", "↙", func() { p.game.MagicLeft() })
+		p.controlBtn(c, "D", "↘", func() { p.game.MagicRight() })
+	})
 }
 
 func (p *IceMagic) controlBtn(c *ui.Context, key, icon string, action func()) {

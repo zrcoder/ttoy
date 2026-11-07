@@ -2,7 +2,6 @@ package icemagic
 
 import (
 	"math/rand/v2"
-	"time"
 
 	"github.com/zrcoder/ttoy/game/common"
 )
@@ -16,6 +15,7 @@ type Game struct {
 	chapter  int
 	level    int
 	chpaters []int
+	anim     moveAnim // display-layer replay of falls and slides
 }
 
 func New() *Game {
@@ -144,6 +144,7 @@ func (g *Game) MagicRight() {
 func (g *Game) Reset() {
 	g.fires = 0
 	g.failed = false
+	g.anim = moveAnim{} // drop stale frames
 	g.parseGrid(g.chapter, g.level)
 }
 
@@ -158,7 +159,6 @@ func (g *Game) swap(src, dst *Sprite) bool {
 		return false
 	}
 	g.updateUI()
-	time.Sleep(400 * time.Millisecond)
 	return true
 }
 

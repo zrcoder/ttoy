@@ -22,6 +22,7 @@ tasks:
     cmds:
       - go tool mygo migrate-ui -write .
       - go fix ./...
+      - go tool mygo install-skills
 
   gen:
     summary: Regenerate bindings (if any)

@@ -2,14 +2,15 @@ module github.com/zrcoder/ttoy
 
 go 1.27.3
 
-tool github.com/egoist/mygo/cmd/mygo
-
-tool github.com/goplus/ixgo/cmd/qexp
+tool (
+	github.com/egoist/mygo/cmd/mygo
+	github.com/goplus/ixgo/cmd/qexp
+)
 
 require (
 	github.com/BurntSushi/toml v1.6.0
 	github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be
-	github.com/egoist/mygo v0.7.4
+	github.com/egoist/mygo v0.8.1
 	github.com/zrcoder/cdor v0.2.3
 	github.com/zrcoder/ndor v0.0.0-20261101130649-66398d77b697
 	golang.org/x/image v0.47.0

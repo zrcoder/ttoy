@@ -24,6 +24,7 @@ type Sprite struct {
 }
 
 func (s *Sprite) iceSlideLeft() bool {
+	s.game.beginAnim() // base frame: the board before the slide
 	left := s.left()
 	if left == nil {
 		return false
@@ -34,6 +35,7 @@ func (s *Sprite) iceSlideLeft() bool {
 		s.game.updateUI()
 		left.fireDie()
 		s.game.updateUI()
+		s.game.frame() // the burn is one replayed frame
 		s.game.checkFall(left.up())
 		s.game.checkFall(s.up())
 		return true
@@ -42,6 +44,7 @@ func (s *Sprite) iceSlideLeft() bool {
 		if ok := s.game.swap(left, s); !ok {
 			return false
 		}
+		s.game.frame()
 		if ok := s.fall(); !ok {
 			s.iceSlideLeft()
 		}
@@ -51,6 +54,7 @@ func (s *Sprite) iceSlideLeft() bool {
 	return false
 }
 func (s *Sprite) iceSlideRight() bool {
+	s.game.beginAnim() // base frame: the board before the slide
 	right := s.right()
 	if right == nil {
 		return false
@@ -61,6 +65,7 @@ func (s *Sprite) iceSlideRight() bool {
 		s.game.updateUI()
 		right.fireDie()
 		s.game.updateUI()
+		s.game.frame() // the burn is one replayed frame
 		s.game.checkFall(right.up())
 		s.game.checkFall(s.up())
 		return true
@@ -69,6 +74,7 @@ func (s *Sprite) iceSlideRight() bool {
 		if ok := s.game.swap(s, right); !ok {
 			return false
 		}
+		s.game.frame()
 		if ok := s.fall(); !ok {
 			s.iceSlideRight()
 		}

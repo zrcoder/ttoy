@@ -94,6 +94,7 @@ func (g *Game) checkFall(s *Sprite) {
 }
 
 func (g *Game) fallBars(bars ...*Bar) bool {
+	g.beginAnim() // base frame: the board before the fall
 	if len(bars) == 0 {
 		return false
 	}
@@ -110,6 +111,7 @@ func (g *Game) fallBars(bars ...*Bar) bool {
 	if !res {
 		return res
 	}
+	g.frame()
 	g.updateUI()
 	g.fallBars(newBars...)
 	g.fallBars(upBars...)
