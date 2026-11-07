@@ -1,6 +1,9 @@
 package icemagic
 
-import "time"
+import (
+	"slices"
+	"time"
+)
 
 // frameStep is how long one replayed frame stays on screen.
 const frameStep = 100 * time.Millisecond
@@ -10,7 +13,7 @@ const frameStep = 100 * time.Millisecond
 // an input handler returns, so intermediate states live here.
 type moveAnim struct {
 	start  time.Time
-	frames [][][]string
+	frames [][][]*Cell
 }
 
 // beginAnim records the board before a move changes it, unless the last
@@ -18,11 +21,11 @@ type moveAnim struct {
 func (g *Game) beginAnim() {
 	n := len(g.anim.frames)
 	if n == 0 {
-		g.anim = moveAnim{start: time.Now(), frames: [][][]string{g.gridImages()}}
+		g.anim = moveAnim{start: time.Now(), frames: [][][]*Cell{g.gridCells()}}
 		return
 	}
-	if !sameImages(g.anim.frames[n-1], g.gridImages()) {
-		g.anim.frames = append(g.anim.frames, g.gridImages())
+	if !sameCells(g.anim.frames[n-1], g.gridCells()) {
+		g.anim.frames = append(g.anim.frames, g.gridCells())
 	}
 }
 
@@ -34,50 +37,42 @@ func (g *Game) frame() {
 		// The replay has ended: let the new frames start from now.
 		g.anim.start = now.Add(-time.Duration(n) * frameStep)
 	}
-	g.anim.frames = append(g.anim.frames, g.gridImages())
+	g.anim.frames = append(g.anim.frames, g.gridCells())
 }
 
-// gridImages copies the image path of each cell of the board.
-func (g *Game) gridImages() [][]string {
-	images := make([][]string, len(g.grid))
+// gridCells copies each cell of the board by value; sprites mutate in
+// place, so a snapshot can only keep Cell copies, behind a pointer.
+func (g *Game) gridCells() [][]*Cell {
+	cells := make([][]*Cell, len(g.grid))
 	for y := range g.grid {
-		images[y] = make([]string, len(g.grid[y]))
+		cells[y] = make([]*Cell, len(g.grid[y]))
 		for x := range g.grid[y] {
-			images[y][x] = g.grid[y][x].Cell.Image
+			c := g.grid[y][x].Cell
+			cells[y][x] = &c
 		}
 	}
-	return images
+	return cells
 }
 
-// sameImages reports whether two board frames match cell by cell.
-func sameImages(a, b [][]string) bool {
-	if len(a) != len(b) {
-		return false
+// sameCells reports whether two board frames match cell by cell.
+func sameCells(a, b [][]*Cell) bool {
+	rowEq := func(x, y []*Cell) bool {
+		return slices.EqualFunc(x, y, func(i, j *Cell) bool { return *i == *j })
 	}
-	for y := range a {
-		if len(a[y]) != len(b[y]) {
-			return false
-		}
-		for x := range a[y] {
-			if a[y][x] != b[y][x] {
-				return false
-			}
-		}
-	}
-	return true
+	return slices.EqualFunc(a, b, rowEq)
 }
 
 // Present returns what the board shows at time t, when the next frame
 // is due, and whether the replay is still playing.
-func (g *Game) Present(t time.Time) ([][]string, time.Time, bool) {
+func (g *Game) Present(t time.Time) ([][]*Cell, time.Time, bool) {
 	n := len(g.anim.frames) - 1
-	if n >= 0 && !sameImages(g.anim.frames[n], g.gridImages()) {
+	if n >= 0 && !sameCells(g.anim.frames[n], g.gridCells()) {
 		// The board changed outside the replay: drop it and go live.
 		g.anim = moveAnim{}
 		n = -1
 	}
 	if n < 0 {
-		return g.gridImages(), time.Time{}, false
+		return g.gridCells(), time.Time{}, false
 	}
 	k := max(int(t.Sub(g.anim.start)/frameStep), 0)
 	if k >= n {

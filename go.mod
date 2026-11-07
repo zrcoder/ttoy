@@ -9,6 +9,7 @@ tool (
 
 require (
 	github.com/BurntSushi/toml v1.6.0
+	github.com/ELY-Open-Source/CrychicUI v0.0.0-20261027050735-bf15ddf6600a
 	github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be
 	github.com/egoist/mygo v0.8.1
 	github.com/zrcoder/cdor v0.2.3
