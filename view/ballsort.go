@@ -8,7 +8,6 @@ import (
 	"github.com/zrcoder/ttoy/game/ballsort"
 )
 
-// BallSort renders a playable Ball Sort puzzle using native mygo UI.
 type BallSort struct {
 	game             *ballsort.Game
 	levels           []string
@@ -55,26 +54,25 @@ func (p *BallSort) View(c *ui.Context) {
 		ui.Row(c).Height(44).Children(func() {
 			ui.Text(c, "Ball Sort").FontSize(20).FontWeight(700)
 		})
-		// Level selector
-		ui.Row(c).AlignItems(ui.Center).Margin(18, 0, 18, 0).Children(func() {
-			choice.Segments(c, "Levels", p.levels, &p.level).OnChange(func() {
-				p.game.SelectLevel(p.level)
-			})
-			ui.Spacer(c).Width(16)
 
-			button.Outline(c, "Reset").OnClick(func() {
-				p.game.Reset()
-				c.Invalidate()
-			})
-
-		})
 		ui.Column(c).AlignItems(ui.Center).Children(func() {
-			ui.Text(c, p.game.State())
-			// Bottles
-			ui.Row(c).Children(func() {
-				for _, bottle := range bottles {
-					p.bottleView(c, bottle)
-				}
+			ui.Row(c).Margin(18, 0, 18, 0).Children(func() {
+				choice.Segments(c, "Levels", p.levels, &p.level).OnChange(func() {
+					p.game.SelectLevel(p.level)
+				})
+				ui.Spacer(c).Width(16)
+				button.Solid(c, "Reset").OnClick(func() {
+					p.game.Reset()
+					c.Invalidate()
+				})
+			})
+			ui.Column(c).AlignItems(ui.Center).Children(func() {
+				ui.Text(c, p.game.State())
+				ui.Row(c).Children(func() {
+					for _, bottle := range bottles {
+						p.bottleView(c, bottle)
+					}
+				})
 			})
 		})
 	})

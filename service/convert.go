@@ -6,7 +6,7 @@ import (
 	"encoding/json/v2"
 
 	"github.com/BurntSushi/toml"
-	"gopkg.in/yaml.v3"
+	"go.yaml.in/yaml/v4"
 )
 
 type Convert struct{}

@@ -17,7 +17,7 @@ type Format struct {
 func NewFormat() *Format {
 	svc := &service.Format{}
 	return &Format{
-		svc: svc,
+		svc:  svc,
 		json: NewDualEditor("json", "json").LeftFn(svc.Json),
 		yaml: NewDualEditor("yaml", "yaml").LeftFn(svc.Yaml),
 		toml: NewDualEditor("toml", "toml").LeftFn(svc.Toml),

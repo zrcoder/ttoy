@@ -105,15 +105,13 @@ func (p *IceMagic) View(c *ui.Context) {
 	c.OnShortcut(0, ui.KeyA, func() { p.magicSfx(); p.game.MagicLeft() })
 	c.OnShortcut(0, ui.KeyD, func() { p.magicSfx(); p.game.MagicRight() })
 
-	ui.Column(c).Fill().Focus().Children(func() {
+	ui.Column(c).Fill().AlignItems(ui.Center).Focus().Children(func() {
 		ui.Row(c).Fill().Height(44).Children(func() {
 			ui.Text(c, "IceMagic").FontSize(20).FontWeight(700)
 		})
-		ui.Column(c).FillWidth().AlignItems(ui.Center).Children(func() {
-			p.menu(c)
-			p.board(c)
-			p.controls(c)
-		})
+		p.menu(c)
+		p.board(c)
+		p.controls(c)
 	})
 
 	p.gameOver(c)
@@ -263,18 +261,16 @@ func b2f(b bool) float32 {
 
 func (p *IceMagic) controls(c *ui.Context) {
 	ui.Row(c).Children(func() {
-		p.controlBtn(c, "J", "←", func() { p.moveSfx(); p.game.MoveLeft() })
-		p.controlBtn(c, "L", "→", func() { p.moveSfx(); p.game.MoveRight() })
-	})
-	ui.Row(c).Children(func() {
-		p.controlBtn(c, "A", "↙", func() { p.magicSfx(); p.game.MagicLeft() })
-		p.controlBtn(c, "D", "↘", func() { p.magicSfx(); p.game.MagicRight() })
+		p.controlBtn(c, "J", "arrow-left", func() { p.moveSfx(); p.game.MoveLeft() })
+		p.controlBtn(c, "A", "arrow-down-left", func() { p.magicSfx(); p.game.MagicLeft() })
+		p.controlBtn(c, "D", "arrow-down-right", func() { p.magicSfx(); p.game.MagicRight() })
+		p.controlBtn(c, "L", "arrow-right", func() { p.moveSfx(); p.game.MoveRight() })
 	})
 }
 
 func (p *IceMagic) controlBtn(c *ui.Context, key, icon string, action func()) {
 	ui.Column(c).AlignItems(ui.Center).Margin(10).Children(func() {
-		button.Outline(c, icon).OnClick(action)
-		ui.Text(c, key).FontSize(10).TextColor(c.Theme().TextMuted)
+		button.IconButton(c, key, icon).OnClick(action)
+		ui.Text(c, key).FontSize(12).TextColor(c.Theme().TextMuted)
 	})
 }

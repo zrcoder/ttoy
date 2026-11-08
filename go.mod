@@ -11,11 +11,11 @@ require (
 	github.com/BurntSushi/toml v1.6.0
 	github.com/ELY-Open-Source/CrychicUI v0.0.0-20261027050735-bf15ddf6600a
 	github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be
-	github.com/egoist/mygo v0.8.1
+	github.com/egoist/mygo v0.8.3
 	github.com/zrcoder/cdor v0.2.3
-	github.com/zrcoder/ndor v0.0.0-20261101130649-66398d77b697
+	github.com/zrcoder/ndor v0.0.0-20261107103135-c0100b08748e
+	go.yaml.in/yaml/v4 v4.0.0
 	golang.org/x/image v0.47.0
-	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
@@ -24,7 +24,7 @@ require (
 	github.com/andybalholm/cascadia v1.3.2 // indirect
 	github.com/dlclark/regexp2 v1.11.4 // indirect
 	github.com/dop251/goja v0.0.0-20240927123429-241b342198c2 // indirect
-	github.com/ebitengine/purego v0.11.2 // indirect
+	github.com/ebitengine/purego v0.11.3 // indirect
 	github.com/fogleman/gg v1.3.0 // indirect
 	github.com/go-sourcemap/sourcemap v2.1.4+incompatible // indirect
 	github.com/go-text/typesetting v0.3.5 // indirect
@@ -55,6 +55,7 @@ require (
 	golang.org/x/tools v0.52.0 // indirect
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da // indirect
 	gonum.org/v1/plot v0.14.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 	oss.terrastruct.com/d2 v0.6.9 // indirect
 	oss.terrastruct.com/util-go v0.0.0-20241005222610-44c011a04896 // indirect
 )

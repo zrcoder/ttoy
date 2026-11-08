@@ -60,28 +60,27 @@ func (p *Hanoi) View(c *ui.Context) {
 			ui.Text(c, "Hanoi").FontSize(20).FontWeight(700)
 		})
 
-		ui.Row(c).FillWidth().AlignItems(ui.Stretch).Margin(18, 0, 18, 0).Children(func() {
-			choice.Segments(c, "Levels", p.levelLabels, &p.level).OnChange(func() {
-				p.game.SelectLevel(p.level)
+		ui.Column(c).Fill().AlignItems(ui.Center).Children(func() {
+			ui.Row(c).Margin(18, 0, 18, 0).Children(func() {
+				choice.Segments(c, "Levels", p.levelLabels, &p.level).OnChange(func() {
+					p.game.SelectLevel(p.level)
+				})
+				ui.Spacer(c).Width(18)
+				button.Solid(c, "Reset").OnClick(func() {
+					p.game.Reset()
+					c.Invalidate()
+				})
+			})
+			ui.Column(c).FillWidth().AlignItems(ui.Center).Children(func() {
+				ui.Text(c, p.game.State()).TextColor(c.Theme().TextMuted).Margin(18, 0, 0, 0)
+				ui.Row(c).Children(func() {
+					piles := p.game.Piles()
+					for _, pile := range piles {
+						p.PileView(c, &pile)
+					}
+				})
 			})
 
-			ui.Spacer(c)
-
-			button.Outline(c, "Reset").OnClick(func() {
-				p.game.Reset()
-				c.Invalidate()
-			})
-		})
-
-		ui.Column(c).FillWidth().AlignItems(ui.Center).Children(func() {
-			ui.Text(c, p.game.State()).TextColor(c.Theme().TextMuted)
-
-			ui.Row(c).Children(func() {
-				piles := p.game.Piles()
-				for _, pile := range piles {
-					p.PileView(c, &pile)
-				}
-			})
 		})
 	})
 }
@@ -92,10 +91,7 @@ func (p *Hanoi) PileView(c *ui.Context, pile *hanoi.PileInfo) {
 			if p.game.ShiftPileIndex() == pile.Index {
 				p.diskView(c, p.game.ShiftDisk.ID)
 			}
-
 			ui.Spacer(c)
-
-			// Disks (bottom-up), stored as IDs
 			maxDisks := p.game.CurrentLevel().Disks
 			for j := range maxDisks {
 				idx := maxDisks - 1 - j
@@ -106,7 +102,6 @@ func (p *Hanoi) PileView(c *ui.Context, pile *hanoi.PileInfo) {
 				}
 			}
 		})
-
 		ui.Row(c).Height(24).AlignItems(ui.Center).Justify(ui.Center).Children(func() {
 			ui.Text(c, string(rune('A'+pile.Index))).FontSize(14).FontWeight(700).TextColor(c.Theme().Text)
 		})
