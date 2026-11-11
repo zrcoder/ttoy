@@ -2,13 +2,11 @@ package view
 
 import (
 	"embed"
+	"fmt"
 	"log"
-	"strconv"
 
 	"github.com/ELY-Open-Source/CrychicUI/button"
-	"github.com/ELY-Open-Source/CrychicUI/choice"
 	"github.com/ELY-Open-Source/CrychicUI/sound"
-	"github.com/ELY-Open-Source/CrychicUI/typography"
 	"github.com/egoist/mygo/ui"
 	"github.com/zrcoder/ttoy/game/common"
 	"github.com/zrcoder/ttoy/game/icemagic"
@@ -167,36 +165,33 @@ func (p *IceMagic) nextLevel() {
 
 func (p *IceMagic) menu(c *ui.Context) {
 	chapters := p.game.Chapters()
-	chaLabels := make([]string, len(chapters))
-	for i := range chaLabels {
-		chaLabels[i] = strconv.Itoa(i + 1)
-	}
-	levelLabels := make([]string, chapters[p.chapterSel])
-	for i := range levelLabels {
-		levelLabels[i] = strconv.Itoa(i + 1)
-	}
+
 	ui.Row(c).Children(func() {
-		typography.Title(c, "Chapter:").Margin(0, 5, 0, 0)
-		ch := strconv.Itoa(p.chapterSel + 1)
-		if choice.Dropdown(c, ch, chaLabels, &ch).Margin(0, 18, 0, 0).Changed() {
-			i, _ := strconv.Atoi(ch)
-			if i-1 == p.chapterSel {
-				return
+		ui.MenuButton(c, fmt.Sprintf("Chapter %d", p.chapterSel+1), func(m *ui.Menu) {
+			for i := range chapters {
+				if m.Item(fmt.Sprintf("Chapter %d", i+1)).Chosen() {
+					if i == p.chapterSel {
+						return
+					}
+					sound.Play(sound.Select)
+					p.pick(i, 0)
+				}
 			}
-			p.pick(i-1, 0)
-
-		}
-		typography.Title(c, "Level:").Margin(0, 5, 0, 0)
-		lv := strconv.Itoa(p.levelSel + 1)
-		if choice.Dropdown(c, lv, levelLabels, &lv).Margin(0, 18, 0, 0).Changed() {
-			i, _ := strconv.Atoi(lv)
-			if i-1 == p.levelSel {
-				return
+		})
+		ui.Spacer(c).Width(18)
+		ui.MenuButton(c, fmt.Sprintf("Level %d", p.levelSel+1), func(m *ui.Menu) {
+			for i := range chapters[p.chapterSel] {
+				if m.Item(fmt.Sprintf("Label %d", i+1)).Chosen() {
+					if i == p.levelSel {
+						return
+					}
+					sound.Play(sound.Select)
+					p.pick(p.chapterSel, i)
+				}
 			}
-			p.pick(p.chapterSel, i-1)
-		}
-
-		button.Solid(c, "Reset").Margin(18).OnClick(p.game.Reset)
+		})
+		ui.Spacer(c).Width(18)
+		button.Solid(c, "Reset").OnClick(p.game.Reset)
 	})
 }
 
