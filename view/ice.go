@@ -102,14 +102,15 @@ func (p *IceMagic) View(c *ui.Context) {
 	c.OnShortcut(0, ui.KeyL, func() { p.moveSfx(); p.game.MoveRight() })
 	c.OnShortcut(0, ui.KeyA, func() { p.magicSfx(); p.game.MagicLeft() })
 	c.OnShortcut(0, ui.KeyD, func() { p.magicSfx(); p.game.MagicRight() })
-
-	ui.Column(c).Fill().AlignItems(ui.Center).Focus().Children(func() {
-		ui.Row(c).Fill().Height(44).Children(func() {
-			ui.Text(c, "IceMagic").FontSize(20).FontWeight(700)
-		})
+	ui.Row(c).FillWidth().Height(44).Children(func() {
+		ui.Text(c, "IceMagic").FontSize(20).FontWeight(700)
+	})
+	ui.Column(c).Fill().AlignItems(ui.Center).Children(func() {
 		p.menu(c)
-		p.board(c)
-		p.controls(c)
+		ui.Column(c).Margin(30, 0).Fill().Focus().AlignItems(ui.Center).Children(func() {
+			p.board(c)
+			p.controls(c)
+		})
 	})
 
 	p.gameOver(c)
@@ -166,7 +167,7 @@ func (p *IceMagic) nextLevel() {
 func (p *IceMagic) menu(c *ui.Context) {
 	chapters := p.game.Chapters()
 
-	ui.Row(c).Children(func() {
+	ui.Row(c).Margin(30, 0).Children(func() {
 		ui.MenuButton(c, fmt.Sprintf("Chapter %d", p.chapterSel+1), func(m *ui.Menu) {
 			for i := range chapters {
 				if m.Item(fmt.Sprintf("Chapter %d", i+1)).Chosen() {

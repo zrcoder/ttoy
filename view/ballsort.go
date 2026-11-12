@@ -55,7 +55,7 @@ func (p *BallSort) View(c *ui.Context) {
 			ui.Text(c, "Ball Sort").FontSize(20).FontWeight(700)
 		})
 
-		ui.Column(c).AlignItems(ui.Center).Children(func() {
+		ui.Column(c).Fill().AlignItems(ui.Center).Children(func() {
 			ui.Row(c).Margin(18, 0, 18, 0).Children(func() {
 				choice.Segments(c, "Levels", p.levels, &p.level).OnChange(func() {
 					p.game.SelectLevel(p.level)
@@ -66,10 +66,17 @@ func (p *BallSort) View(c *ui.Context) {
 					c.Invalidate()
 				})
 			})
-			ui.Column(c).AlignItems(ui.Center).Children(func() {
-				ui.Text(c, p.game.State())
-				ui.Row(c).Children(func() {
-					for _, bottle := range bottles {
+			ui.Text(c, p.game.State()).Margin(30, 0)
+
+			ui.Column(c).FillWidth().Margin(30, 0).Justify(ui.Center).AlignItems(ui.Center).Children(func() {
+				n := len(bottles)
+				ui.Row(c).Fill().Justify(ui.Center).AlignItems(ui.Center).Children(func() {
+					for _, bottle := range bottles[0 : n/2] {
+						p.bottleView(c, bottle)
+					}
+				})
+				ui.Row(c).Fill().Justify(ui.Center).AlignItems(ui.Center).Children(func() {
+					for _, bottle := range bottles[n/2 : n] {
 						p.bottleView(c, bottle)
 					}
 				})
@@ -79,7 +86,7 @@ func (p *BallSort) View(c *ui.Context) {
 }
 
 func (p *BallSort) bottleView(c *ui.Context, b *ballsort.Bottle) {
-	ui.Column(c).AlignItems(ui.Center).Margin(12).Children(func() {
+	ui.Column(c).AlignItems(ui.Center).Margin(0, 50).Children(func() {
 		if b.HasShiftBall() {
 			p.ballView(c, b.ShiftBall)
 		} else {
@@ -102,7 +109,7 @@ func (p *BallSort) bottleView(c *ui.Context, b *ballsort.Bottle) {
 			}
 		})
 		ui.Row(c).Height(24).AlignItems(ui.Center).Justify(ui.Center).Children(func() {
-			ui.Text(c, string(rune('A'+b.Index))).FontSize(14).FontWeight(700).TextColor(c.Theme().Text)
+			ui.Text(c, string(rune('A'+b.Index))).FontSize(14).FontWeight(700).TextColor(c.Theme().TextMuted)
 		})
 	}).OnClick(func() {
 		p.onBottleClick(c, b.Index)

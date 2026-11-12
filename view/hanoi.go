@@ -71,8 +71,8 @@ func (p *Hanoi) View(c *ui.Context) {
 					c.Invalidate()
 				})
 			})
-			ui.Column(c).FillWidth().AlignItems(ui.Center).Children(func() {
-				ui.Text(c, p.game.State()).TextColor(c.Theme().TextMuted).Margin(18, 0, 0, 0)
+			ui.Text(c, p.game.State()).TextColor(c.Theme().TextMuted).Margin(30, 0)
+			ui.Column(c).FillWidth().Margin(30, 0).AlignItems(ui.Center).Children(func() {
 				ui.Row(c).Children(func() {
 					piles := p.game.Piles()
 					for _, pile := range piles {
@@ -86,27 +86,37 @@ func (p *Hanoi) View(c *ui.Context) {
 }
 
 func (p *Hanoi) PileView(c *ui.Context, pile *hanoi.PileInfo) {
-	ui.Column(c).AlignItems(ui.Center).Margin(38).Children(func() {
-		ui.Column(c).Width(140).Height(260).AlignItems(ui.Center).Children(func() {
-			if p.game.ShiftPileIndex() == pile.Index {
-				p.diskView(c, p.game.ShiftDisk.ID)
-			}
-			ui.Spacer(c)
-			maxDisks := p.game.CurrentLevel().Disks
-			for j := range maxDisks {
-				idx := maxDisks - 1 - j
-				if idx < len(pile.Disks) {
-					ui.Row(c).Height(24).Children(func() {
-						p.diskView(c, pile.Disks[idx])
-					})
+	ui.Column(c).AlignItems(ui.Center).Children(func() {
+		if p.game.ShiftPileIndex() == pile.Index {
+			p.diskView(c, p.game.ShiftDisk.ID)
+		} else {
+			ui.Row(c).Height(20)
+		}
+
+		col := ui.Column(c).Width(180).AlignItems(ui.Center).Margin(18).Children(func() {
+			ui.Column(c).Width(140).Height(260).AlignItems(ui.Center).Children(func() {
+				ui.Spacer(c)
+				maxDisks := p.game.CurrentLevel().Disks
+				for j := range maxDisks {
+					idx := maxDisks - 1 - j
+					if idx < len(pile.Disks) {
+						ui.Row(c).Height(24).Children(func() {
+							p.diskView(c, pile.Disks[idx])
+						})
+					}
 				}
-			}
+			})
+			ui.Row(c).Height(24).AlignItems(ui.Center).Justify(ui.Center).Children(func() {
+				ui.Text(c, string(rune('A'+pile.Index))).FontSize(14).FontWeight(700).TextColor(c.Theme().Text)
+			})
 		})
-		ui.Row(c).Height(24).AlignItems(ui.Center).Justify(ui.Center).Children(func() {
-			ui.Text(c, string(rune('A'+pile.Index))).FontSize(14).FontWeight(700).TextColor(c.Theme().Text)
-		})
-	}).OnClick(func() {
-		p.onPileClick(c, pile.Index)
+		if col.Clicked() {
+			p.onPileClick(c, pile.Index)
+		}
+		col.Border(2, c.Theme().Border).Radius(10)
+		if pile.Index < 2 {
+			col.BorderStyle(ui.BorderDashed)
+		}
 	})
 }
 
