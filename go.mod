@@ -11,7 +11,7 @@ require (
 	github.com/BurntSushi/toml v1.6.0
 	github.com/ELY-Open-Source/CrychicUI v0.0.0-20261110123803-1c55e6a884bb
 	github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be
-	github.com/egoist/mygo v0.9.0
+	github.com/egoist/mygo v0.9.1
 	github.com/zrcoder/cdor v0.2.3
 	github.com/zrcoder/ndor v0.0.0-20261107103135-c0100b08748e
 	go.yaml.in/yaml/v4 v4.0.0
