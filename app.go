@@ -13,12 +13,6 @@ import (
 	"github.com/egoist/mygo/ui"
 )
 
-//go:embed resources/icons/moon.svg
-var moonIconData []byte
-
-//go:embed resources/icons/sun.svg
-var sunIconData []byte
-
 //go:embed resources/*
 var assertsFS embed.FS
 

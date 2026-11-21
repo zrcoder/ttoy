@@ -44,18 +44,12 @@ func (p *BallSort) View(c *ui.Context) {
 	} else {
 		p.solvedDialogOpen = false
 	}
-	for i := range bottles {
-		if c.Shortcut(0, ui.KeyA+ui.Key(i)) {
-			p.onBottleClick(c, i)
-			break
-		}
-	}
 	ui.Column(c).Fill().Children(func() {
 		ui.Row(c).Height(44).Children(func() {
 			ui.Text(c, "Ball Sort").FontSize(20).FontWeight(700)
 		})
 
-		ui.Column(c).Fill().AlignItems(ui.Center).Children(func() {
+		ui.Column(c).Fill().Cursor(ui.CursorGrab).AlignItems(ui.Center).Children(func() {
 			ui.Row(c).Margin(18, 0, 18, 0).Children(func() {
 				choice.Segments(c, "Levels", p.levels, &p.level).OnChange(func() {
 					p.game.SelectLevel(p.level)
@@ -86,7 +80,7 @@ func (p *BallSort) View(c *ui.Context) {
 }
 
 func (p *BallSort) bottleView(c *ui.Context, b *ballsort.Bottle) {
-	ui.Column(c).AlignItems(ui.Center).Margin(0, 50).Children(func() {
+	bottle := ui.Column(c).Cursor(ui.CursorGrab).AlignItems(ui.Center).Margin(0, 50).Children(func() {
 		if b.HasShiftBall() {
 			p.ballView(c, b.ShiftBall)
 		} else {
@@ -98,7 +92,7 @@ func (p *BallSort) bottleView(c *ui.Context, b *ballsort.Bottle) {
 			borderColor = c.Theme().Success
 			borderWidth = []float32{2, 2, 2, 2}
 		}
-		ui.Column(c).Width(70).Height(168).BorderWidth(borderWidth...).BorderColor(borderColor).Radius(8).AlignItems(ui.Center).Children(func() {
+		ui.Column(c).Width(60).Height(168).BorderWidth(borderWidth...).BorderColor(borderColor).Radius(8).AlignItems(ui.Center).Children(func() {
 			for j := ballsort.BottleBallCount - 1; j >= 0; j-- {
 				ui.Spacer(c).Height(2)
 				if j < len(b.Balls) {
@@ -111,9 +105,15 @@ func (p *BallSort) bottleView(c *ui.Context, b *ballsort.Bottle) {
 		ui.Row(c).Height(24).AlignItems(ui.Center).Justify(ui.Center).Children(func() {
 			ui.Text(c, string(rune('A'+b.Index))).FontSize(14).FontWeight(700).TextColor(c.Theme().TextMuted)
 		})
-	}).OnClick(func() {
-		p.onBottleClick(c, b.Index)
 	})
+	key := ui.KeyA + ui.Key(b.Index)
+	bottle.KeyShortcuts(0, key)
+	if bottle.Clicked() {
+		p.onBottleClick(c, b.Index)
+	}
+	if c.Shortcut(0, key) {
+		p.onBottleClick(c, b.Index)
+	}
 }
 
 func (p *BallSort) ballView(c *ui.Context, ball *ballsort.Ball) {

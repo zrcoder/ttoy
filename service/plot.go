@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/zrcoder/cdor"
-	ndor "github.com/zrcoder/ndor/pkg"
+	"github.com/zrcoder/ndor"
 )
 
 type Plot struct{}

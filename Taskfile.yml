@@ -27,7 +27,7 @@ tasks:
   gen:
     summary: Regenerate bindings (if any)
     cmds:
-      - go generate
+      - go generate ./...
 
   clean:
     cmds:

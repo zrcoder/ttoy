@@ -11,9 +11,9 @@ require (
 	github.com/BurntSushi/toml v1.6.0
 	github.com/ELY-Open-Source/CrychicUI v0.0.0-20261110123803-1c55e6a884bb
 	github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be
-	github.com/egoist/mygo v0.9.1
+	github.com/egoist/mygo v0.10.0
 	github.com/zrcoder/cdor v0.2.3
-	github.com/zrcoder/ndor v0.0.0-20261107103135-c0100b08748e
+	github.com/zrcoder/ndor v0.0.0-20261120143419-5185dab1ab4f
 	go.yaml.in/yaml/v4 v4.0.0
 	golang.org/x/image v0.48.0
 )
@@ -27,16 +27,15 @@ require (
 	github.com/dlclark/regexp2 v1.11.4 // indirect
 	github.com/dop251/goja v0.0.0-20240927123429-241b342198c2 // indirect
 	github.com/ebitengine/purego v0.11.3 // indirect
-	github.com/fogleman/gg v1.3.0 // indirect
 	github.com/go-sourcemap/sourcemap v2.1.4+incompatible // indirect
 	github.com/go-text/typesetting v0.3.5 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/google/pprof v0.0.0-20240927180334-d43a67379298 // indirect
-	github.com/goplus/gogen v1.24.7 // indirect
-	github.com/goplus/ixgo v1.2.6 // indirect
+	github.com/goplus/gogen v1.26.6 // indirect
+	github.com/goplus/ixgo v1.2.7 // indirect
 	github.com/goplus/mod v0.22.1 // indirect
 	github.com/goplus/reflectx v1.8.3 // indirect
-	github.com/goplus/xgo v1.7.6-0.20260925200949-51a44c58fd65 // indirect
+	github.com/goplus/xgo v1.7.6-0.20261116010951-f428a90c7942 // indirect
 	github.com/klauspost/compress v1.18.6 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/mazznoer/csscolorparser v0.1.5 // indirect

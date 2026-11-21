@@ -47,14 +47,7 @@ func (p *Hanoi) View(c *ui.Context) {
 	} else {
 		p.solvedDialogOpen = false
 	}
-	switch {
-	case c.Shortcut(0, ui.KeyA):
-		p.onPileClick(c, 0)
-	case c.Shortcut(0, ui.KeyB):
-		p.onPileClick(c, 1)
-	case c.Shortcut(0, ui.KeyC):
-		p.onPileClick(c, 2)
-	}
+
 	ui.Column(c).Fill().Children(func() {
 		ui.Row(c).Height(44).Children(func() {
 			ui.Text(c, "Hanoi").FontSize(20).FontWeight(700)
@@ -110,6 +103,11 @@ func (p *Hanoi) PileView(c *ui.Context, pile *hanoi.PileInfo) {
 				ui.Text(c, string(rune('A'+pile.Index))).FontSize(14).FontWeight(700).TextColor(c.Theme().Text)
 			})
 		})
+		key := ui.KeyA + ui.Key(pile.Index)
+		col.KeyShortcuts(0, key)
+		if c.Shortcut(0, key) {
+			p.onPileClick(c, pile.Index)
+		}
 		if col.Clicked() {
 			p.onPileClick(c, pile.Index)
 		}
