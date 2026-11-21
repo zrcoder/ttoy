@@ -37,8 +37,10 @@ type Disk struct {
 }
 
 type Level struct {
-	Label string
-	Disks int
+	Label        string
+	Disks        int
+	SampleCode   string
+	InitCodeLine int
 }
 
 type PileInfo struct {
@@ -55,9 +57,50 @@ type EventData struct {
 func New() *Game {
 	g := &Game{
 		levels: []Level{
-			{Label: "Easy", Disks: 2},
-			{Label: "Medium", Disks: 3},
-			{Label: "Hard", Disks: 5},
+			{
+				Label: "Easy",
+				Disks: 2,
+				SampleCode: `// Move disks with A, B or C.
+// The first call picks a disk up, the next drops it.
+A
+B
+A
+C
+// TODO: finish the last move here
+
+`,
+				InitCodeLine: 7,
+			},
+			{
+				Label: "Medium",
+				Disks: 3,
+				SampleCode: `// We can define a recursive function to solve this problem.
+func solve(n int, A, B, C func()) {
+	if n == 0 {
+		return
+	}
+	solve(n-1, A, C, B)
+	
+	// TODO: move the only one disk from area A to area C
+	
+	
+	solve(n-1, B, A, C)
+}
+
+// Call the solve function to solve the problem.
+solve(3, A, B, C)`,
+				InitCodeLine: 8,
+			},
+			{
+				Label: "Hard",
+				Disks: 5,
+				SampleCode: `// Use the recursive function to solve this problem.
+func solve(n int, A, B, C func()) {
+	
+}
+`,
+				InitCodeLine: 2,
+			},
 		},
 		rand: rand.New(rand.NewPCG(rand.Uint64(), rand.Uint64())),
 	}

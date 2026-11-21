@@ -12,17 +12,6 @@ import (
 	"github.com/zrcoder/ttoy/game/hanoi/xgo"
 )
 
-// 3-disk solution; also solves the default 2-disk level (moves after IsDone are ignored).
-const sampleHanoiCode = `// Move disks with A, B or C.
-// The first call picks a disk up, the next drops it.
-A
-B
-A
-C
-B
-C
-`
-
 // Hanoi renders a playable Towers of Hanoi puzzle.
 type Hanoi struct {
 	game             *hanoi.Game
@@ -59,8 +48,9 @@ func NewHanoi() *Hanoi {
 	for i := range p.levelLabels {
 		p.levelLabels[i] = levels[i].Label
 	}
-	p.codeBuf = &editor.State{Buffer: editor.NewBuffer(sampleHanoiCode)}
+	p.codeBuf = &editor.State{Buffer: editor.NewBuffer("")}
 	p.codeBuf.Buffer.SetLanguage(editor.LanguageNamed("go"))
+	p.setInitCode()
 	hanoi.Bind(p.game)
 	p.game.SetOnMove(p.onMove)
 	p.resetView()
@@ -97,21 +87,21 @@ func (p *Hanoi) View(c *ui.Context) {
 		ui.Row(c).Height(44).Children(func() {
 			ui.Text(c, "Hanoi").FontSize(20).FontWeight(700)
 		})
-
 		ui.Column(c).Fill().AlignItems(ui.Center).Children(func() {
-			ui.Row(c).Margin(18, 0, 18, 0).Children(func() {
+			ui.Row(c).Children(func() {
 				choice.Segments(c, "Levels", p.levelLabels, &p.level).OnChange(func() {
 					p.game.SelectLevel(p.level)
+					p.setInitCode()
 					p.resetView()
 				})
-				button.Solid(c, "Reset").OnClick(func() {
+				button.Solid(c, "Reset").Margin(0, 18).OnClick(func() {
 					p.game.Reset()
 					p.resetView()
 					c.Invalidate()
 				})
 			})
 			state := fmt.Sprintf("Steps: %d, Minimum: %d", board.steps, p.game.MinSteps())
-			ui.Text(c, state).TextColor(c.Theme().TextMuted).Margin(30, 0)
+			ui.Text(c, state).TextColor(c.Theme().TextMuted).Margin(18, 0, 0, 0)
 			ui.Column(c).FillWidth().Margin(10, 0).AlignItems(ui.Center).Children(func() {
 				ui.Row(c).Children(func() {
 					for i := range 3 {
@@ -119,15 +109,25 @@ func (p *Hanoi) View(c *ui.Context) {
 					}
 				})
 			})
-
-			p.codePanel(c)
+			if button.IconButton(c, "Run", "arrow-up").Margin(10, 0).Clicked() {
+				p.runCode(c)
+			}
+			if c.Shortcut(ui.Ctrl, ui.KeyR) {
+				p.runCode(c)
+			}
+			editor.View(c, p.codeBuf).Fill().Focus()
 		})
-
 	})
 
 	if p.runErr != "" {
 		Toast(c, p.runErr, func() { p.runErr = "" })
 	}
+}
+
+func (p *Hanoi) setInitCode() {
+	curLevel := p.game.CurrentLevel()
+	p.codeBuf.Buffer.Set(curLevel.SampleCode)
+	p.codeBuf.GoTo(editor.Pos{Line: curLevel.InitCodeLine, Col: 999})
 }
 
 func (p *Hanoi) PileView(c *ui.Context, board board, index int) {
@@ -208,16 +208,6 @@ func (p *Hanoi) resetView() {
 	p.lastFrameIdx = -1
 	p.solvedShown = false
 	p.solvedDialogOpen = false
-}
-
-func (p *Hanoi) codePanel(c *ui.Context) {
-	ui.Column(c).Fill().AlignItems(ui.Center).Children(func() {
-		if button.IconButton(c, "Run", "arrow-up").Margin(10).Clicked() {
-			p.runCode(c)
-		}
-		// code.CodeEditor(c, p.codeBuf, code.CodeEditorOptions{}).Fill()
-		editor.View(c, p.codeBuf).Fill()
-	})
 }
 
 func (p *Hanoi) runCode(c *ui.Context) {

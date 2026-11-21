@@ -13,11 +13,6 @@ import (
 // codePrelude is prepended to user code. The dot import lets user code call
 // A/B/C unqualified; Go+ (xgo) supplies the implicit "package main".
 const codePrelude = `import . "github.com/zrcoder/ttoy/game/hanoi/export"
-var (
-	a = A
-	b = B
-	c = C
-)
 `
 
 // RunCode compiles and runs user code that drives the bound game via A, B, C.
