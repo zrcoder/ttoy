@@ -6,7 +6,6 @@ import (
 	"github.com/zrcoder/ttoy/view"
 
 	"github.com/ELY-Open-Source/CrychicUI/button"
-	"github.com/ELY-Open-Source/CrychicUI/choice"
 	"github.com/ELY-Open-Source/CrychicUI/icon"
 	"github.com/ELY-Open-Source/CrychicUI/sound"
 	"github.com/egoist/mygo"
@@ -15,6 +14,9 @@ import (
 
 //go:embed resources/*
 var assertsFS embed.FS
+
+var soundSvg = icon.Must("volume-2")
+var muteSvg = icon.Must("volume-x")
 
 const (
 	KeyHome     = "home"
@@ -111,9 +113,20 @@ func (t *Ttoy) nav(c *ui.Context) {
 
 			ui.Spacer(c)
 
-			if choice.MuteToggle(c, "music", &t.musicEnabled).Width(36).Height(36).Changed() {
-				sound.SetEnabled(t.musicEnabled)
-			}
+			ui.Row(c).Children(func() {
+				on := sound.Enabled()
+				icon := soundSvg
+				if !on {
+					icon = muteSvg
+				}
+				if ui.Switch(c, &on).Label("Sound").Changed() {
+					sound.Play(sound.Toggle)
+					sound.SetEnabled(on)
+				}
+				ui.Spacer(c).Width(10)
+				ui.Icon(c, icon).Size(20, 20)
+			})
+
 		})
 	})
 }

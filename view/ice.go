@@ -21,9 +21,6 @@ type IceMagic struct {
 	bitmaps map[string]*ui.Bitmap
 	gifs    map[string]*ui.VideoPlayer
 
-	chapterPopoverOpen bool
-	levelPopoverOpen   bool
-
 	// judged latches that the game over was shown, until the next game.
 	judged   bool
 	diagOpen bool

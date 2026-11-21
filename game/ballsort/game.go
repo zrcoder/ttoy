@@ -4,7 +4,6 @@ import (
 	"math/rand/v2"
 
 	"github.com/egoist/mygo/ui"
-	"github.com/zrcoder/ttoy/game/common"
 )
 
 const (
@@ -209,13 +208,6 @@ func (g *Game) SelectLevel(index int) {
 
 func (g *Game) State() string {
 	return "Done: " + string(rune('0'+g.DoneBottlesCount)) + "/" + string(rune('0'+g.currentBallTubes()))
-}
-
-func (g *Game) state() common.State {
-	if g.IsDone() {
-		return common.StateSucceed
-	}
-	return common.StatePlaying
 }
 
 func (b *Bottle) Pop() *Ball {
