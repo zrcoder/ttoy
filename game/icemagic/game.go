@@ -15,7 +15,8 @@ type Game struct {
 	chapter  int
 	level    int
 	chpaters []int
-	anim     moveAnim // display-layer replay of falls and slides
+
+	onMove func()
 }
 
 func New() *Game {
@@ -29,6 +30,10 @@ func New() *Game {
 
 func (g *Game) Grid() [][]*Sprite {
 	return g.grid
+}
+
+func (g *Game) SetOnMove(f func()) {
+	g.onMove = f
 }
 
 // PlayerX returns the player's column.
@@ -144,7 +149,6 @@ func (g *Game) MagicRight() {
 func (g *Game) Reset() {
 	g.fires = 0
 	g.failed = false
-	g.anim = moveAnim{} // drop stale frames
 	g.parseGrid(g.chapter, g.level)
 }
 

@@ -29,13 +29,26 @@ type IceMagic struct {
 	diagOpen bool
 
 	note int // next move sound, climbing a pentatonic scale
+
+	timeline iceTimeline
 }
 
 func NewIceMagic(assertsFS embed.FS) *IceMagic {
 	res := &IceMagic{game: icemagic.New()}
 	res.loadBitmaps(assertsFS)
 	res.loadGifs(assertsFS)
+	res.game.SetOnMove(res.onMove)
+	res.timeline.reset(snapshotCells(res.game.Grid()))
 	return res
+}
+
+func (p *IceMagic) onMove() {
+	p.timeline.push(snapshotCells(p.game.Grid()))
+}
+
+func (p *IceMagic) resetBoard() {
+	p.game.Reset()
+	p.timeline.reset(snapshotCells(p.game.Grid()))
 }
 
 func (p *IceMagic) loadBitmaps(assertsFS embed.FS) {
@@ -137,13 +150,15 @@ func (p *IceMagic) over() {
 	if p.game.State() == common.StateSucceed {
 		p.nextLevel()
 	} else {
-		p.game.Reset()
+		p.resetBoard()
 	}
 }
 
 func (p *IceMagic) pick(ch, lv int) {
 	p.chapterSel, p.levelSel = ch, lv
 	p.game.SelectLevel(ch+1, lv+1)
+	p.timeline.reset(snapshotCells(p.game.Grid()))
+	p.judged, p.diagOpen = false, false
 }
 
 // nextLevel advances the chapter's levels, then goes to the next chapter's level 1.
@@ -187,24 +202,34 @@ func (p *IceMagic) menu(c *ui.Context) {
 			}
 		})
 		ui.Spacer(c).Width(18)
-		button.Solid(c, "Reset").OnClick(p.game.Reset)
+		button.Solid(c, "Reset").OnClick(p.resetBoard)
 	})
 }
 
-// board draws the frame the replay shows right now.
 func (p *IceMagic) board(c *ui.Context) {
-	cells, nextAt, playing := p.game.Present(c.Now())
-	if len(cells) == 0 {
+	grid := p.game.Grid()
+	cells, nextAt, playing := p.timeline.present(c.Now(), grid)
+	if len(grid) == 0 {
 		ui.Text(c, "Loading grid...").TextColor(c.Theme().TextMuted)
 		return
 	}
 	ui.Column(c).Margin(28, 0).Children(func() {
-		for _, row := range cells {
-			ui.Row(c).Children(func() {
-				for _, cell := range row {
-					p.cell(c, cell)
-				}
-			})
+		if cells != nil {
+			for _, row := range cells {
+				ui.Row(c).Children(func() {
+					for _, cell := range row {
+						p.cell(c, cell)
+					}
+				})
+			}
+		} else {
+			for _, row := range grid {
+				ui.Row(c).Children(func() {
+					for _, sprite := range row {
+						p.cell(c, &sprite.Cell)
+					}
+				})
+			}
 		}
 	})
 	if playing {
@@ -214,7 +239,6 @@ func (p *IceMagic) board(c *ui.Context) {
 			c.AnimationFrame()
 		}
 	}
-	// latch a shown game over until the next game begins.
 	if st := p.game.State(); st == common.StatePlaying {
 		p.judged = false
 	} else if !p.judged && !playing {
@@ -252,18 +276,34 @@ func b2f(b bool) float32 {
 
 func (p *IceMagic) controls(c *ui.Context) {
 	ui.Row(c).Children(func() {
-		p.controlBtn(c, ui.KeyJ, "J", "arrow-left", func() { p.moveSfx(); p.game.MoveLeft() })
-		p.controlBtn(c, ui.KeyA, "A", "arrow-down-left", func() { p.magicSfx(); p.game.MagicLeft() })
-		p.controlBtn(c, ui.KeyD, "D", "arrow-down-right", func() { p.magicSfx(); p.game.MagicRight() })
-		p.controlBtn(c, ui.KeyL, "L", "arrow-right", func() { p.moveSfx(); p.game.MoveRight() })
+		p.controlBtn(c, ui.KeyJ, "J", "arrow-left", func() {
+			p.moveSfx()
+			p.game.MoveLeft()
+		})
+		p.controlBtn(c, ui.KeyA, "A", "arrow-down-left", func() {
+			p.magicSfx()
+			p.game.MagicLeft()
+		})
+		p.controlBtn(c, ui.KeyD, "D", "arrow-down-right", func() {
+			p.magicSfx()
+			p.game.MagicRight()
+		})
+		p.controlBtn(c, ui.KeyL, "L", "arrow-right", func() {
+			p.moveSfx()
+			p.game.MoveRight()
+		})
 	})
 }
 
 func (p *IceMagic) controlBtn(c *ui.Context, key ui.Key, label, icon string, action func()) {
+	run := func() {
+		p.timeline.ensureBase(p.game.Grid())
+		action()
+	}
 	ui.Column(c).AlignItems(ui.Center).Margin(10).Children(func() {
-		button.IconButton(c, label, icon).OnClick(action)
+		button.IconButton(c, label, icon).OnClick(run)
 		if c.Shortcut(0, key) {
-			action()
+			run()
 		}
 		ui.Text(c, label).FontSize(12).TextColor(c.Theme().TextMuted)
 	})

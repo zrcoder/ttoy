@@ -9,7 +9,7 @@ import (
 const (
 	PileCount = 3
 
-	MaxDisks = 6
+	MaxDisks = 5
 )
 
 type Game struct {
@@ -21,6 +21,8 @@ type Game struct {
 	rand       *rand.Rand
 	levelIndex int
 	levels     []Level
+
+	onMove func()
 }
 
 type Pile struct {
@@ -56,7 +58,6 @@ func New() *Game {
 			{Label: "Easy", Disks: 2},
 			{Label: "Medium", Disks: 3},
 			{Label: "Hard", Disks: 5},
-			{Label: "Expert", Disks: 6},
 		},
 		rand: rand.New(rand.NewPCG(rand.Uint64(), rand.Uint64())),
 	}
@@ -101,14 +102,17 @@ func (g *Game) SelectPile(pile *Pile) error {
 	}
 	if g.ShiftDisk == nil {
 		g.ShiftDisk = pile.Pop()
+		g.notifyMove()
 		return nil
 	}
 	if g.ShiftDisk.pile == pile || pile.Empty() || pile.Top().ID > g.ShiftDisk.ID {
 		pile.Push(g.ShiftDisk)
 		g.ShiftDisk = nil
 		g.steps++
+		g.notifyMove()
 		return nil
 	}
+	g.notifyMove()
 	return errors.New("invalid move")
 }
 
@@ -116,8 +120,10 @@ func (g *Game) MinSteps() int {
 	return (1 << g.CurrentLevel().Disks) - 1
 }
 
-// ShiftPileIndex returns the index of the pile the held disk was taken
-// from, or -1 while no disk is held.
+func (g *Game) Steps() int {
+	return g.steps
+}
+
 func (g *Game) ShiftPileIndex() int {
 	if g.ShiftDisk == nil || g.ShiftDisk.pile == nil {
 		return -1
@@ -148,13 +154,23 @@ func (g *Game) CurrentLevel() Level {
 
 func (g *Game) Piles() []PileInfo {
 	return []PileInfo{
-		{Index: 0, Disks: g.pileToIDs(g.PileA)},
-		{Index: 1, Disks: g.pileToIDs(g.PileB)},
-		{Index: 2, Disks: g.pileToIDs(g.PileC)},
+		{Index: 0, Disks: g.pileIDs(g.PileA)},
+		{Index: 1, Disks: g.pileIDs(g.PileB)},
+		{Index: 2, Disks: g.pileIDs(g.PileC)},
 	}
 }
 
-func (g *Game) pileToIDs(p *Pile) []int {
+func (g *Game) SetOnMove(f func()) {
+	g.onMove = f
+}
+
+func (g *Game) notifyMove() {
+	if g.onMove != nil {
+		g.onMove()
+	}
+}
+
+func (g *Game) pileIDs(p *Pile) []int {
 	ids := make([]int, len(p.Disks))
 	for i, d := range p.Disks {
 		ids[i] = d.ID

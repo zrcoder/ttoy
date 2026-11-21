@@ -33,3 +33,4 @@ tasks:
     cmds:
       - rm -rf build
       - rm -rf bin
+      - rm -rf game/hanoi/exported
