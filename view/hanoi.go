@@ -6,6 +6,7 @@ import (
 	"github.com/ELY-Open-Source/CrychicUI/button"
 	"github.com/ELY-Open-Source/CrychicUI/choice"
 	"github.com/ELY-Open-Source/CrychicUI/sound"
+	"github.com/ELY-Open-Source/CrychicUI/typography"
 	"github.com/egoist/mygo/ui"
 	"github.com/egoist/mygo/ui/editor"
 	"github.com/zrcoder/ttoy/game/hanoi"
@@ -109,9 +110,17 @@ func (p *Hanoi) View(c *ui.Context) {
 					}
 				})
 			})
-			if button.IconButton(c, "Run", "arrow-up").Margin(10, 0).Clicked() {
-				p.runCode(c)
-			}
+			ui.Row(c).Gap(18).Children(func() {
+				if button.IconButton(c, "Run", "play").Margin(10, 0).Clicked() {
+					p.runCode(c)
+				}
+				ui.Row(c).Children(func() {
+
+					typography.Kbd(c, "Ctrl", false)
+					ui.Text(c, "+")
+					typography.Kbd(c, "R", false)
+				})
+			})
 			if c.Shortcut(ui.Ctrl, ui.KeyR) {
 				p.runCode(c)
 			}

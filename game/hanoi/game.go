@@ -64,6 +64,7 @@ func New() *Game {
 // The first call picks a disk up, the next drops it.
 A
 B
+
 A
 C
 // TODO: finish the last move here
@@ -79,16 +80,17 @@ func solve(n int, A, B, C func()) {
 	if n == 0 {
 		return
 	}
-	solve(n-1, A, C, B)
+	solve n-1, A, C, B
 	
 	// TODO: move the only one disk from area A to area C
 	
 	
-	solve(n-1, B, A, C)
+	solve n-1, B, A, C
 }
 
 // Call the solve function to solve the problem.
-solve(3, A, B, C)`,
+solve 3, A, B, C
+`,
 				InitCodeLine: 8,
 			},
 			{
