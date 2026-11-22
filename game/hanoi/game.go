@@ -70,7 +70,7 @@ C
 // TODO: finish the last move here
 
 `,
-				InitCodeLine: 7,
+				InitCodeLine: 8,
 			},
 			{
 				Label: "Medium",

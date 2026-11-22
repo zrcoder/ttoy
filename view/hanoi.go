@@ -110,20 +110,21 @@ func (p *Hanoi) View(c *ui.Context) {
 					}
 				})
 			})
-			ui.Row(c).Gap(18).Children(func() {
-				if button.IconButton(c, "Run", "play").Margin(10, 0).Clicked() {
+			ui.Row(c).Gap(10).Children(func() {
+				if button.Solid(c, "▶︎").Clicked() {
 					p.runCode(c)
 				}
-				ui.Row(c).Children(func() {
 
-					typography.Kbd(c, "Ctrl", false)
-					ui.Text(c, "+")
-					typography.Kbd(c, "R", false)
+				keysMatched := c.Shortcut(ui.Ctrl, ui.KeyR)
+				ui.Column(c).FillHeight().Children(func() {
+					ui.Spacer(c)
+					typography.Kbd(c, "Ctrl+R", keysMatched)
 				})
+				if keysMatched {
+					p.runCode(c)
+				}
 			})
-			if c.Shortcut(ui.Ctrl, ui.KeyR) {
-				p.runCode(c)
-			}
+
 			editor.View(c, p.codeBuf).Fill().Focus()
 		})
 	})

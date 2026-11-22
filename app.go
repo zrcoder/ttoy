@@ -151,6 +151,6 @@ func (t *Ttoy) content(c *ui.Context) {
 func (t *Ttoy) home(c *ui.Context) {
 	ui.Column(c).Fill().AlignItems(ui.Center).Justify(ui.Center).Children(func() {
 		ui.Text(c, "TToy").FontSize(32).FontWeight(800).TextColor(c.Theme().TextMuted)
-		ui.Text(c, "My dev tools.").FontSize(16).TextColor(c.Theme().TextMuted).Margin(8, 0, 0, 0)
+		ui.Text(c, "My dev tools and games.").FontSize(16).TextColor(c.Theme().TextMuted).Margin(8, 0, 0, 0)
 	})
 }

@@ -80,7 +80,7 @@ func (p *BallSort) View(c *ui.Context) {
 }
 
 func (p *BallSort) bottleView(c *ui.Context, b *ballsort.Bottle) {
-	bottle := ui.Column(c).Cursor(ui.CursorGrab).AlignItems(ui.Center).Margin(0, 50).Children(func() {
+	bottle := ui.Column(c).Cursor(ui.CursorGrab).AlignItems(ui.Center).Margin(18, 50).Children(func() {
 		if b.HasShiftBall() {
 			p.ballView(c, b.ShiftBall)
 		} else {
