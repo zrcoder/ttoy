@@ -5,7 +5,7 @@ import (
 )
 
 func cdorTransform(data string, fn func(*cdor.Cdor)) ([]byte, error) {
-	c := cdor.Ctx()
+	c := cdor.New()
 	fn(c)
 	c.Fill("transparent")
 	c.Theme(200)

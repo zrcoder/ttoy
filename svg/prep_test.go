@@ -14,7 +14,7 @@ import (
 // d2SVG renders a d2 diagram the way the plot panel does.
 func d2SVG(t *testing.T, src string) []byte {
 	t.Helper()
-	c := cdor.Ctx()
+	c := cdor.New()
 	c.D2(src)
 	c.Fill("transparent")
 	c.Theme(200)
