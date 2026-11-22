@@ -25,8 +25,6 @@ const (
 	KeyEncode   = "codec"
 	KeyGenerate = "gen"
 	KeyDiff     = "diff"
-	KeyDataView = "dataview"
-	KeyPlot     = "graph"
 	KeyIce      = "icemagic"
 	KeyBall     = "ballsort"
 	KeyHanoi    = "hanoi"
@@ -43,8 +41,6 @@ type Ttoy struct {
 	format   *view.Format
 	generate *view.Generate
 	diff     *view.Diff
-	dataView *view.DataView
-	plot     *view.Plot
 	ballSort *view.BallSort
 	hanoi    *view.Hanoi
 	iceMagic *view.IceMagic
@@ -60,8 +56,6 @@ func New() *Ttoy {
 		format:       view.NewFormat(),
 		generate:     view.NewGenerate(),
 		diff:         view.NewDiff(),
-		dataView:     view.NewDataView(),
-		plot:         view.NewPlot(),
 		ballSort:     view.NewBallSort(),
 		hanoi:        view.NewHanoi(),
 		iceMagic:     view.NewIceMagic(assertsFS),
@@ -91,8 +85,6 @@ func (t *Ttoy) nav(c *ui.Context) {
 				sidebarItem(c, KeyEncode, icon.Must("refresh-ccw"), "Encode")
 				sidebarItem(c, KeyGenerate, icon.Must("sparkles"), "Generate")
 				sidebarItem(c, KeyDiff, icon.Must("database-zap"), "Diff")
-				sidebarItem(c, KeyDataView, icon.Must("grid"), "Data View")
-				sidebarItem(c, KeyPlot, icon.Must("chart-bar"), "Plot")
 			})
 			ui.SidebarSection(c, "Games", nil, func() {
 				sidebarItem(c, KeyIce, icon.Must("snowflake"), "IceMagic")
@@ -146,10 +138,6 @@ func (t *Ttoy) content(c *ui.Context) {
 			t.generate.View(c)
 		case KeyDiff:
 			t.diff.View(c)
-		case KeyDataView:
-			t.dataView.DataView(c)
-		case KeyPlot:
-			t.plot.View(c)
 		case KeyIce:
 			t.iceMagic.View(c)
 		case KeyBall:
